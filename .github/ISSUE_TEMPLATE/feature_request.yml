@@ -1,0 +1,113 @@
+name: Feature request
+description: Suggest an idea for MCPVotsAgi
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+projects: ["kabrony/mcpvotsagi"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! 💡
+
+        Please provide as much detail as possible about your idea.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Is your feature request related to a problem? Please describe.
+      description: A clear and concise description of what the problem is.
+      placeholder: I'm always frustrated when...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of what you want to happen.
+      placeholder: I would like to see...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Describe alternatives you've considered
+      description: A clear and concise description of any alternative solutions or features you've considered.
+      placeholder: I've also considered...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Which component would this affect?
+      description: Select the primary component this feature would impact
+      options:
+        - Trading Backend
+        - AI Integration
+        - Solana Integration
+        - Dashboard/UI
+        - MCP Servers
+        - Test Framework
+        - Documentation
+        - API
+        - Security
+        - Performance
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: How important is this feature to you?
+      options:
+        - Low - Nice to have
+        - Medium - Would improve workflow
+        - High - Critical for my use case
+        - Critical - Blocking my adoption
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Describe how you would use this feature
+      placeholder: |
+        I would use this feature to...
+
+        This would help me because...
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context, screenshots, mockups, or examples about the feature request here.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Implementation
+      description: Are you willing to help implement this feature?
+      options:
+        - label: I would be willing to contribute to the implementation
+        - label: I can help with testing
+        - label: I can help with documentation
+        - label: I can provide design/UX input
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/kabrony/mcpvotsagi/blob/main/CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

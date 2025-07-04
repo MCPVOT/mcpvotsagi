@@ -1,0 +1,30 @@
+{
+  "name": "oracle-agi-v5-dashboard",
+  "version": "5.0.0",
+  "description": "Oracle AGI V5 Unified Dashboard with MCP Integration",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev -p 3002",
+    "build": "next build",
+    "start": "next start -p 3002",
+    "backend": "python oracle_agi_v5_unified_dashboard.py",
+    "launch": "python launch_oracle_agi_v5.py",
+    "all": "concurrently \"npm run backend\" \"npm run dev\""
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.0",
+    "@mui/material": "^5.14.0",
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "concurrently": "^8.0.0"
+  }
+}
