@@ -1,0 +1,167 @@
+# Unified AGI Portal Configuration
+# ====================================
+
+# DeepSeek-R1 Configuration
+deepseek_r1:
+  model_name: "deepseek-r1"
+  fallback_models:
+    - "hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL"
+    - "deepseek-r1-distill-llama-70b"
+  ollama_endpoint: "http://localhost:11434"
+  temperature: 0.7
+  max_tokens: 2048
+  top_p: 0.9
+
+# IPFS Configuration
+ipfs:
+  endpoint: "http://localhost:5001"
+  gateway: "http://localhost:8080"
+  auto_start: true
+  pin_important_data: true
+
+# MCP Agents Configuration
+mcp_agents:
+  filesystem:
+    name: "FileSystem"
+    description: "File operations, reading, writing, manipulation"
+    command: "npx @modelcontextprotocol/server-filesystem"
+    port: 3000
+    enabled: true
+
+  github:
+    name: "GitHub"
+    description: "GitHub integration, repos, issues, PRs"
+    command: "npx @modelcontextprotocol/server-github"
+    port: 3001
+    enabled: true
+
+  memory:
+    name: "Memory"
+    description: "Persistent memory across sessions"
+    command: "npx @modelcontextprotocol/server-memory"
+    port: 3002
+    enabled: true
+
+  browser:
+    name: "Browser"
+    description: "Web automation, scraping, interaction"
+    command: "npx @agentdeskai/browser-tools-mcp"
+    port: 3006
+    enabled: true
+
+  search:
+    name: "Search"
+    description: "Web search via Brave API"
+    command: "npx @modelcontextprotocol/server-brave-search"
+    port: 3003
+    enabled: true
+
+  solana:
+    name: "Solana"
+    description: "Solana blockchain integration"
+    command: "npx @modelcontextprotocol/server-solana"
+    port: 3004
+    enabled: true
+
+  huggingface:
+    name: "HuggingFace"
+    description: "AI model integration via HuggingFace"
+    command: "npx @modelcontextprotocol/server-huggingface"
+    port: 3005
+    enabled: true
+
+# Server Configuration
+server:
+  host: "localhost"
+  port: 8000
+  websocket_port: 8001
+  cors_enabled: true
+  debug: false
+
+# Database Configuration
+database:
+  type: "sqlite"
+  path: "data/agi_portal.db"
+  backup_enabled: true
+  backup_interval: 3600  # 1 hour
+
+# Chat Configuration
+chat:
+  max_sessions: 1000
+  session_timeout: 86400  # 24 hours
+  max_message_length: 10000
+  store_in_ipfs: true
+
+# Security Configuration
+security:
+  rate_limiting: true
+  max_requests_per_minute: 60
+  cors_origins:
+    - "http://localhost:8000"
+    - "http://127.0.0.1:8000"
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  file: "logs/agi_portal.log"
+  max_size: "10MB"
+  backup_count: 5
+
+# Performance Configuration
+performance:
+  max_concurrent_requests: 100
+  request_timeout: 30
+  websocket_timeout: 300
+
+# Features Configuration
+features:
+  ipfs_integration: true
+  mcp_agents: true
+  chat_interface: true
+  web_interface: true
+  api_interface: true
+  websocket_interface: true
+
+# System Prompts
+system_prompts:
+  base: |
+    You are the Oracle AGI, a unified artificial general intelligence portal.
+    You have access to multiple MCP agents and can perform complex tasks across domains.
+
+    Your capabilities include:
+    - Advanced reasoning and planning with DeepSeek-R1
+    - File system operations
+    - GitHub integration
+    - Web browsing and search
+    - Blockchain operations (Solana)
+    - AI model integration
+    - Persistent memory
+    - IPFS decentralized storage
+
+    When answering:
+    1. Provide clear, actionable responses
+    2. Use available agents when needed
+    3. Explain complex concepts simply
+    4. Offer multiple approaches when possible
+    5. Store important information in IPFS for permanence
+    6. Be helpful to both humans and other agents
+
+  planning: |
+    You are an expert at complex task planning and decision making.
+    Break down complex requests into actionable steps.
+    Consider dependencies, resources, and optimal execution order.
+
+  coding: |
+    You are an expert software developer with access to file systems and GitHub.
+    Write clean, efficient, well-documented code.
+    Follow best practices and consider maintainability.
+
+  research: |
+    You are a research expert with access to web search and browsing.
+    Provide comprehensive, accurate information from reliable sources.
+    Cite sources and fact-check information.
+
+  blockchain: |
+    You are a blockchain expert with Solana integration.
+    Understand DeFi, NFTs, smart contracts, and cryptocurrency.
+    Provide accurate technical information about blockchain technologies.
