@@ -1,0 +1,142 @@
+# MCPVotsAGI Unified System Configuration
+# =======================================
+# Complete configuration for all components
+
+system:
+  name: "MCPVotsAGI"
+  version: "9.0.0"
+  environment: "production"
+  workspace: "C:/Workspace/MCPVotsAGI"
+  
+# Ollama AI Models Configuration
+ollama:
+  host: "http://localhost:11434"
+  primary_model: "hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL"
+  models:
+    - name: "deepseek_r1_brain"
+      model: "hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL"
+      description: "Primary reasoning brain"
+      priority: 1
+    - name: "llama3.1"
+      model: "llama3.1:8b"
+      description: "General purpose assistant"
+      priority: 2
+    - name: "mistral"
+      model: "mistral:latest"
+      description: "Fast responses"
+      priority: 3
+    - name: "qwen2.5-coder"
+      model: "qwen2.5-coder:latest"
+      description: "Code generation"
+      priority: 4
+    - name: "deepseek-r1"
+      model: "deepseek-r1:latest"
+      description: "Alternative reasoning"
+      priority: 5
+
+# MCP Servers Configuration
+mcp_servers:
+  github:
+    enabled: true
+    port: 3001
+    command: "npx @modelcontextprotocol/server-github"
+    description: "GitHub repository management"
+    
+  memory:
+    enabled: true
+    port: 3002
+    command: "npx @modelcontextprotocol/server-memory"
+    description: "Persistent memory across sessions"
+    
+  browser:
+    enabled: true
+    port: 3006
+    command: "npx @agentdeskai/browser-tools-mcp"
+    description: "Web browsing and scraping"
+    
+  solana:
+    enabled: true
+    port: 3005
+    command: "python servers/solana_mcp_server.py"
+    description: "Solana blockchain integration"
+    
+  deepseek_mcp:
+    enabled: true
+    port: 3008
+    command: "python servers/deepseek_ollama_mcp_server.py"
+    description: "DeepSeek-R1 reasoning engine"
+    
+  supermemory:
+    enabled: true
+    port: 3004
+    command: "python servers/supermemory_mcp_server.py"
+    description: "Advanced vector memory"
+
+# Dashboard Configuration
+dashboard:
+  port: 8888
+  host: "0.0.0.0"
+  title: "Oracle AGI V9 Complete"
+  features:
+    chat: true
+    mcp_tools: true
+    system_monitor: true
+    knowledge_graph: true
+    trading_interface: true
+    workflow_builder: true
+
+# Data Storage
+storage:
+  f_drive:
+    path: "F:/MCPVotsAGI_Data"
+    rl_data: "F:/MCPVotsAGI_Data/RL"
+    models: "F:/MCPVotsAGI_Data/models"
+    knowledge: "F:/MCPVotsAGI_Data/knowledge"
+  local:
+    database: "oracle_agi_v9.db"
+    logs: "logs/"
+    cache: "cache/"
+
+# Trading Configuration
+trading:
+  enabled: true
+  exchanges:
+    - finnhub
+    - solana_dex
+  strategies:
+    - deepseek_trading
+    - dgm_evolution
+    - rl_brain
+  risk_management:
+    max_position_size: 0.1
+    stop_loss: 0.03
+    take_profit: 0.10
+
+# Security & Privacy
+security:
+  treat_as_public: true  # Act as if everything is public
+  encrypt_sensitive: true
+  api_keys_location: "environment"  # Don't store in files
+  
+# Features Toggle
+features:
+  mcp_integration: true
+  ollama_chat: true
+  trading_bot: true
+  workflow_automation: true
+  knowledge_persistence: true
+  rl_brain: true
+  continuous_learning: true
+  
+# Monitoring
+monitoring:
+  metrics_interval: 5  # seconds
+  health_check_interval: 30  # seconds
+  log_level: "INFO"
+  
+# API Keys (use environment variables)
+# Set these in your environment:
+# - OPENAI_API_KEY
+# - FINNHUB_API_KEY
+# - GITHUB_TOKEN
+# - SOLANA_RPC_URL
