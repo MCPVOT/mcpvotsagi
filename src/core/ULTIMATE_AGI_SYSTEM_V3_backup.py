@@ -75,38 +75,24 @@ except ImportError:
     HAS_CLAUDIA = False
     logger.warning("Claudia integration not available")
 
-# Import F: Drive Storage System
-try:
-    from f_drive_storage import (
-        FDriveStorageManager,
-        initialize_f_drive_storage,
-        get_f_drive_stats,
-        get_f_drive_path
-    )
-    HAS_F_DRIVE = True
-except ImportError:
-    FDriveStorageManager = None
-    HAS_F_DRIVE = False
-    logger.warning("F: drive storage not available")
-
 
 class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
     """Complete production-ready AGI portal with full Claudia integration"""
 
     def __init__(self):
         """Initialize V3 system with complete Claudia integration"""
-        # Initialize V3 attributes first
-        self.version = "ULTIMATE-V3.0-PRODUCTION"
-        self.port = int(os.environ.get('AGI_PORT', 8889))
-        self.start_time = time.time()
+        if HAS_V2:
+            super().__init__()
+            self.version = "ULTIMATE-V3.0-PRODUCTION"
+        else:
+            # Minimal initialization if V2 not available
+            self.version = "ULTIMATE-V3.0-PRODUCTION"
+            self.port = int(os.environ.get('AGI_PORT', 8889))
+            self.start_time = time.time()
 
         # Context7 components
         self.context7 = None
         self.code_assistant = None
-
-        # F: Drive Storage System (800GB for data gathering and intelligence)
-        self.f_drive_storage = None
-        self.storage_initialized = False
 
         # Complete Claudia integration
         self.claudia_integration = None
@@ -133,13 +119,6 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
         self.learning_engine = None
         self.evolution_stats = {}
 
-        # Now initialize parent class
-        if HAS_V2:
-            super().__init__()
-        else:
-            # If V2 not available, do minimal initialization
-            self.app = None
-
         logger.info(f"🚀 ULTIMATE AGI SYSTEM V3 PRODUCTION initialized with complete Claudia integration!")
 
     async def initialize_all_systems(self):
@@ -153,10 +132,6 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
         # Initialize Context7
         if HAS_CONTEXT7:
             await self._init_context7()
-
-        # Initialize F: Drive Storage System (800GB for data gathering)
-        if HAS_F_DRIVE:
-            await self._init_f_drive_storage()
 
         # Initialize complete Claudia integration
         if HAS_CLAUDIA:
@@ -243,38 +218,6 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
 
         logger.info("✅ Advanced V3 features initialized")
 
-    async def _init_f_drive_storage(self):
-        """Initialize F: Drive Storage System for large-scale data"""
-        logger.info("🗄️ Initializing F: Drive Storage System (800GB)...")
-
-        try:
-            self.f_drive_storage = FDriveStorageManager()
-
-            # Initialize storage directories
-            if await initialize_f_drive_storage():
-                self.storage_initialized = True
-
-                # Get initial stats
-                stats = get_f_drive_stats()
-                total_files = sum(s.get('files_count', 0) for s in stats.values() if 'error' not in s)
-
-                logger.info(f"✅ F: Drive Storage ready - {len(stats)} storage types, {total_files} files")
-
-                # Log storage types
-                for storage_type, data in stats.items():
-                    if "error" not in data:
-                        logger.info(f"  📁 {storage_type}: {data['size_mb']} MB")
-                    else:
-                        logger.warning(f"  ⚠️ {storage_type}: {data['error']}")
-
-            else:
-                logger.warning("⚠️ F: Drive Storage initialization failed")
-                self.storage_initialized = False
-
-        except Exception as e:
-            logger.error(f"❌ F: Drive Storage initialization error: {e}")
-            self.storage_initialized = False
-
     async def _init_context7(self):
         """Initialize Context7 documentation system"""
         logger.info("Initializing Context7 documentation system...")
@@ -330,7 +273,7 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
             self._track_library_usage(message)
 
             # Handle agent execution through Claudia
-            if use_claudia and agent_name and self.claudia_integration is not None:
+            if use_claudia and agent_name and self.claudia_integration:
                 return await self._handle_claudia_agent_execution(agent_name, message, data)
 
             # Check if this is a coding request
@@ -376,7 +319,7 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
         """Handle agent execution through Claudia"""
         from aiohttp import web
 
-        if self.claudia_integration is None or not self.claudia_connected:
+        if not self.claudia_integration or not self.claudia_connected:
             return web.json_response({
                 'error': 'Claudia integration not available',
                 'fallback_response': await self._get_ai_response(message)
@@ -613,11 +556,8 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
             self.app.router.add_post('/api/examples', self.handle_code_examples_request)
             self.app.router.add_get('/api/library-stats', self.get_library_stats)
 
-            # Backward compatibility - redirect /api/metrics to /api/v3/metrics
-            self.app.router.add_get('/api/metrics', self.get_real_time_metrics)
-
             # Complete Claudia integration routes
-            if self.claudia_integration is not None:
+            if self.claudia_integration:
                 asyncio.create_task(self.claudia_integration.integrate_with_ultimate_agi(self))
 
             # Advanced V3 routes
@@ -630,11 +570,6 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
             self.app.router.add_post('/api/v3/context/compress', self.compress_context)
             self.app.router.add_get('/api/v3/learning', self.get_learning_stats)
             self.app.router.add_post('/api/v3/learning/evolve', self.trigger_evolution)
-
-            # F: Drive Storage routes
-            self.app.router.add_get('/api/v3/storage', self.get_storage_stats)
-            self.app.router.add_get('/api/v3/storage/status', self.get_storage_status)
-            self.app.router.add_post('/api/v3/storage/initialize', self.initialize_storage)
 
             # WebSocket for real-time updates
             self.app.router.add_get('/ws/v3/realtime', self.handle_websocket)
@@ -663,7 +598,7 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
         dashboard_data = {
             'version': self.version,
             'uptime': int(time.time() - self.start_time),
-            'claudia_status': await self.claudia_integration.get_claudia_status() if self.claudia_integration is not None else None,
+            'claudia_status': await self.claudia_integration.get_claudia_status() if self.claudia_integration else None,
             'context7_status': 'online' if self.context7 and self.context7.connected else 'offline',
             'agents': self.claudia_agents,
             'projects': self.claudia_projects,
@@ -705,7 +640,7 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
             return web.json_response({'error': 'Agent name and task are required'}, status=400)
 
         # Use Claudia integration for execution
-        if self.claudia_integration is not None:
+        if self.claudia_integration:
             result = await self.claudia_integration.execute_agent_task(agent_name, task, context)
             return web.json_response(result)
         else:
@@ -769,86 +704,6 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
 
         from aiohttp import web
         return web.json_response({'success': True, 'iteration': self.learning_engine['iterations']})
-
-    async def get_storage_stats(self, request):
-        """Get F: drive storage statistics"""
-        from aiohttp import web
-
-        if not self.storage_initialized:
-            return web.json_response({
-                'error': 'F: drive storage not initialized',
-                'available': False
-            }, status=503)
-
-        try:
-            stats = get_f_drive_stats()
-            total_size_mb = sum(s.get('size_mb', 0) for s in stats.values() if 'error' not in s)
-            total_files = sum(s.get('files_count', 0) for s in stats.values() if 'error' not in s)
-
-            return web.json_response({
-                'storage_types': stats,
-                'summary': {
-                    'total_size_mb': total_size_mb,
-                    'total_size_gb': round(total_size_mb / 1024, 2),
-                    'total_files': total_files,
-                    'available_capacity': '800GB',
-                    'storage_initialized': self.storage_initialized
-                },
-                'timestamp': datetime.now().isoformat()
-            })
-        except Exception as e:
-            return web.json_response({'error': str(e)}, status=500)
-
-    async def get_storage_status(self, request):
-        """Get F: drive storage system status"""
-        from aiohttp import web
-
-        status = {
-            'f_drive_available': Path("F:/").exists() if Path else False,
-            'storage_initialized': self.storage_initialized,
-            'storage_manager_loaded': self.f_drive_storage is not None,
-            'total_capacity': '800GB',
-            'intended_usage': [
-                'RL trading data and models',
-                'Chat memory and conversation history',
-                'Context management and caching',
-                'Knowledge graph persistence',
-                'Model weights and training checkpoints',
-                'IPFS distributed storage'
-            ]
-        }
-
-        return web.json_response(status)
-
-    async def initialize_storage(self, request):
-        """Initialize or reinitialize F: drive storage"""
-        from aiohttp import web
-
-        if not HAS_F_DRIVE:
-            return web.json_response({
-                'error': 'F: drive storage module not available'
-            }, status=503)
-
-        try:
-            success = await initialize_f_drive_storage()
-            if success:
-                self.storage_initialized = True
-                stats = get_f_drive_stats()
-                return web.json_response({
-                    'success': True,
-                    'message': 'F: drive storage initialized successfully',
-                    'stats': stats
-                })
-            else:
-                return web.json_response({
-                    'success': False,
-                    'error': 'Failed to initialize F: drive storage'
-                }, status=500)
-        except Exception as e:
-            return web.json_response({
-                'success': False,
-                'error': str(e)
-            }, status=500)
 
     async def handle_websocket(self, request):
         """Handle WebSocket connections for real-time updates"""
@@ -980,7 +835,7 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
                 pass
 
         # Stop Claudia integration
-        if self.claudia_integration is not None:
+        if self.claudia_integration:
             await self.claudia_integration.stop_claudia()
 
         # Stop Context7
@@ -1065,143 +920,69 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
         return await self.handle_websocket(request)
 
     async def serve_dashboard_v2(self, request):
-        """Serve the V2 dashboard (simple JSON response)"""
+        """Serve the V2 dashboard (redirect to V3)"""
         from aiohttp import web
-        return web.json_response({
-            'title': 'ULTIMATE AGI SYSTEM V3',
-            'version': self.version,
-            'status': 'online',
-            'features': [
-                'Complete Claudia Integration',
-                'Multi-Model Orchestration',
-                'Real-Time Dashboard',
-                '1M Token Context Management',
-                'Continuous Learning Engine'
-            ],
-            'endpoints': {
-                'chat': 'POST /api/chat',
-                'v3_dashboard': 'GET /api/v3/dashboard',
-                'metrics': 'GET /api/v3/metrics',
-                'claudia_status': 'GET /api/claudia/status',
-                'agents': 'GET /api/claudia/agents',
-                'agent_execute': 'POST /api/v3/agent/execute'
-            },
-            'chat_test': {
-                'basic_message': {
-                    'url': '/api/chat',
-                    'method': 'POST',
-                    'body': {'message': 'Hello, test message'}
-                },
-                'agent_execution': {
-                    'url': '/api/chat',
-                    'method': 'POST',
-                    'body': {
-                        'message': 'Create a React component',
-                        'use_claudia': True,
-                        'agent': 'ultimate-agi-orchestrator'
-                    }
-                }
-            }
-        })
-
-
-# Module-level main function for import
-async def main():
-    """Main entry point for ULTIMATE AGI SYSTEM V3"""
-    # Fix encoding for Windows
-    if sys.platform == 'win32':
-        subprocess.run('chcp 65001', shell=True, capture_output=True)
-        import io
-        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
-
-    print("""
-    ╔══════════════════════════════════════════════════════════════════════════════════════╗
-    ║                          ULTIMATE AGI SYSTEM V3 - PRODUCTION                        ║
-    ║                                                                                      ║
-    ║  🚀 Complete Claudia Integration - Full Agent Management & Project Coordination      ║
-    ║  🧠 Advanced Multi-Model Orchestration - DeepSeek-R1, Claude, GPT-4                 ║
-    ║  📊 Real-Time Metrics Dashboard - WebSocket-Powered Live Updates                    ║
-    ║  🔗 1M Token Context Management - Advanced Context Compression                      ║
-    ║  🎯 Continuous Learning Engine - Evolution & Performance Optimization               ║
-    ║  🎨 Cyberpunk UI/UX - Modern React Components with Real-Time Data                   ║
-    ║  📚 Context7 Documentation - Always Current API Documentation                       ║
-    ║  🛡️ Production-Ready - Error Handling, Monitoring & Health Checks                  ║
-    ╚══════════════════════════════════════════════════════════════════════════════════════╝
-    """)
-
-    if not HAS_AIOHTTP:
-        print("❌ ERROR: aiohttp not available. Please install: pip install aiohttp")
-        return
-
-    system = UltimateAGISystemV3()
-
-    # Create minimal web app if V2 not available
-    if not HAS_V2:
-        system.app = web.Application()
-
-    # Setup routes
-    system.setup_routes()
-
-    try:
-        await system.initialize_all_systems()
-
-        # Start web server
-        runner = web.AppRunner(system.app)
-        await runner.setup()
-        site = web.TCPSite(runner, 'localhost', system.port)
-        await site.start()
-
-        print(f"\n🎯 ULTIMATE AGI SYSTEM V3 READY!")
-        print(f"✅ Main Dashboard: http://localhost:{system.port}")
-        print(f"✅ V3 Advanced Dashboard: http://localhost:{system.port}/api/v3/dashboard")
-        print(f"✅ Real-Time Metrics: http://localhost:{system.port}/api/v3/metrics")
-        print(f"✅ WebSocket Updates: ws://localhost:{system.port}/ws/v3/realtime")
-
-        # System status
-        print(f"\n📊 SYSTEM STATUS:")
-        print(f"  🧠 Claudia Integration: {'✅ Online' if system.claudia_connected else '⚠️ Offline'}")
-        print(f"  📚 Context7 Documentation: {'✅ Online' if system.context7 else '⚠️ Offline'}")
-        print(f"  🤖 Agents Available: {len(system.claudia_agents)}")
-        print(f"  📁 Projects Available: {len(system.claudia_projects)}")
-        print(f"  🎯 Active Models: {len([m for m in system.active_models.values() if m['status'] == 'ready'])}")
-        print(f"  🔗 Context Capacity: {system.context_manager['max_tokens']:,} tokens")
-        print(f"  🚀 Learning Engine: {'✅ Active' if system.learning_engine['active'] else '⚠️ Inactive'}")
-
-        print(f"\n🔥 CHAT ENDPOINT WORKING!")
-        print(f"  💬 Basic Chat: POST /api/chat")
-        print(f"     Example: {{'message': 'Hello, how are you?'}}")
-        print(f"  🤖 Agent Chat: POST /api/chat")
-        print(f"     Example: {{'message': 'Create a React component', 'use_claudia': true, 'agent': 'ultimate-agi-orchestrator'}}")
-
-        print(f"\n🎯 TRY THESE V3 FEATURES:")
-        print(f"  • POST /api/v3/agent/execute - Execute Claudia agents")
-        print(f"  • POST /api/v3/model/switch - Switch between AI models")
-        print(f"  • POST /api/v3/context/compress - Manage large contexts")
-        print(f"  • POST /api/v3/learning/evolve - Trigger system evolution")
-        print(f"  • WebSocket /ws/v3/realtime - Real-time system updates")
-
-        # Keep running
-        try:
-            print(f"\n🚀 System running... Press Ctrl+C to stop")
-            while True:
-                await asyncio.sleep(3600)
-        except KeyboardInterrupt:
-            print("\n🛑 Shutting down ULTIMATE AGI SYSTEM V3...")
-            await system.cleanup()
-
-    except Exception as e:
-        logger.error(f"❌ System startup failed: {e}")
-        import traceback
-        traceback.print_exc()
-
-
-if __name__ == "__main__":
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        print("\n👋 ULTIMATE AGI SYSTEM V3 Shutdown Complete!")
-    except Exception as e:
-        print(f"❌ Fatal Error: {e}")
-        import traceback
-        traceback.print_exc()
+        return web.Response(text=f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ULTIMATE AGI SYSTEM V3</title>
+    <meta charset="utf-8">
+    <style>
+        body {{
+            font-family: 'Source Code Pro', monospace;
+            background: #0a0a0a;
+            color: #00ff41;
+            margin: 0;
+            padding: 20px;
+            overflow-x: auto;
+        }}
+        .container {{ max-width: 1200px; margin: 0 auto; }}
+        .header {{ text-align: center; margin-bottom: 30px; }}
+        .section {{
+            background: #1a1a1a;
+            border: 1px solid #00ff41;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 5px;
+        }}
+        .endpoint {{
+            background: #0f1f0f;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 3px solid #00ff41;
+            font-family: monospace;
+        }}
+        .metrics {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }}
+        .metric {{
+            background: #0f0f0f;
+            padding: 15px;
+            border: 1px solid #00d4ff;
+            border-radius: 3px;
+            text-align: center;
+        }}
+        .status-online {{ color: #00ff41; }}
+        .status-offline {{ color: #ff0080; }}
+        a {{ color: #00d4ff; text-decoration: none; }}
+        a:hover {{ color: #00ff41; }}
+        .refresh-button {{
+            background: #00ff41;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 ULTIMATE AGI SYSTEM V3</h1>
+            <p>Complete Claudia Integration • Multi-Model Orchestr

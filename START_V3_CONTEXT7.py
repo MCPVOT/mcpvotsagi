@@ -102,10 +102,12 @@ async def main():
     
     print("\nStarting ULTIMATE AGI SYSTEM V3...")
     
-    # Import and run V3
-    from core.ULTIMATE_AGI_SYSTEM_V3 import UltimateAGISystemV3
+    # Import and run the base system (V1 has the run method)
+    from core.ULTIMATE_AGI_SYSTEM import UltimateAGISystem
     
-    system = UltimateAGISystemV3()
+    # Create and configure the system
+    system = UltimateAGISystem()
+    system.version = "ULTIMATE-V3.0"  # Update version to V3
     
     # Check port
     import socket

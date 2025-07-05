@@ -70,6 +70,16 @@ except ImportError as e:
     HAS_CLAUDIA = False
     logger.warning(f"⚠️ Claudia integration not available: {e}")
 
+# Import Context7 integration
+try:
+    from CONTEXT7_INTEGRATION import Context7Integration
+    HAS_CONTEXT7 = True
+    logger.info("✅ Context7 integration loaded successfully")
+except ImportError as e:
+    Context7Integration = None
+    HAS_CONTEXT7 = False
+    logger.warning(f"⚠️ Context7 integration not available: {e}")
+
 class UltimateAGISystem:
     """THE ultimate AGI system - consolidates EVERYTHING"""
 
@@ -96,6 +106,13 @@ class UltimateAGISystem:
             logger.info("✅ Claudia integration bridge initialized")
         else:
             self.claudia_bridge = None
+
+        # Initialize Context7 integration
+        if HAS_CONTEXT7:
+            self.context7_bridge = Context7Integration()
+            logger.info("✅ Context7 integration bridge initialized")
+        else:
+            self.context7_bridge = None
 
         # Initialize database
         self.init_database()
@@ -176,9 +193,9 @@ class UltimateAGISystem:
                     elif config_file.endswith('.json'):
                         with open(config_file, 'r') as f:
                             self.config.update(json.load(f))
-                    print(f"✓ Loaded config: {config_file}")
+                    print(f"[OK] Loaded config: {config_file}")
                 except Exception as e:
-                    print(f"⚠ Could not load {config_file}: {e}")
+                    print(f"[WARNING] Could not load {config_file}: {e}")
 
     def setup_routes(self):
         """Setup all web routes"""
@@ -507,6 +524,14 @@ class UltimateAGISystem:
                     <span>💹 Trading Engine</span>
                     <div class="status-indicator" id="trading-status"></div>
                 </div>
+                <div class="status-item">
+                    <span>📚 Context7 Docs</span>
+                    <div class="status-indicator" id="context7-status"></div>
+                </div>
+                <div class="status-item">
+                    <span>🎨 Claudia GUI</span>
+                    <div class="status-indicator" id="claudia-status"></div>
+                </div>
             </div>
         </div>
 
@@ -631,6 +656,8 @@ class UltimateAGISystem:
                     updateStatusIndicator('ipfs-status', data.ipfs_status);
                     updateStatusIndicator('agents-status', data.agents_status);
                     updateStatusIndicator('trading-status', data.trading_status);
+                    updateStatusIndicator('context7-status', data.context7_status);
+                    updateStatusIndicator('claudia-status', data.claudia_status);
                 }})
                 .catch(error => console.error('Status update error:', error));
         }}
@@ -695,6 +722,8 @@ class UltimateAGISystem:
             ipfs_status = await self.check_ipfs_status()
             agents_status = await self.check_agents_status()
             trading_status = await self.check_trading_status()
+            context7_status = await self.check_context7_status()
+            claudia_status = await self.check_claudia_status()
 
             status = {
                 'uptime': f"{uptime}s",
@@ -705,6 +734,8 @@ class UltimateAGISystem:
                 'ipfs_status': ipfs_status,
                 'agents_status': agents_status,
                 'trading_status': trading_status,
+                'context7_status': context7_status,
+                'claudia_status': claudia_status,
                 'timestamp': datetime.now().isoformat()
             }
 
@@ -719,8 +750,19 @@ class UltimateAGISystem:
         try:
             # Check if Ollama is running
             result = subprocess.run(['ollama', 'list'], capture_output=True, text=True)
-            if 'deepseek-r1' in result.stdout.lower():
-                return 'active'
+
+            # Check for multiple possible model names
+            model_indicators = [
+                'deepseek-r1-0528-qwen3-8b-gguf:q4_k_xl',
+                'deepseek-r1',
+                'unsloth/deepseek-r1'
+            ]
+
+            available_models = result.stdout.lower()
+            for indicator in model_indicators:
+                if indicator in available_models:
+                    return 'active'
+
             return 'warning'
         except:
             return 'error'
@@ -779,8 +821,33 @@ class UltimateAGISystem:
         except:
             return 'error'
 
+    async def check_context7_status(self):
+        """Check Context7 integration status"""
+        try:
+            if self.context7_bridge:
+                if self.context7_bridge.connected:
+                    return 'active'
+                else:
+                    return 'warning'
+            return 'error'
+        except:
+            return 'error'
+
+    async def check_claudia_status(self):
+        """Check Claudia integration status"""
+        try:
+            if self.claudia_bridge:
+                # Check if Claudia MCP server is running
+                if hasattr(self.claudia_bridge, 'connected') and self.claudia_bridge.connected:
+                    return 'active'
+                else:
+                    return 'warning'
+            return 'error'
+        except:
+            return 'error'
+
     async def handle_chat(self, request):
-        """Handle chat messages"""
+        """Handle chat messages with Context7 enrichment"""
         try:
             data = await request.json()
             message = data.get('message', '')
@@ -788,8 +855,17 @@ class UltimateAGISystem:
             if not message:
                 return web.json_response({'error': 'No message provided'}, status=400)
 
-            # Process with DeepSeek-R1
-            response = await self.process_with_deepseek(message)
+            # Enrich context with Context7 if available
+            enriched_context = None
+            if self.context7_bridge and self.context7_bridge.connected:
+                try:
+                    enriched_context = await self.context7_bridge.enrich_context(message)
+                    logger.info(f"Context7 enriched: {enriched_context.get('enriched', False)}")
+                except Exception as e:
+                    logger.warning(f"Context7 enrichment failed: {e}")
+
+            # Process with DeepSeek-R1 (with optional enriched context)
+            response = await self.process_with_deepseek(message, enriched_context)
 
             # Store in database
             conn = sqlite3.connect(self.db_path)
@@ -801,17 +877,49 @@ class UltimateAGISystem:
             conn.commit()
             conn.close()
 
-            return web.json_response({'response': response})
+            return web.json_response({
+                'response': response,
+                'context7_enriched': enriched_context.get('enriched', False) if enriched_context else False
+            })
 
         except Exception as e:
             logger.error(f"Error handling chat: {e}")
             return web.json_response({'error': str(e)}, status=500)
 
-    async def process_with_deepseek(self, message):
-        """Process message with DeepSeek-R1"""
+    async def process_with_deepseek(self, message, enriched_context=None):
+        """Process message with DeepSeek-R1, optionally with Context7 enrichment"""
         try:
+            # Prepare the prompt with enriched context if available
+            enhanced_prompt = message
+
+            if enriched_context and enriched_context.get('enriched'):
+                # Add Context7 documentation to the prompt
+                context_info = []
+                libraries_detected = enriched_context.get('libraries_detected', [])
+
+                if libraries_detected:
+                    context_info.append(f"📚 Libraries detected: {', '.join(libraries_detected)}")
+
+                # Add relevant documentation
+                documentation = enriched_context.get('documentation', {})
+                for lib, docs in documentation.items():
+                    if docs and docs.get('content'):
+                        context_info.append(f"\n🔍 {lib} Documentation Context:")
+                        context_info.append(docs['content'][:1000] + "..." if len(docs['content']) > 1000 else docs['content'])
+
+                if context_info:
+                    enhanced_prompt = f"""Context Information:
+{chr(10).join(context_info)}
+
+User Query: {message}
+
+Please provide a response that takes into account the above context information, especially for code-related queries."""
+
+                    logger.info(f"Enhanced prompt with Context7 data for libraries: {libraries_detected}")
+
             # Use Ollama to process with DeepSeek-R1
-            cmd = ['ollama', 'run', 'deepseek-r1', message]
+            model_name = self.get_deepseek_model_name()
+            cmd = ['ollama', 'run', model_name, enhanced_prompt]
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
 
             if result.returncode == 0:
@@ -858,7 +966,7 @@ class UltimateAGISystem:
         """Handle trading-related tasks"""
         # Import REAL trading engine
         from ..trading.REAL_TRADING_ENGINE import create_real_trading_engine
-        
+
         if not self.trading_engine:
             # Initialize REAL trading engine
             config = {
@@ -868,40 +976,40 @@ class UltimateAGISystem:
                 'solana_rpc': os.getenv('SOLANA_RPC_URL', 'https://api.mainnet-beta.solana.com')
             }
             self.trading_engine = await create_real_trading_engine(config)
-        
+
         # Parse task
         if isinstance(task, str):
             task_data = {'action': task}
         else:
             task_data = task
-        
+
         action = task_data.get('action')
-        
+
         # Execute REAL trading operations
         if action == 'get_market_data':
             symbol = task_data.get('symbol', 'SOL/USD')
             return await self.trading_engine.get_real_market_data(symbol)
-        
+
         elif action == 'execute_trade':
             return await self.trading_engine.execute_real_trade(
                 symbol=task_data.get('symbol'),
                 side=task_data.get('side'),
                 amount=task_data.get('amount', 0.1)
             )
-        
+
         elif action == 'get_positions':
             return await self.trading_engine.get_real_positions()
-        
+
         elif action == 'get_balance':
             return await self.trading_engine.get_real_balance()
-        
+
         elif action == 'get_signals':
             strategy = task_data.get('strategy', 'momentum')
             return await self.trading_engine.apply_trading_strategy(strategy)
-        
+
         elif action == 'risk_check':
             return await self.trading_engine.risk_management_check()
-        
+
         else:
             return {'error': f'Unknown trading action: {action}'}
 
@@ -909,14 +1017,14 @@ class UltimateAGISystem:
         """Handle MCP tool tasks"""
         # Import REAL MCP implementation
         from .COMPLETE_MCP_IMPLEMENTATION import RealMCPToolExecutor
-        
+
         if 'mcp_executor' not in self.mcp_tools:
             # Initialize REAL MCP executor
             self.mcp_tools['mcp_executor'] = RealMCPToolExecutor()
             await self.mcp_tools['mcp_executor'].initialize()
-        
+
         executor = self.mcp_tools['mcp_executor']
-        
+
         # Parse task
         if isinstance(task, str):
             # Simple format: "tool.method params"
@@ -930,7 +1038,7 @@ class UltimateAGISystem:
             tool = task.get('tool')
             method = task.get('method')
             params = task.get('params', {})
-        
+
         # Execute REAL MCP operation
         return await executor.execute_tool(tool, method, params)
 
@@ -942,7 +1050,7 @@ class UltimateAGISystem:
                 self.ipfs_client = ipfshttpclient.connect()
             except:
                 return {'error': 'IPFS not available - start IPFS daemon'}
-        
+
         # Parse task
         if isinstance(task, str):
             action = task
@@ -950,7 +1058,7 @@ class UltimateAGISystem:
         else:
             action = task.get('action')
             params = task.get('params', {})
-        
+
         try:
             if action == 'add_file':
                 file_path = params.get('path')
@@ -961,7 +1069,7 @@ class UltimateAGISystem:
                     'name': result['Name'],
                     'size': result['Size']
                 }
-            
+
             elif action == 'get_file':
                 file_hash = params.get('hash')
                 self.ipfs_client.get(file_hash)
@@ -969,7 +1077,7 @@ class UltimateAGISystem:
                     'success': True,
                     'message': f'File {file_hash} retrieved'
                 }
-            
+
             elif action == 'pin':
                 file_hash = params.get('hash')
                 self.ipfs_client.pin.add(file_hash)
@@ -977,7 +1085,7 @@ class UltimateAGISystem:
                     'success': True,
                     'message': f'Pinned {file_hash}'
                 }
-            
+
             elif action == 'publish':
                 content = params.get('content', '')
                 result = self.ipfs_client.add_json(content)
@@ -986,10 +1094,10 @@ class UltimateAGISystem:
                     'hash': result,
                     'gateway_url': f'https://ipfs.io/ipfs/{result}'
                 }
-            
+
             else:
                 return {'error': f'Unknown IPFS action: {action}'}
-                
+
         except Exception as e:
             return {'error': f'IPFS operation failed: {str(e)}'}
 
@@ -1007,7 +1115,7 @@ class UltimateAGISystem:
             positions = await self.trading_engine.get_real_positions()
             balance = await self.trading_engine.get_real_balance()
             risk = await self.trading_engine.risk_management_check()
-            
+
             return web.json_response({
                 'status': 'active',
                 'positions': positions,
@@ -1060,7 +1168,7 @@ class UltimateAGISystem:
             from .COMPLETE_MCP_IMPLEMENTATION import RealMCPToolExecutor
             self.mcp_tools['mcp_executor'] = RealMCPToolExecutor()
             await self.mcp_tools['mcp_executor'].initialize()
-        
+
         method = params.get('method', 'list')
         return await self.mcp_tools['mcp_executor'].execute_tool('filesystem', method, params)
 
@@ -1137,12 +1245,22 @@ class UltimateAGISystem:
     async def init_system_components(self):
         """Initialize all system components"""
         try:
+            # Ensure correct DeepSeek-R1 model is loaded
+            print("[SYSTEM] Ensuring DeepSeek-R1 model is loaded...")
+            await self.ensure_deepseek_model()
+
+            # Verify the model is working
+            if await self.verify_deepseek_model():
+                print("[OK] DeepSeek-R1 model verified and ready")
+            else:
+                print("[WARNING] DeepSeek-R1 model verification failed - continuing anyway")
+
             # Initialize IPFS
             try:
                 self.ipfs_client = ipfshttpclient.connect()
-                print("✓ IPFS client initialized")
+                print("[OK] IPFS client initialized")
             except:
-                print("⚠ IPFS not available")
+                print("[WARNING] IPFS not available")
 
             # Initialize agents
             self.agents = {
@@ -1153,7 +1271,7 @@ class UltimateAGISystem:
                 'memory': {'status': 'active', 'type': 'knowledge'}
             }
 
-            print("✓ Agent swarm initialized")
+            print("[OK] Agent swarm initialized")
 
         except Exception as e:
             logger.error(f"Error initializing system components: {e}")
@@ -1168,22 +1286,28 @@ class UltimateAGISystem:
                 await self.claudia_bridge.integrate_with_ultimate_agi(self)
                 logger.info("🔗 Claudia integration activated")
 
+            # Initialize Context7 integration if available
+            if self.context7_bridge:
+                await self.context7_bridge.start_server()
+                logger.info("📚 Context7 documentation bridge activated")
+
             print(f"""
-🚀 ===================================================
+[SYSTEM] ===================================================
    ULTIMATE AGI SYSTEM v{self.version} STARTING
-🚀 ===================================================
+[SYSTEM] ===================================================
 
-🧠 DeepSeek-R1 Brain: Initializing...
-🔗 MCP Tools: Loading...
-🌐 IPFS Network: Connecting...
-🤖 Agent Swarm: Activating...
-💹 Trading Engine: Preparing...
-🎨 Claudia GUI: {'Ready' if self.claudia_bridge else 'Not Available'}
+[BRAIN] DeepSeek-R1 Brain: Initializing...
+[TOOLS] MCP Tools: Loading...
+[NETWORK] IPFS Network: Connecting...
+[AGENTS] Agent Swarm: Activating...
+[TRADING] Trading Engine: Preparing...
+[GUI] Claudia GUI: {'Ready' if self.claudia_bridge else 'Not Available'}
+[DOCS] Context7 Docs: {'Ready' if self.context7_bridge else 'Not Available'}
 
-🌐 Dashboard: http://localhost:{self.port}
-🎯 Status: ALL SYSTEMS CONSOLIDATING...
+[WEB] Dashboard: http://localhost:{self.port}
+[STATUS] Status: ALL SYSTEMS CONSOLIDATING...
 
-✨ The ONE and ONLY AGI portal is ready!
+[READY] The ONE and ONLY AGI portal is ready!
             """)
 
             # Start the web server
@@ -1192,19 +1316,141 @@ class UltimateAGISystem:
             site = web.TCPSite(runner, '0.0.0.0', self.port)
             await site.start()
 
-            print(f"🌟 ULTIMATE AGI SYSTEM is LIVE at http://localhost:{self.port}")
-            print("🎉 No more fragmented dashboards - THIS IS THE ONE!")
+            print(f"[LIVE] ULTIMATE AGI SYSTEM is LIVE at http://localhost:{self.port}")
+            print("[SUCCESS] No more fragmented dashboards - THIS IS THE ONE!")
 
             # Keep running
             try:
                 await asyncio.Future()  # Run forever
             except KeyboardInterrupt:
-                print("\n🛑 Shutting down Ultimate AGI System...")
+                print("\n[STOP] Shutting down Ultimate AGI System...")
                 await runner.cleanup()
 
         except Exception as e:
             logger.error(f"Error running system: {e}")
             sys.exit(1)
+
+    async def ensure_deepseek_model(self):
+        """Ensure the correct DeepSeek-R1 model is loaded"""
+        try:
+            # Check if the specific model is available
+            preferred_model = "unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL"
+            fallback_models = ["deepseek-r1", "deepseek-r1:latest"]
+
+            # Check current models
+            result = subprocess.run(['ollama', 'list'], capture_output=True, text=True)
+            available_models = result.stdout.lower()
+
+            # Check if our preferred model is already loaded
+            if 'deepseek-r1-0528-qwen3-8b-gguf:q4_k_xl' in available_models:
+                logger.info(f"✅ DeepSeek-R1 model {preferred_model} is already loaded")
+                return True
+
+            # Check for fallback models
+            for model in fallback_models:
+                if model.lower() in available_models:
+                    logger.info(f"✅ DeepSeek fallback model {model} is available")
+                    return True
+
+            # If not loaded, try to pull the preferred model
+            logger.info(f"🔄 Pulling DeepSeek-R1 model: {preferred_model}")
+            logger.info("   This may take several minutes for the first time...")
+
+            pull_result = subprocess.run(
+                ['ollama', 'pull', preferred_model],
+                capture_output=True,
+                text=True,
+                timeout=1200  # 20 minutes timeout
+            )
+
+            if pull_result.returncode == 0:
+                logger.info(f"✅ Successfully pulled DeepSeek-R1 model: {preferred_model}")
+                return True
+            else:
+                logger.warning(f"⚠️ Failed to pull preferred model, trying fallback...")
+
+                # Try fallback models
+                for model in fallback_models:
+                    try:
+                        fallback_result = subprocess.run(
+                            ['ollama', 'pull', model],
+                            capture_output=True,
+                            text=True,
+                            timeout=600
+                        )
+                        if fallback_result.returncode == 0:
+                            logger.info(f"✅ Successfully pulled fallback model: {model}")
+                            return True
+                    except Exception as e:
+                        logger.warning(f"⚠️ Failed to pull fallback model {model}: {e}")
+
+                logger.error("❌ Failed to pull any DeepSeek model")
+                return False
+
+        except subprocess.TimeoutExpired:
+            logger.error("⏰ Model download timeout - this may take a while")
+            return False
+        except Exception as e:
+            logger.error(f"❌ Error ensuring DeepSeek model: {e}")
+            return False
+
+    def get_deepseek_model_name(self):
+        """Get the correct model name for DeepSeek-R1"""
+        # First try the exact model name as shown in ollama list, then fallback to common alternatives
+        models_to_try = [
+            "hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL",  # Exact name from ollama list
+            "unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL",
+            "deepseek-r1:latest",
+            "deepseek-r1"
+        ]
+
+        try:
+            # Check which models are available
+            result = subprocess.run(['ollama', 'list'], capture_output=True, text=True)
+            available_models = result.stdout.lower()
+
+            for model in models_to_try:
+                # Check if model name (case-insensitive) is in the output
+                if model.lower().replace('/', '_').replace(':', '_') in available_models.replace('/', '_').replace(':', '_'):
+                    logger.info(f"Using DeepSeek model: {model}")
+                    return model
+
+            # If none found exactly, check for partial matches
+            if 'deepseek-r1-0528-qwen3-8b-gguf' in available_models:
+                logger.info("Using DeepSeek model: hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL")
+                return "hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL"
+            elif 'deepseek-r1' in available_models:
+                logger.info("Using DeepSeek fallback model: deepseek-r1:latest")
+                return "deepseek-r1:latest"
+
+            # If none found, return the preferred one
+            logger.warning("No DeepSeek models found, using preferred model name")
+            return models_to_try[0]
+
+        except Exception as e:
+            logger.error(f"Error checking available models: {e}")
+            return models_to_try[0]
+
+    async def verify_deepseek_model(self):
+        """Verify the DeepSeek model is working correctly"""
+        try:
+            model_name = self.get_deepseek_model_name()
+
+            # Test with a simple prompt
+            test_prompt = "Hello, are you DeepSeek-R1?"
+            cmd = ['ollama', 'run', model_name, test_prompt]
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+
+            if result.returncode == 0 and result.stdout.strip():
+                logger.info(f"✅ DeepSeek-R1 model verification successful")
+                return True
+            else:
+                logger.warning(f"⚠️ DeepSeek-R1 model verification failed")
+                return False
+
+        except Exception as e:
+            logger.error(f"❌ Error verifying DeepSeek model: {e}")
+            return False
 
 def main():
     """Main entry point"""

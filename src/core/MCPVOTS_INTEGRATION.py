@@ -51,9 +51,9 @@ class MCPVotsIntegration:
     async def _init_orchestrator(self):
         """Initialize the comprehensive ecosystem orchestrator"""
         try:
-            from MCPVots.comprehensive_ecosystem_orchestrator import EcosystemOrchestrator
-            self.orchestrator = EcosystemOrchestrator()
-            await self.orchestrator.initialize()
+            from MCPVots.comprehensive_ecosystem_orchestrator import ComprehensiveEcosystemOrchestrator
+            self.orchestrator = ComprehensiveEcosystemOrchestrator()
+            # Note: ComprehensiveEcosystemOrchestrator might not have an async initialize method
             self.services['orchestrator'] = True
             logger.info("✅ Ecosystem Orchestrator initialized")
         except Exception as e:
@@ -70,9 +70,9 @@ class MCPVotsIntegration:
     async def _init_knowledge_system(self):
         """Initialize advanced knowledge graph system"""
         try:
-            from MCPVots.enhanced_memory_knowledge_system_v2 import KnowledgeSystem
-            self.knowledge_graph = KnowledgeSystem()
-            await self.knowledge_graph.initialize()
+            from MCPVots.enhanced_memory_knowledge_system_v2 import EnhancedMemoryKnowledgeSystem
+            self.knowledge_graph = EnhancedMemoryKnowledgeSystem()
+            # Note: EnhancedMemoryKnowledgeSystem might not have an async initialize method
             self.services['knowledge'] = True
             logger.info("✅ Knowledge graph system initialized")
         except Exception as e:

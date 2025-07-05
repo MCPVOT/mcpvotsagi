@@ -8,6 +8,40 @@ This guide details the advanced ML/DL workflows and techniques from MCPVots that
 
 ### 1. Multi-Model Orchestration
 
+```mermaid
+graph TB
+    subgraph "Input Layer"
+        QUERY[User Query]
+        ROUTER[Query Router]
+    end
+    
+    subgraph "Model Ensemble"
+        DS[DeepSeek-R1<br/>Complex Reasoning]
+        GEM[Gemini-1M<br/>Context Analysis]
+        OLL[Ollama<br/>Fast Inference]
+    end
+    
+    subgraph "Consensus Layer"
+        WEIGHT[Weighted Voting<br/>DS:0.5 GEM:0.3 OLL:0.2]
+        CONS[Consensus Builder]
+        RESULT[Final Result]
+    end
+    
+    QUERY --> ROUTER
+    ROUTER --> DS
+    ROUTER --> GEM
+    ROUTER --> OLL
+    DS --> WEIGHT
+    GEM --> WEIGHT
+    OLL --> WEIGHT
+    WEIGHT --> CONS
+    CONS --> RESULT
+    
+    style DS fill:#ffb74d
+    style GEM fill:#4fc3f7
+    style OLL fill:#81c784
+```
+
 The MCPVots system demonstrates how to coordinate multiple AI models for superior results:
 
 ```python
@@ -75,6 +109,41 @@ class ContinuousLearningPipeline:
 
 ### 1. Darwin Gödel Machine (DGM)
 
+```mermaid
+graph LR
+    subgraph "Evolution Process"
+        ALG[Current Algorithm]
+        MUT[Mutation Engine]
+        VAR[Variations]
+    end
+    
+    subgraph "Evaluation"
+        TEST[Performance Test]
+        SCORE[Fitness Score]
+        COMP[Compare]
+    end
+    
+    subgraph "Selection"
+        SELECT[Natural Selection]
+        BEST[Best Algorithm]
+        DEPLOY[Deploy]
+    end
+    
+    ALG --> MUT
+    MUT --> VAR
+    VAR --> TEST
+    TEST --> SCORE
+    SCORE --> COMP
+    COMP --> SELECT
+    SELECT --> BEST
+    BEST --> DEPLOY
+    DEPLOY -.-> ALG
+    
+    style MUT fill:#ff6b6b
+    style SELECT fill:#4ecdc4
+    style DEPLOY fill:#95e1d3
+```
+
 Self-modifying AI that evolves its own algorithms:
 
 ```python
@@ -99,6 +168,39 @@ class DarwinGodelMachine:
 ```
 
 ### 2. Semantic Reasoning with OWL
+
+```mermaid
+graph TD
+    subgraph "Knowledge Graph"
+        PY[Python]
+        JS[JavaScript]
+        REACT[React]
+        FAST[FastAPI]
+        LANG[LangChain]
+        NODE[Node.js]
+    end
+    
+    subgraph "Relationships"
+        FAST -->|uses| PY
+        LANG -->|uses| PY
+        REACT -->|uses| JS
+        NODE -->|executes| JS
+    end
+    
+    subgraph "Inference Engine"
+        QUERY[Query: Tools using Python?]
+        TRAVERSE[Graph Traversal]
+        RESULT[Result: FastAPI, LangChain]
+    end
+    
+    QUERY --> TRAVERSE
+    TRAVERSE --> PY
+    TRAVERSE --> RESULT
+    
+    style PY fill:#3776ab
+    style JS fill:#f7df1e
+    style RESULT fill:#4caf50
+```
 
 Knowledge graph-based reasoning for complex relationships:
 
@@ -299,6 +401,45 @@ class BatchProcessor:
 
 ## 🔄 Self-Healing Implementation
 
+```mermaid
+flowchart TB
+    subgraph "Health Monitoring"
+        MON[Monitor Service]
+        CPU[CPU Check<br/>Threshold: 80%]
+        MEM[Memory Check<br/>Threshold: 85%]
+        ERR[Error Rate<br/>Threshold: 5%]
+    end
+    
+    subgraph "Health Score"
+        CALC[Calculate Score]
+        SCORE{Score > 70?}
+    end
+    
+    subgraph "Recovery Actions"
+        HEALTHY[Continue Normal]
+        RESTART[Restart Service]
+        CACHE[Clear Cache]
+        REDUCE[Reduce Load]
+        FAILOVER[Failover]
+    end
+    
+    MON --> CPU
+    MON --> MEM
+    MON --> ERR
+    CPU --> CALC
+    MEM --> CALC
+    ERR --> CALC
+    CALC --> SCORE
+    SCORE -->|Yes| HEALTHY
+    SCORE -->|No| RESTART
+    RESTART -->|Fail| CACHE
+    CACHE -->|Fail| REDUCE
+    REDUCE -->|Fail| FAILOVER
+    
+    style HEALTHY fill:#4caf50
+    style FAILOVER fill:#f44336
+```
+
 ### 1. Health Monitoring
 
 ```python
@@ -360,6 +501,35 @@ class AutoRecovery:
 ```
 
 ## 🎯 Implementation Roadmap
+
+```mermaid
+gantt
+    title MCPVots ML/DL Implementation Timeline
+    dateFormat  YYYY-MM-DD
+    section Phase 1 Core
+    Multi-Model Orchestration     :a1, 2025-07-05, 2d
+    Basic Self-Healing           :a2, after a1, 2d
+    Knowledge Graph Memory       :a3, after a1, 3d
+    Async Service Architecture   :a4, 2025-07-05, 5d
+    
+    section Phase 2 Advanced
+    Darwin Gödel Machine        :b1, after a4, 3d
+    1M Token Processing         :b2, after a4, 2d
+    Continuous Learning         :b3, after b1, 3d
+    Semantic Reasoning          :b4, after b2, 2d
+    
+    section Phase 3 Optimize
+    Intelligent Caching         :c1, after b4, 2d
+    Batch Processing            :c2, after b4, 2d
+    Model Loading Optimization  :c3, after c1, 2d
+    Performance Tuning          :c4, after c2, 3d
+    
+    section Phase 4 Production
+    Testing Suite               :d1, after c4, 3d
+    Documentation               :d2, after c4, 2d
+    Deployment Scripts          :d3, after d1, 2d
+    Monitoring Dashboard        :d4, after d2, 3d
+```
 
 ### Phase 1: Core Integration (Week 1)
 - [ ] Set up multi-model orchestration

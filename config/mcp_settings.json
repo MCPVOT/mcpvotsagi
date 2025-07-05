@@ -1,43 +1,55 @@
 {
   "mcpServers": {
     "filesystem": {
-      "command": "npx",
+      "command": "node",
       "args": [
-        "@modelcontextprotocol/server-filesystem",
-        "C:\\Workspace\\MCPVotsAGI"
+        "dist/index.js"
       ],
-      "env": {}
-    },
-    "memory": {
-      "command": "npx",
-      "args": [
-        "@modelcontextprotocol/server-memory"
-      ],
-      "env": {}
+      "cwd": "C:\\Workspace\\MCPVotsAGI\\tools\\mcp-filesystem",
+      "env": {
+        "NODE_ENV": "production"
+      }
     },
     "github": {
-      "command": "npx",
+      "command": "node",
       "args": [
-        "@modelcontextprotocol/server-github"
+        "dist/index.js"
       ],
+      "cwd": "C:\\Workspace\\MCPVotsAGI\\tools\\mcp-github",
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": ""
+        "NODE_ENV": "production",
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    "memory": {
+      "command": "node",
+      "args": [
+        "dist/index.js"
+      ],
+      "cwd": "C:\\Workspace\\MCPVotsAGI\\tools\\mcp-memory",
+      "env": {
+        "NODE_ENV": "production"
       }
     },
     "browser": {
-      "command": "npx",
+      "command": "node",
       "args": [
-        "@modelcontextprotocol/server-puppeteer"
+        "dist/index.js"
       ],
-      "env": {}
+      "cwd": "C:\\Workspace\\MCPVotsAGI\\tools\\mcp-browser",
+      "env": {
+        "NODE_ENV": "production"
+      }
     },
     "brave-search": {
-      "command": "npx",
+      "command": "node",
       "args": [
-        "@modelcontextprotocol/server-brave-search"
+        "dist/index.js"
       ],
+      "cwd": "C:\\Workspace\\MCPVotsAGI\\tools\\mcp-brave-search",
       "env": {
-        "BRAVE_API_KEY": ""
+        "NODE_ENV": "production",
+        "BRAVE_SEARCH_API_KEY": "${BRAVE_SEARCH_API_KEY}"
       }
     }
   }

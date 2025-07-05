@@ -48,10 +48,47 @@ When a user asks a coding question, Context7:
 - Identifies the specific libraries needed
 - Determines relevant topics within those libraries
 
+```mermaid
+graph LR
+    subgraph "Query Analysis"
+        QUERY[User Query]
+        DETECT[Library Detector]
+        IDENTIFY[Library Identifier]
+        TOPICS[Topic Analyzer]
+    end
+    
+    QUERY --> DETECT
+    DETECT --> IDENTIFY
+    IDENTIFY --> TOPICS
+    
+    style QUERY fill:#e1f5fe
+    style TOPICS fill:#a5d6a7
+```
+
 ### 2. Documentation Retrieval
-```python
-# Automatic enrichment flow
-User Query → Library Detection → Documentation Fetch → Context Enhancement → AI Response
+```mermaid
+sequenceDiagram
+    participant User
+    participant System
+    participant Context7
+    participant Cache
+    participant NPM
+    
+    User->>System: Code-related query
+    System->>Context7: Detect libraries
+    Context7->>Cache: Check cache
+    
+    alt Cache Hit
+        Cache-->>Context7: Return cached docs
+    else Cache Miss
+        Context7->>NPM: Fetch documentation
+        NPM-->>Context7: Library docs
+        Context7->>Cache: Store in cache
+    end
+    
+    Context7-->>System: Enriched context
+    System->>System: Generate response
+    System-->>User: Accurate code with docs
 ```
 
 ### 3. Enhanced Code Generation
@@ -102,6 +139,42 @@ Context7 supports 1000+ libraries including:
 **And many more!**
 
 ## 🛠️ Advanced Usage
+
+### API Flow Architecture
+
+```mermaid
+graph TB
+    subgraph "Context7 APIs"
+        DOC[Documentation API]
+        EX[Examples API]
+        STATS[Statistics API]
+    end
+    
+    subgraph "Processing"
+        FETCH[Fetch Docs]
+        FORMAT[Format Response]
+        CACHE[Cache Manager]
+    end
+    
+    subgraph "Outputs"
+        DOCS[Library Docs]
+        CODE[Code Examples]
+        METRICS[Usage Stats]
+    end
+    
+    DOC --> FETCH
+    EX --> FETCH
+    STATS --> CACHE
+    FETCH --> FORMAT
+    FORMAT --> CACHE
+    CACHE --> DOCS
+    CACHE --> CODE
+    CACHE --> METRICS
+    
+    style DOC fill:#ffccbc
+    style EX fill:#dcedc8
+    style STATS fill:#e1bee7
+```
 
 ### 1. Direct Documentation API
 
@@ -165,6 +238,38 @@ result = await assistant.generate_code_with_docs(
 ```
 
 ## 📊 Performance Optimization
+
+```mermaid
+graph LR
+    subgraph "Caching Strategy"
+        PRE[Pre-cache Popular]
+        SMART[Smart Cache]
+        TTL[TTL Management]
+    end
+    
+    subgraph "Token Optimization"
+        MAX[Max Token Limit]
+        TOPIC[Topic Focus]
+        TRUNC[Auto Truncation]
+    end
+    
+    subgraph "Performance Gains"
+        FAST[<100ms Response]
+        EFF[90% Cache Hit]
+        SAVE[50% Token Savings]
+    end
+    
+    PRE --> FAST
+    SMART --> EFF
+    TTL --> EFF
+    MAX --> SAVE
+    TOPIC --> SAVE
+    TRUNC --> SAVE
+    
+    style FAST fill:#00ff00
+    style EFF fill:#00ff00
+    style SAVE fill:#00ff00
+```
 
 ### 1. Pre-caching
 Popular libraries are pre-cached on startup:
@@ -242,6 +347,27 @@ except Exception as e:
 ```
 
 ## 🚀 Integration Examples
+
+```mermaid
+mindmap
+  root((Context7 Integration))
+    Chat Enhancement
+      Code Detection
+      Doc Enrichment
+      Response Generation
+    Code Review
+      Import Analysis
+      API Validation
+      Version Checking
+    Learning Assistant
+      Concept Explanation
+      Example Generation
+      Tutorial Creation
+    IDE Integration
+      Real-time Hints
+      API Completion
+      Doc Tooltips
+```
 
 ### 1. Chat Enhancement
 
