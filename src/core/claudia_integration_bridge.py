@@ -282,7 +282,7 @@ class ClaudiaCompleteIntegration:
                             "config": agent_data,
                             "capabilities": agent_data.get("capabilities", []),
                             "tools": agent_data.get("tools", []),
-                            "model": agent_data.get("model", "deepseek-r1"),
+                            "model": agent_data.get("model", "hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL"),
                             "status": "available",
                             "created": datetime.fromtimestamp(agent_file.stat().st_mtime).isoformat(),
                             "size": agent_file.stat().st_size
@@ -540,7 +540,7 @@ You have access to all system components and can make high-level decisions about
                 "Component integration management"
             ],
             "tools": ["mcp-filesystem", "mcp-memory", "mcp-github", "mcp-browser", "mcp-solana"],
-            "model": "deepseek-r1",
+            "model": "hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL",
             "temperature": 0.7,
             "max_tokens": 4000,
             "context_window": "128k",
@@ -573,7 +573,7 @@ You provide detailed explanations of your reasoning process and can handle compl
                 "Chain-of-thought reasoning"
             ],
             "tools": ["mcp-filesystem", "mcp-memory", "mcp-github", "mcp-browser", "mcp-solana"],
-            "model": "deepseek-r1",
+            "model": "hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL",
             "temperature": 0.5,
             "max_tokens": 3000,
             "context_window": "128k",
@@ -607,7 +607,7 @@ You make data-driven decisions and provide detailed analysis of market condition
                 "Real-time decision making"
             ],
             "tools": ["mcp-solana", "mcp-memory", "mcp-browser", "mcp-github"],
-            "model": "deepseek-r1",
+            "model": "hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL",
             "temperature": 0.3,
             "max_tokens": 2000,
             "context_window": "128k",
@@ -640,7 +640,7 @@ You help improve the Enhanced AGI System's interface and user experience.""",
                 "Mobile-responsive design"
             ],
             "tools": ["mcp-filesystem", "mcp-github", "mcp-browser"],
-            "model": "deepseek-r1",
+            "model": "hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL",
             "temperature": 0.6,
             "max_tokens": 3000,
             "context_window": "128k",
@@ -673,7 +673,7 @@ You ensure all system components are well-documented and accessible to users."""
                 "User guide development"
             ],
             "tools": ["mcp-filesystem", "mcp-memory", "mcp-github", "mcp-browser"],
-            "model": "deepseek-r1",
+            "model": "hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL",
             "temperature": 0.4,
             "max_tokens": 3000,
             "context_window": "128k",

@@ -220,7 +220,8 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
 
         # Initialize multi-model orchestration
         self.active_models = {
-            'deepseek-r1': {'status': 'ready', 'tokens_used': 0},
+            'hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL': {'status': 'ready', 'tokens_used': 0},
+            'deepseek-r1': {'status': 'ready', 'tokens_used': 0},  # Keep as fallback
             'claude-3-opus': {'status': 'standby', 'tokens_used': 0},
             'gpt-4': {'status': 'standby', 'tokens_used': 0}
         }
@@ -312,7 +313,7 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
         try:
             data = await request.json()
             message = data.get('message', '')
-            model = data.get('model', 'deepseek-r1')
+            model = data.get('model', 'hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL')
             agent_name = data.get('agent')
             use_claudia = data.get('use_claudia', False)
 
@@ -423,7 +424,7 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
             self.active_models[model]['tokens_used'] += len(message.split())
 
             # Process based on model capabilities
-            if model == 'deepseek-r1':
+            if model in ['deepseek-r1', 'hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL']:
                 # Use DeepSeek-R1 for complex reasoning
                 response = await self._process_with_deepseek(message)
             elif model == 'claude-3-opus':
