@@ -1,0 +1,111 @@
+{
+  "name": "MCPVotsAGI Ultimate Development Environment",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  
+  // Features to add to the dev container
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/git-lfs:1": {},
+    "ghcr.io/devcontainers-contrib/features/poetry:2": {},
+    "ghcr.io/devcontainers-contrib/features/ollama:1": {}
+  },
+
+  // Configure tool-specific properties
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "ms-toolsai.jupyter",
+        "ms-toolsai.vscode-jupyter-cell-tags",
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "ms-azuretools.vscode-docker",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "streetsidesoftware.code-spell-checker",
+        "redhat.vscode-yaml",
+        "tamasfe.even-better-toml",
+        "rust-lang.rust-analyzer",
+        "tauri-apps.tauri-vscode",
+        "bradlc.vscode-tailwindcss"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
+        "python.formatting.blackPath": "/usr/local/py-utils/bin/black",
+        "python.formatting.yapfPath": "/usr/local/py-utils/bin/yapf",
+        "python.linting.banditPath": "/usr/local/py-utils/bin/bandit",
+        "python.linting.flake8Path": "/usr/local/py-utils/bin/flake8",
+        "python.linting.mypyPath": "/usr/local/py-utils/bin/mypy",
+        "python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
+        "python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
+        "python.linting.pylintPath": "/usr/local/py-utils/bin/pylint",
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      }
+    }
+  },
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally
+  "forwardPorts": [
+    8888,  // Ultimate AGI Dashboard
+    11434, // Ollama API
+    3000,  // MCP FileSystem
+    3001,  // MCP GitHub
+    3002,  // MCP Memory
+    3003,  // MCP Browser
+    3005,  // MCP Solana
+    3006,  // Additional MCP
+    3333,  // Ultimate AGI MCP Server
+    5001,  // IPFS API
+    8080,  // IPFS Gateway
+    6379,  // Redis (if needed)
+    5432   // PostgreSQL (if needed)
+  ],
+
+  // Environment variables
+  "containerEnv": {
+    "WORKSPACE_PATH": "/workspaces/MCPVotsAGI",
+    "OLLAMA_HOST": "http://localhost:11434",
+    "DEEPSEEK_MODEL": "hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL",
+    "PYTHONPATH": "${containerWorkspaceFolder}/src:${PYTHONPATH}"
+  },
+
+  // Run commands after container is created
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+
+  // Run commands after container is started
+  "postStartCommand": "bash .devcontainer/post-start.sh",
+
+  // Uncomment to connect as root instead
+  // "remoteUser": "root",
+  
+  // Configure minimum host requirements
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb",
+    "storage": "32gb"
+  },
+
+  // Mounts for persistent data
+  "mounts": [
+    "source=mcpvotsagi-memory,target=/workspace/memory,type=volume",
+    "source=mcpvotsagi-models,target=/workspace/models,type=volume",
+    "source=mcpvotsagi-data,target=/workspace/data,type=volume"
+  ],
+
+  // Run args for container
+  "runArgs": [
+    "--cap-add=SYS_PTRACE",
+    "--security-opt",
+    "seccomp=unconfined",
+    "--network=host"
+  ]
+}

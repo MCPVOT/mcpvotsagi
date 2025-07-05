@@ -55,6 +55,21 @@ except ImportError:
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Import Claudia integration bridge
+try:
+    # Add current directory to path
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    if current_dir not in sys.path:
+        sys.path.insert(0, current_dir)
+
+    from claudia_integration_bridge import ClaudiaIntegrationBridge
+    HAS_CLAUDIA = True
+    logger.info("✅ Claudia integration bridge loaded successfully")
+except ImportError as e:
+    ClaudiaIntegrationBridge = None
+    HAS_CLAUDIA = False
+    logger.warning(f"⚠️ Claudia integration not available: {e}")
+
 class UltimateAGISystem:
     """THE ultimate AGI system - consolidates EVERYTHING"""
 
@@ -74,6 +89,13 @@ class UltimateAGISystem:
         self.deepseek_model = None
         self.trading_engine = None
         self.memory_system = None
+
+        # Initialize Claudia integration
+        if HAS_CLAUDIA:
+            self.claudia_bridge = ClaudiaIntegrationBridge()
+            logger.info("✅ Claudia integration bridge initialized")
+        else:
+            self.claudia_bridge = None
 
         # Initialize database
         self.init_database()
@@ -834,15 +856,142 @@ class UltimateAGISystem:
 
     async def handle_trading_task(self, task):
         """Handle trading-related tasks"""
-        return f"Trading task processed: {task}"
+        # Import REAL trading engine
+        from ..trading.REAL_TRADING_ENGINE import create_real_trading_engine
+        
+        if not self.trading_engine:
+            # Initialize REAL trading engine
+            config = {
+                'finnhub_api_key': os.getenv('FINNHUB_API_KEY'),
+                'binance_api_key': os.getenv('BINANCE_API_KEY'),
+                'binance_secret': os.getenv('BINANCE_SECRET'),
+                'solana_rpc': os.getenv('SOLANA_RPC_URL', 'https://api.mainnet-beta.solana.com')
+            }
+            self.trading_engine = await create_real_trading_engine(config)
+        
+        # Parse task
+        if isinstance(task, str):
+            task_data = {'action': task}
+        else:
+            task_data = task
+        
+        action = task_data.get('action')
+        
+        # Execute REAL trading operations
+        if action == 'get_market_data':
+            symbol = task_data.get('symbol', 'SOL/USD')
+            return await self.trading_engine.get_real_market_data(symbol)
+        
+        elif action == 'execute_trade':
+            return await self.trading_engine.execute_real_trade(
+                symbol=task_data.get('symbol'),
+                side=task_data.get('side'),
+                amount=task_data.get('amount', 0.1)
+            )
+        
+        elif action == 'get_positions':
+            return await self.trading_engine.get_real_positions()
+        
+        elif action == 'get_balance':
+            return await self.trading_engine.get_real_balance()
+        
+        elif action == 'get_signals':
+            strategy = task_data.get('strategy', 'momentum')
+            return await self.trading_engine.apply_trading_strategy(strategy)
+        
+        elif action == 'risk_check':
+            return await self.trading_engine.risk_management_check()
+        
+        else:
+            return {'error': f'Unknown trading action: {action}'}
 
     async def handle_mcp_task(self, task):
         """Handle MCP tool tasks"""
-        return f"MCP task processed: {task}"
+        # Import REAL MCP implementation
+        from .COMPLETE_MCP_IMPLEMENTATION import RealMCPToolExecutor
+        
+        if 'mcp_executor' not in self.mcp_tools:
+            # Initialize REAL MCP executor
+            self.mcp_tools['mcp_executor'] = RealMCPToolExecutor()
+            await self.mcp_tools['mcp_executor'].initialize()
+        
+        executor = self.mcp_tools['mcp_executor']
+        
+        # Parse task
+        if isinstance(task, str):
+            # Simple format: "tool.method params"
+            parts = task.split(' ', 1)
+            if '.' in parts[0]:
+                tool, method = parts[0].split('.')
+                params = json.loads(parts[1]) if len(parts) > 1 else {}
+            else:
+                return {'error': 'Invalid MCP task format'}
+        else:
+            tool = task.get('tool')
+            method = task.get('method')
+            params = task.get('params', {})
+        
+        # Execute REAL MCP operation
+        return await executor.execute_tool(tool, method, params)
 
     async def handle_ipfs_task(self, task):
-        """Handle IPFS tasks"""
-        return f"IPFS task processed: {task}"
+        """Handle REAL IPFS tasks"""
+        if not self.ipfs_client:
+            try:
+                import ipfshttpclient
+                self.ipfs_client = ipfshttpclient.connect()
+            except:
+                return {'error': 'IPFS not available - start IPFS daemon'}
+        
+        # Parse task
+        if isinstance(task, str):
+            action = task
+            params = {}
+        else:
+            action = task.get('action')
+            params = task.get('params', {})
+        
+        try:
+            if action == 'add_file':
+                file_path = params.get('path')
+                result = self.ipfs_client.add(file_path)
+                return {
+                    'success': True,
+                    'hash': result['Hash'],
+                    'name': result['Name'],
+                    'size': result['Size']
+                }
+            
+            elif action == 'get_file':
+                file_hash = params.get('hash')
+                self.ipfs_client.get(file_hash)
+                return {
+                    'success': True,
+                    'message': f'File {file_hash} retrieved'
+                }
+            
+            elif action == 'pin':
+                file_hash = params.get('hash')
+                self.ipfs_client.pin.add(file_hash)
+                return {
+                    'success': True,
+                    'message': f'Pinned {file_hash}'
+                }
+            
+            elif action == 'publish':
+                content = params.get('content', '')
+                result = self.ipfs_client.add_json(content)
+                return {
+                    'success': True,
+                    'hash': result,
+                    'gateway_url': f'https://ipfs.io/ipfs/{result}'
+                }
+            
+            else:
+                return {'error': f'Unknown IPFS action: {action}'}
+                
+        except Exception as e:
+            return {'error': f'IPFS operation failed: {str(e)}'}
 
     async def handle_memory_task(self, task):
         """Handle memory/knowledge tasks"""
@@ -853,13 +1002,28 @@ class UltimateAGISystem:
         return f"General task processed: {task}"
 
     async def get_trading_status(self, request):
-        """Get trading status"""
-        return web.json_response({
-            'status': 'active',
-            'positions': [],
-            'pnl': 0.0,
-            'timestamp': datetime.now().isoformat()
-        })
+        """Get REAL trading status"""
+        if self.trading_engine:
+            positions = await self.trading_engine.get_real_positions()
+            balance = await self.trading_engine.get_real_balance()
+            risk = await self.trading_engine.risk_management_check()
+            
+            return web.json_response({
+                'status': 'active',
+                'positions': positions,
+                'balance': balance,
+                'pnl': balance.get('pnl', 0),
+                'pnl_percentage': balance.get('pnl_percentage', 0),
+                'risk_warnings': risk.get('warnings', []),
+                'pending_actions': risk.get('actions', []),
+                'timestamp': datetime.now().isoformat()
+            })
+        else:
+            return web.json_response({
+                'status': 'not_initialized',
+                'message': 'Trading engine not yet initialized',
+                'timestamp': datetime.now().isoformat()
+            })
 
     async def handle_mcp_request(self, request):
         """Handle MCP tool requests"""
@@ -890,8 +1054,15 @@ class UltimateAGISystem:
             return f"Unknown MCP tool: {tool}"
 
     async def handle_filesystem_tool(self, params):
-        """Handle filesystem MCP tool"""
-        return "Filesystem tool executed"
+        """Handle filesystem MCP tool with REAL operations"""
+        # Use the REAL MCP executor
+        if 'mcp_executor' not in self.mcp_tools:
+            from .COMPLETE_MCP_IMPLEMENTATION import RealMCPToolExecutor
+            self.mcp_tools['mcp_executor'] = RealMCPToolExecutor()
+            await self.mcp_tools['mcp_executor'].initialize()
+        
+        method = params.get('method', 'list')
+        return await self.mcp_tools['mcp_executor'].execute_tool('filesystem', method, params)
 
     async def handle_github_tool(self, params):
         """Handle GitHub MCP tool"""
@@ -992,6 +1163,11 @@ class UltimateAGISystem:
         try:
             await self.init_system_components()
 
+            # Initialize Claudia integration if available
+            if self.claudia_bridge:
+                await self.claudia_bridge.integrate_with_ultimate_agi(self)
+                logger.info("🔗 Claudia integration activated")
+
             print(f"""
 🚀 ===================================================
    ULTIMATE AGI SYSTEM v{self.version} STARTING
@@ -1002,6 +1178,7 @@ class UltimateAGISystem:
 🌐 IPFS Network: Connecting...
 🤖 Agent Swarm: Activating...
 💹 Trading Engine: Preparing...
+🎨 Claudia GUI: {'Ready' if self.claudia_bridge else 'Not Available'}
 
 🌐 Dashboard: http://localhost:{self.port}
 🎯 Status: ALL SYSTEMS CONSOLIDATING...
