@@ -75,19 +75,26 @@ except ImportError:
     HAS_CLAUDIA = False
     logger.warning("Claudia integration not available")
 
-# Import F: Drive Storage System
+# Import Unified F: Drive Storage System
 try:
-    from f_drive_storage import (
-        FDriveStorageManager,
-        initialize_f_drive_storage,
-        get_f_drive_stats,
-        get_f_drive_path
+    from unified_f_drive_storage import (
+        UnifiedFDriveStorage,
+        initialize_storage,
+        get_storage_stats,
+        get_storage_path,
+        ensure_storage_path,
+        storage_manager
     )
     HAS_F_DRIVE = True
 except ImportError:
-    FDriveStorageManager = None
+    UnifiedFDriveStorage = None
+    initialize_storage = None
+    get_storage_stats = None
+    get_storage_path = None
+    ensure_storage_path = None
+    storage_manager = None
     HAS_F_DRIVE = False
-    logger.warning("F: drive storage not available")
+    logger.warning("Unified F: drive storage not available")
 
 
 class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
@@ -246,34 +253,63 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
 
     async def _init_f_drive_storage(self):
         """Initialize F: Drive Storage System for large-scale data"""
-        logger.info("🗄️ Initializing F: Drive Storage System (800GB)...")
+        logger.info("🗄️ Initializing F: Drive Storage System (853GB)...")
 
         try:
-            self.f_drive_storage = FDriveStorageManager()
-
-            # Initialize storage directories
-            if await initialize_f_drive_storage():
-                self.storage_initialized = True
-
-                # Get initial stats
-                stats = get_f_drive_stats()
-                total_files = sum(s.get('files_count', 0) for s in stats.values() if 'error' not in s)
-
-                logger.info(f"✅ F: Drive Storage ready - {len(stats)} storage types, {total_files} files")
-
-                # Log storage types
-                for storage_type, data in stats.items():
-                    if "error" not in data:
-                        logger.info(f"  📁 {storage_type}: {data['size_mb']} MB")
-                    else:
-                        logger.warning(f"  ⚠️ {storage_type}: {data['error']}")
-
+            # Use global storage manager or create new one
+            if storage_manager:
+                self.f_drive_storage = storage_manager
+                self.storage = storage_manager  # Store reference for API access
             else:
-                logger.warning("⚠️ F: Drive Storage initialization failed")
+                self.f_drive_storage = UnifiedFDriveStorage() if HAS_F_DRIVE else None
+                self.storage = self.f_drive_storage
+
+            if self.f_drive_storage:
+                # Initialize storage directories
+                if initialize_storage():
+                    self.storage_initialized = True
+
+                    # Get initial stats
+                    stats = get_storage_stats()
+
+                    # Log F: drive availability
+                    if stats.get('f_drive_available'):
+                        logger.info("✅ Using F: drive for storage")
+                    else:
+                        logger.info("ℹ️ Using local storage (F: drive not available)")
+
+                    # Log disk usage
+                    if 'disk_usage' in stats and 'error' not in stats['disk_usage']:
+                        disk = stats['disk_usage']
+                        logger.info(f"💾 Disk: {disk['used_gb']:.1f}GB / {disk['total_gb']:.1f}GB ({disk['percent']:.1f}% used)")
+
+                    # Log category stats
+                    categories = stats.get('categories', {})
+                    total_files = sum(
+                        c.get('file_count', 0) for c in categories.values()
+                        if 'error' not in c and 'status' not in c
+                    )
+
+                    logger.info(f"✅ Storage ready - {len(categories)} categories, {total_files} files")
+
+                    # Log storage categories
+                    for category, data in categories.items():
+                        if 'error' not in data and 'status' not in data:
+                            logger.info(f"  📁 {category}: {data['used_gb']:.2f}GB / {data['allocated_gb']}GB ({data['usage_percent']:.1f}%)")
+                        elif 'status' in data:
+                            logger.info(f"  📁 {category}: {data['status']}")
+                        else:
+                            logger.warning(f"  ⚠️ {category}: {data.get('error', 'Unknown error')}")
+
+                else:
+                    logger.warning("⚠️ Storage initialization failed")
+                    self.storage_initialized = False
+            else:
+                logger.warning("⚠️ Storage system not available")
                 self.storage_initialized = False
 
         except Exception as e:
-            logger.error(f"❌ F: Drive Storage initialization error: {e}")
+            logger.error(f"❌ Storage initialization error: {e}")
             self.storage_initialized = False
 
     async def _init_context7(self):
@@ -782,21 +818,66 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
             }, status=503)
 
         try:
-            stats = get_f_drive_stats()
-            total_size_mb = sum(s.get('size_mb', 0) for s in stats.values() if 'error' not in s)
-            total_files = sum(s.get('files_count', 0) for s in stats.values() if 'error' not in s)
+            stats = get_storage_stats()
 
-            return web.json_response({
-                'storage_types': stats,
-                'summary': {
-                    'total_size_mb': total_size_mb,
-                    'total_size_gb': round(total_size_mb / 1024, 2),
-                    'total_files': total_files,
-                    'available_capacity': '800GB',
-                    'storage_initialized': self.storage_initialized
-                },
-                'timestamp': datetime.now().isoformat()
-            })
+            # Handle unified storage system format
+            if 'categories' in stats:
+                # New unified format
+                categories = {}
+                total_allocated_gb = 0
+
+                for category, data in stats['categories'].items():
+                    # Get path for each category
+                    category_path = get_storage_path(category) if get_storage_path else None
+                    category_info = {
+                        'path': str(category_path) if category_path else f"F:\\MCPVotsAGI_Data\\{category}",
+                        'status': data.get('status', 'unknown'),
+                        'allocated_gb': self.storage.storage_config.get(category, {}).get('size_gb', 0) if hasattr(self, 'storage') else 100
+                    }
+
+                    if 'used_gb' in data:
+                        category_info.update({
+                            'used_gb': data['used_gb'],
+                            'usage_percent': data.get('usage_percent', 0)
+                        })
+
+                    categories[category] = category_info
+                    total_allocated_gb += category_info['allocated_gb']
+
+                disk_info = stats.get('disk_usage', {})
+
+                return web.json_response({
+                    'storage_system': 'unified',
+                    'base_path': stats.get('base_path', 'F:\\MCPVotsAGI_Data'),
+                    'f_drive_available': stats.get('f_drive_available', False),
+                    'categories': categories,
+                    'disk_usage': disk_info,
+                    'summary': {
+                        'total_allocated_gb': total_allocated_gb,
+                        'total_used_gb': disk_info.get('used_gb', 0),
+                        'total_free_gb': disk_info.get('free_gb', 0),
+                        'total_capacity': f"{total_allocated_gb}GB",
+                        'storage_initialized': self.storage_initialized
+                    },
+                    'timestamp': datetime.now().isoformat()
+                })
+            else:
+                # Legacy format fallback
+                total_size_mb = sum(s.get('size_mb', 0) for s in stats.values() if 'error' not in s)
+                total_files = sum(s.get('files_count', 0) for s in stats.values() if 'error' not in s)
+
+                return web.json_response({
+                    'storage_system': 'legacy',
+                    'storage_types': stats,
+                    'summary': {
+                        'total_size_mb': total_size_mb,
+                        'total_size_gb': round(total_size_mb / 1024, 2),
+                        'total_files': total_files,
+                        'available_capacity': '800GB',
+                        'storage_initialized': self.storage_initialized
+                    },
+                    'timestamp': datetime.now().isoformat()
+                })
         except Exception as e:
             return web.json_response({'error': str(e)}, status=500)
 
@@ -804,20 +885,62 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
         """Get F: drive storage system status"""
         from aiohttp import web
 
-        status = {
-            'f_drive_available': Path("F:/").exists() if Path else False,
-            'storage_initialized': self.storage_initialized,
-            'storage_manager_loaded': self.f_drive_storage is not None,
-            'total_capacity': '800GB',
-            'intended_usage': [
-                'RL trading data and models',
-                'Chat memory and conversation history',
-                'Context management and caching',
-                'Knowledge graph persistence',
-                'Model weights and training checkpoints',
-                'IPFS distributed storage'
-            ]
-        }
+        # Get current storage stats
+        if self.f_drive_storage and HAS_F_DRIVE:
+            try:
+                stats = get_storage_stats()
+                disk_usage = stats.get('disk_usage', {})
+
+                status = {
+                    'storage_system': 'unified',
+                    'f_drive_available': stats.get('f_drive_available', False),
+                    'storage_initialized': self.storage_initialized,
+                    'storage_manager_loaded': self.f_drive_storage is not None,
+                    'base_path': stats.get('base_path', 'F:\\MCPVotsAGI_Data'),
+                    'total_capacity': '853GB',
+                    'disk_usage': {
+                        'total_gb': disk_usage.get('total_gb', 0),
+                        'used_gb': disk_usage.get('used_gb', 0),
+                        'free_gb': disk_usage.get('free_gb', 0),
+                        'percent': disk_usage.get('percent', 0)
+                    },
+                    'categories': [
+                        'RL Trading (200GB)',
+                        'Market Data (150GB)',
+                        'Memory Store (100GB)',
+                        'Chat Memory (100GB)',
+                        'Model Weights (150GB)',
+                        'Context Cache (50GB)',
+                        'IPFS Storage (100GB)',
+                        'Security Data (50GB)',
+                        'Backups (53GB)'
+                    ],
+                    'features': [
+                        'Cross-platform support (Windows/Linux)',
+                        'Automatic F: drive detection and fallback',
+                        'Real-time storage monitoring',
+                        'Intelligent data categorization',
+                        'Automated backup and recovery'
+                    ]
+                }
+            except Exception as e:
+                status = {
+                    'storage_system': 'unified',
+                    'f_drive_available': False,
+                    'storage_initialized': False,
+                    'storage_manager_loaded': False,
+                    'error': str(e),
+                    'total_capacity': '853GB'
+                }
+        else:
+            status = {
+                'storage_system': 'unavailable',
+                'f_drive_available': False,
+                'storage_initialized': False,
+                'storage_manager_loaded': False,
+                'total_capacity': '853GB',
+                'message': 'Unified storage system not available'
+            }
 
         return web.json_response(status)
 
@@ -831,10 +954,10 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
             }, status=503)
 
         try:
-            success = await initialize_f_drive_storage()
+            success = initialize_storage()
             if success:
                 self.storage_initialized = True
-                stats = get_f_drive_stats()
+                stats = get_storage_stats()
                 return web.json_response({
                     'success': True,
                     'message': 'F: drive storage initialized successfully',

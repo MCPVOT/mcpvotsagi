@@ -24,6 +24,18 @@ from transformers import AutoTokenizer, AutoModel
 import chromadb
 from chromadb.config import Settings
 
+# Import F: drive storage system
+try:
+    from src.core.unified_f_drive_storage import (
+        get_storage_path,
+        ensure_storage_path,
+        storage_manager
+    )
+    HAS_F_DRIVE = True
+except ImportError:
+    HAS_F_DRIVE = False
+    storage_manager = None
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("KnowledgeBaseSystem")
 
@@ -73,9 +85,24 @@ class EmbeddingGenerator:
 class KnowledgeBaseSystem:
     """Main knowledge base with vector search and knowledge graph"""
     
-    def __init__(self, data_path: str = "/mnt/c/Workspace/MCPVotsAGI/knowledge"):
-        self.data_path = Path(data_path)
-        self.data_path.mkdir(exist_ok=True)
+    def __init__(self, data_path: str = None):
+        # Use F: drive if available, otherwise use local path
+        if data_path is None:
+            if HAS_F_DRIVE and storage_manager:
+                # Use F: drive memory store for knowledge graph
+                self.data_path = ensure_storage_path('memory_store', 'knowledge_graph')
+                logger.info(f"Using F: drive storage at: {self.data_path}")
+            else:
+                # Fallback to local storage
+                self.data_path = Path(os.environ.get(
+                    'MCPVOTSAGI_MEMORY_PATH',
+                    '/mnt/c/Workspace/MCPVotsAGI/knowledge'
+                ))
+                self.data_path.mkdir(exist_ok=True)
+                logger.info(f"Using local storage at: {self.data_path}")
+        else:
+            self.data_path = Path(data_path)
+            self.data_path.mkdir(exist_ok=True)
         
         # Initialize components
         self.embedding_gen = EmbeddingGenerator()
