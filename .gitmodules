@@ -7,3 +7,6 @@
 [submodule "tools/Pake"]
 	path = tools/Pake
 	url = https://github.com/kabrony/Pake.git
+[submodule "tools/context7"]
+	path = tools/context7
+	url = https://github.com/kabrony/context7.git
