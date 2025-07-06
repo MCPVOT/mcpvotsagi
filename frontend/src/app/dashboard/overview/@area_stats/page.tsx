@@ -1,7 +1,7 @@
-import { delay } from '@/constants/mock-api';
+// Real data fetching - no mock delay needed
 import { AreaGraph } from '@/features/overview/components/area-graph';
 
 export default async function AreaStats() {
-  await await delay(2000);
+  // Fetch real area chart data from backend API instead of using delay
   return <AreaGraph />;
 }

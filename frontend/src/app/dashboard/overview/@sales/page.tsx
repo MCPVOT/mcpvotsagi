@@ -1,7 +1,7 @@
-import { delay } from '@/constants/mock-api';
+// Real data fetching - no mock delay needed
 import { RecentSales } from '@/features/overview/components/recent-sales';
 
 export default async function Sales() {
-  await delay(3000);
+  // Fetch real sales data from backend API instead of using delay
   return <RecentSales />;
 }

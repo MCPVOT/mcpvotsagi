@@ -30,14 +30,14 @@ logger = logging.getLogger(__name__)
 
 class MCPToolInterface:
     """Interface for MCP tools to be used by DeepSeek-R1"""
-    
+
     def __init__(self, name: str, command: str, port: Optional[int] = None):
         self.name = name
         self.command = command
         self.port = port
         self.process = None
         self.is_running = False
-        
+
     async def start(self):
         """Start the MCP server"""
         try:
@@ -52,12 +52,12 @@ class MCPToolInterface:
         except Exception as e:
             logger.error(f"Failed to start {self.name}: {e}")
             return False
-    
+
     async def call(self, method: str, params: Dict = None) -> Any:
         """Call an MCP tool method"""
         if not self.is_running:
             await self.start()
-        
+
         # MCP protocol communication
         request = {
             "jsonrpc": "2.0",
@@ -65,24 +65,29 @@ class MCPToolInterface:
             "params": params or {},
             "id": datetime.now().timestamp()
         }
-        
+
         # Send to MCP server (simplified - actual implementation would use proper MCP protocol)
         return await self._send_request(request)
-    
+
     async def _send_request(self, request: Dict) -> Any:
         """Send request to MCP server"""
-        # This would implement actual MCP protocol communication
-        # For now, returning mock response
-        return {"result": f"Called {request['method']} on {self.name}"}
+        try:
+            # Implement actual MCP protocol communication
+            # This would connect to real MCP server via stdio or HTTP
+            # For now, raise NotImplementedError until full MCP implementation
+            raise NotImplementedError(f"MCP method {request['method']} not yet implemented for {self.name}")
+        except Exception as e:
+            logger.error(f"MCP request failed: {e}")
+            raise
 
 class UltimateAGIMCPBridge:
     """Bridge between Ultimate AGI System and MCP tools"""
-    
+
     def __init__(self):
         self.workspace = Path("C:/Workspace/MCPVotsAGI")
         self.ollama_host = "http://localhost:11434"
         self.deepseek_model = "hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL"
-        
+
         # Initialize MCP tools that DeepSeek-R1 can use
         self.mcp_tools = {
             'filesystem': MCPToolInterface(
@@ -110,28 +115,28 @@ class UltimateAGIMCPBridge:
                 port=3005
             )
         }
-        
+
         # Memory system for context
         if UltimateMemorySystem:
             self.memory = UltimateMemorySystem(self.workspace)
         else:
             self.memory = None
-        
+
         logger.info("Ultimate AGI MCP Bridge initialized")
-    
+
     async def process_with_deepseek(self, prompt: str, use_tools: List[str] = None) -> Dict:
         """Process prompt with DeepSeek-R1 and optionally use MCP tools"""
-        
+
         # 1. Enhance prompt with memory context
         context = await self._get_memory_context(prompt)
         enhanced_prompt = f"{context}\n\nUser request: {prompt}" if context else prompt
-        
+
         # 2. Query DeepSeek-R1
         response = await self._query_deepseek(enhanced_prompt)
-        
+
         # 3. Parse response for tool calls
         tool_calls = self._parse_tool_calls(response)
-        
+
         # 4. Execute MCP tool calls if requested
         tool_results = {}
         if use_tools and tool_calls:
@@ -142,7 +147,7 @@ class UltimateAGIMCPBridge:
                         tool_call.get('params', {})
                     )
                     tool_results[tool_call['tool']] = result
-        
+
         # 5. If we got tool results, ask DeepSeek to integrate them
         if tool_results:
             integration_prompt = f"""
@@ -157,7 +162,7 @@ Please provide a final response integrating these tool results.
             final_response = await self._query_deepseek(integration_prompt)
         else:
             final_response = response
-        
+
         # 6. Store in memory
         if self.memory:
             await self.memory.save_conversation(
@@ -170,43 +175,43 @@ Please provide a final response integrating these tool results.
                 role="assistant",
                 content=final_response
             )
-        
+
         return {
             "response": final_response,
             "tool_results": tool_results,
             "model": self.deepseek_model
         }
-    
+
     async def _get_memory_context(self, prompt: str) -> str:
         """Get relevant context from memory system"""
         if not self.memory:
             return ""
-        
+
         try:
             # Search for relevant memories
             memories = await self.memory.recall_memory(prompt, top_k=3)
-            
+
             # Search knowledge graph
             knowledge = await self.memory.query_knowledge(prompt)
-            
+
             # Build context
             context_parts = []
-            
+
             if memories:
                 context_parts.append("Relevant memories:")
                 for mem in memories:
                     context_parts.append(f"- {mem['content']}")
-            
+
             if knowledge:
                 context_parts.append("\nRelevant knowledge:")
                 for k in knowledge[:3]:
                     context_parts.append(f"- {k['subject']} {k['predicate']} {k['object']}")
-            
+
             return "\n".join(context_parts)
         except Exception as e:
             logger.error(f"Error getting memory context: {e}")
             return ""
-    
+
     async def _query_deepseek(self, prompt: str) -> str:
         """Query DeepSeek-R1 via Ollama"""
         try:
@@ -214,7 +219,7 @@ Please provide a final response integrating these tool results.
             response = requests.get(f"{self.ollama_host}/api/tags", timeout=2)
             if response.status_code != 200:
                 return "Error: Ollama service not running"
-            
+
             # Generate response
             generate_url = f"{self.ollama_host}/api/generate"
             data = {
@@ -222,55 +227,55 @@ Please provide a final response integrating these tool results.
                 "prompt": prompt,
                 "stream": False
             }
-            
+
             response = requests.post(generate_url, json=data, timeout=30)
             if response.status_code == 200:
                 return response.json().get('response', 'No response generated')
             else:
                 return f"Error generating response: {response.status_code}"
-                
+
         except Exception as e:
             logger.error(f"Error querying DeepSeek: {e}")
             return f"Error: {str(e)}"
-    
+
     def _parse_tool_calls(self, response: str) -> List[Dict]:
         """Parse response for MCP tool calls"""
         tool_calls = []
-        
+
         # Simple parsing - look for tool call patterns
         # In production, this would use more sophisticated parsing
-        
+
         # Pattern: [TOOL:filesystem:read:{"path": "/some/path"}]
         import re
         pattern = r'\[TOOL:(\w+):(\w+):(.*?)\]'
         matches = re.findall(pattern, response)
-        
+
         for match in matches:
             tool, method, params_str = match
             try:
                 params = json.loads(params_str) if params_str else {}
             except:
                 params = {}
-            
+
             tool_calls.append({
                 'tool': tool,
                 'method': method,
                 'params': params
             })
-        
+
         return tool_calls
-    
+
     async def expose_as_mcp_server(self, port: int = 3333):
         """Expose Ultimate AGI as an MCP server"""
         from aiohttp import web
-        
+
         async def handle_mcp_request(request):
             """Handle incoming MCP requests"""
             try:
                 data = await request.json()
                 method = data.get('method')
                 params = data.get('params', {})
-                
+
                 # Route methods
                 if method == 'chat':
                     result = await self.process_with_deepseek(
@@ -294,13 +299,13 @@ Please provide a final response integrating these tool results.
                         result = {"error": "Memory system not available"}
                 else:
                     result = {"error": f"Unknown method: {method}"}
-                
+
                 return web.json_response({
                     "jsonrpc": "2.0",
                     "result": result,
                     "id": data.get('id')
                 })
-                
+
             except Exception as e:
                 return web.json_response({
                     "jsonrpc": "2.0",
@@ -310,17 +315,17 @@ Please provide a final response integrating these tool results.
                     },
                     "id": data.get('id', None)
                 })
-        
+
         app = web.Application()
         app.router.add_post('/mcp', handle_mcp_request)
-        
+
         runner = web.AppRunner(app)
         await runner.setup()
         site = web.TCPSite(runner, 'localhost', port)
         await site.start()
-        
+
         logger.info(f"Ultimate AGI MCP Server running on port {port}")
-        
+
         # Keep running
         await asyncio.Future()
 
@@ -356,18 +361,18 @@ MCP_SERVER_CONFIG = {
 async def main():
     """Main entry point"""
     bridge = UltimateAGIMCPBridge()
-    
+
     # Example: Process with DeepSeek using MCP tools
     print("🔗 Testing Ultimate AGI MCP Bridge...")
-    
+
     result = await bridge.process_with_deepseek(
         "What files are in the src directory?",
         use_tools=['filesystem']
     )
-    
+
     print(f"\nResponse: {result['response']}")
     print(f"Tool results: {result['tool_results']}")
-    
+
     # Start as MCP server
     print("\n🚀 Starting Ultimate AGI as MCP Server on port 3333...")
     await bridge.expose_as_mcp_server(port=3333)

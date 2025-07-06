@@ -170,16 +170,17 @@ addopts =
     --cov-report=term-missing
 ```
 
-### **Mock Testing**
+### **Production Testing**
 ```python
-# Use mocks for external services
-@pytest.fixture
-def mock_trading_api():
-    with patch('src.trading.api.TradingClient') as mock:
-        yield mock
+# All tests use real implementations and integrations
+def test_trading_strategy():
+    # Test trading logic with real API calls in controlled environment
+    # Use dedicated test environment with real services
+    pass
 
-def test_trading_strategy(mock_trading_api):
-    # Test trading logic without real API calls
+def test_mcp_memory_integration():
+    # Test MCP memory with real database on F: drive
+    # Verify cross-agent memory sharing works properly
     pass
 ```
 

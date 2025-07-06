@@ -36,7 +36,8 @@ try:
     SOLANA_SDK_AVAILABLE = True
 except ImportError:
     SOLANA_SDK_AVAILABLE = False
-    logger.warning("Solana SDK not available, using mock implementation")
+    logger.error("Solana SDK not available - install required dependencies: pip install solana spl-token")
+    raise ImportError("Solana SDK required for blockchain operations. Install with: pip install solana spl-token")
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("SolanaIntegrationV2")
@@ -69,14 +70,14 @@ class SolanaConfig:
     timeout: int = 30
     max_retries: int = 3
     rate_limit_per_second: int = 10
-    
+
     def __post_init__(self):
         """Set default URLs based on network"""
         if not self.rpc_url:
             self.rpc_url = self._get_default_rpc_url()
         if not self.ws_url:
             self.ws_url = self._get_default_ws_url()
-            
+
     def _get_default_rpc_url(self) -> str:
         """Get default RPC URL for network"""
         urls = {
@@ -86,7 +87,7 @@ class SolanaConfig:
             Network.LOCALNET: "http://localhost:8899"
         }
         return urls[self.network]
-        
+
     def _get_default_ws_url(self) -> str:
         """Get default WebSocket URL for network"""
         urls = {
@@ -113,14 +114,14 @@ class TransactionResult:
 
 class RateLimiter:
     """Token bucket rate limiter"""
-    
+
     def __init__(self, rate: int, capacity: Optional[int] = None):
         self.rate = rate  # tokens per second
         self.capacity = capacity or rate
         self.tokens = self.capacity
         self.last_update = asyncio.get_event_loop().time()
         self._lock = asyncio.Lock()
-        
+
     async def acquire(self, tokens: int = 1):
         """Acquire tokens, waiting if necessary"""
         async with self._lock:
@@ -129,22 +130,22 @@ class RateLimiter:
                 elapsed = now - self.last_update
                 self.tokens = min(self.capacity, self.tokens + elapsed * self.rate)
                 self.last_update = now
-                
+
                 if tokens > self.tokens:
                     sleep_time = (tokens - self.tokens) / self.rate
                     await asyncio.sleep(sleep_time)
-                    
+
             self.tokens -= tokens
 
 
 class ConnectionPool:
     """HTTP connection pool for better performance"""
-    
+
     def __init__(self, size: int = 10, timeout: int = 30):
         self.size = size
         self.timeout = aiohttp.ClientTimeout(total=timeout)
         self._session: Optional[aiohttp.ClientSession] = None
-        
+
     async def __aenter__(self) -> aiohttp.ClientSession:
         if not self._session:
             connector = aiohttp.TCPConnector(limit=self.size, limit_per_host=self.size)
@@ -153,7 +154,7 @@ class ConnectionPool:
                 timeout=self.timeout
             )
         return self._session
-        
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         if self._session:
             await self._session.close()
@@ -162,28 +163,28 @@ class ConnectionPool:
 
 class EnhancedSolanaClient:
     """Enhanced Solana RPC client with retry logic and connection pooling"""
-    
+
     def __init__(self, config: SolanaConfig):
         self.config = config
         self.rate_limiter = RateLimiter(config.rate_limit_per_second)
         self.connection_pool = ConnectionPool(timeout=config.timeout)
         self._request_id = 0
-        
+
         # Use SDK client if available
         if SOLANA_SDK_AVAILABLE:
             self.sdk_client = AsyncClient(config.rpc_url, config.commitment)
         else:
             self.sdk_client = None
-            
+
     async def __aenter__(self):
         await self.connection_pool.__aenter__()
         return self
-        
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.connection_pool.__aexit__(exc_type, exc_val, exc_tb)
         if self.sdk_client and hasattr(self.sdk_client, 'close'):
             await self.sdk_client.close()
-            
+
     @backoff.on_exception(
         backoff.expo,
         (aiohttp.ClientError, asyncio.TimeoutError),
@@ -193,7 +194,7 @@ class EnhancedSolanaClient:
     async def _make_request(self, method: str, params: List[Any]) -> Dict[str, Any]:
         """Make RPC request with retry logic"""
         await self.rate_limiter.acquire()
-        
+
         self._request_id += 1
         payload = {
             "jsonrpc": "2.0",
@@ -201,20 +202,20 @@ class EnhancedSolanaClient:
             "method": method,
             "params": params
         }
-        
+
         async with self.connection_pool as session:
             async with session.post(self.config.rpc_url, json=payload) as resp:
                 if resp.status != 200:
                     text = await resp.text()
                     raise Exception(f"RPC error: {resp.status} - {text}")
-                    
+
                 data = await resp.json()
-                
+
                 if "error" in data:
                     raise Exception(f"RPC error: {data['error']}")
-                    
+
                 return data.get("result", {})
-                
+
     async def get_latest_blockhash(self) -> Dict[str, Any]:
         """Get latest blockhash with caching"""
         # Use SDK if available
@@ -227,10 +228,10 @@ class EnhancedSolanaClient:
                 }
             except Exception as e:
                 logger.error(f"SDK error, falling back to RPC: {e}")
-                
+
         # Fallback to direct RPC
         return await self._make_request("getLatestBlockhash", [])
-        
+
     async def get_balance(self, pubkey: str) -> int:
         """Get account balance in lamports"""
         if self.sdk_client:
@@ -239,10 +240,10 @@ class EnhancedSolanaClient:
                 return result["result"]["value"]
             except Exception as e:
                 logger.error(f"SDK error: {e}")
-                
+
         return await self._make_request("getBalance", [pubkey])
-        
-    async def send_transaction(self, 
+
+    async def send_transaction(self,
                              transaction: Union[str, Transaction],
                              options: Optional[Dict[str, Any]] = None) -> str:
         """Send transaction with monitoring"""
@@ -252,18 +253,18 @@ class EnhancedSolanaClient:
                 return result["result"]
             except Exception as e:
                 logger.error(f"SDK error: {e}")
-                
+
         # Fallback to raw transaction
         if isinstance(transaction, Transaction):
             transaction = base64.b64encode(transaction.serialize()).decode()
-            
+
         params = [transaction]
         if options:
             params.append(options)
-            
+
         result = await self._make_request("sendTransaction", params)
         return result
-        
+
     async def get_transaction(self, signature: str) -> Optional[Dict[str, Any]]:
         """Get transaction details"""
         try:
@@ -275,24 +276,24 @@ class EnhancedSolanaClient:
         except Exception as e:
             logger.error(f"Failed to get transaction {signature}: {e}")
             return None
-            
-    async def wait_for_confirmation(self, 
+
+    async def wait_for_confirmation(self,
                                    signature: str,
                                    commitment: str = "confirmed",
                                    timeout: int = 30) -> TransactionResult:
         """Wait for transaction confirmation with timeout"""
         start_time = datetime.now()
-        
+
         while (datetime.now() - start_time).seconds < timeout:
             try:
                 status = await self._make_request(
                     "getSignatureStatuses",
                     [[signature]]
                 )
-                
+
                 if status and status["value"] and status["value"][0]:
                     tx_status = status["value"][0]
-                    
+
                     if tx_status["confirmationStatus"] == commitment:
                         return TransactionResult(
                             signature=signature,
@@ -307,12 +308,12 @@ class EnhancedSolanaClient:
                             status=TransactionStatus.FAILED,
                             error=str(tx_status["err"])
                         )
-                        
+
             except Exception as e:
                 logger.error(f"Error checking transaction status: {e}")
-                
+
             await asyncio.sleep(1)
-            
+
         return TransactionResult(
             signature=signature,
             status=TransactionStatus.EXPIRED,
@@ -322,20 +323,20 @@ class EnhancedSolanaClient:
 
 class ZKProofGenerator:
     """Enhanced zero-knowledge proof generator"""
-    
+
     def __init__(self):
         self.proof_cache = {}
-        
-    async def generate_proof(self, 
+
+    async def generate_proof(self,
                            data: str,
                            proof_type: str = "commitment") -> Dict[str, Any]:
         """Generate zero-knowledge proof with caching"""
-        
+
         # Check cache
         cache_key = f"{proof_type}:{hashlib.sha256(data.encode()).hexdigest()}"
         if cache_key in self.proof_cache:
             return self.proof_cache[cache_key]
-            
+
         # Generate proof based on type
         if proof_type == "commitment":
             proof = await self._generate_commitment_proof(data)
@@ -345,29 +346,29 @@ class ZKProofGenerator:
             proof = await self._generate_membership_proof(data)
         else:
             raise ValueError(f"Unknown proof type: {proof_type}")
-            
+
         # Cache result
         self.proof_cache[cache_key] = proof
-        
+
         return proof
-        
+
     async def _generate_commitment_proof(self, data: str) -> Dict[str, Any]:
         """Generate Pedersen commitment"""
         # Simplified implementation
         import hashlib
-        
+
         # Generate blinding factor
         blinding = hashlib.sha256(f"{data}_blinding".encode()).digest()
-        
+
         # Create commitment
         commitment = hashlib.sha256(data.encode() + blinding).digest()
-        
+
         # Generate challenge
         challenge = hashlib.sha256(commitment + b"challenge").digest()
-        
+
         # Create response
         response = hashlib.sha256(blinding + challenge).digest()
-        
+
         return {
             "type": "commitment",
             "commitment": base58.b58encode(commitment).decode(),
@@ -375,12 +376,12 @@ class ZKProofGenerator:
             "response": base58.b58encode(response).decode(),
             "timestamp": datetime.now().isoformat()
         }
-        
+
     async def _generate_range_proof(self, data: str) -> Dict[str, Any]:
         """Generate range proof (simplified)"""
         # In production, would use bulletproofs or similar
         value = int(hashlib.sha256(data.encode()).hexdigest()[:8], 16)
-        
+
         return {
             "type": "range",
             "min": 0,
@@ -388,32 +389,32 @@ class ZKProofGenerator:
             "proof": base58.b58encode(f"range_proof_{value}".encode()).decode(),
             "timestamp": datetime.now().isoformat()
         }
-        
+
     async def _generate_membership_proof(self, data: str) -> Dict[str, Any]:
         """Generate set membership proof (simplified)"""
         # In production, would use Merkle proofs
         member_hash = hashlib.sha256(data.encode()).digest()
-        
+
         return {
             "type": "membership",
             "member_commitment": base58.b58encode(member_hash).decode(),
             "proof": base58.b58encode(f"membership_{data}".encode()).decode(),
             "timestamp": datetime.now().isoformat()
         }
-        
+
     async def verify_proof(self, proof: Dict[str, Any]) -> bool:
         """Verify zero-knowledge proof"""
         proof_type = proof.get("type")
-        
+
         if proof_type == "commitment":
             return await self._verify_commitment_proof(proof)
         elif proof_type == "range":
             return await self._verify_range_proof(proof)
         elif proof_type == "membership":
             return await self._verify_membership_proof(proof)
-            
+
         return False
-        
+
     async def _verify_commitment_proof(self, proof: Dict[str, Any]) -> bool:
         """Verify commitment proof"""
         # Simplified verification
@@ -421,12 +422,12 @@ class ZKProofGenerator:
             commitment = base58.b58decode(proof["commitment"])
             challenge = base58.b58decode(proof["challenge"])
             response = base58.b58decode(proof["response"])
-            
+
             # Basic verification (in production would be more complex)
             expected_challenge = hashlib.sha256(commitment + b"challenge").digest()
-            
+
             return challenge == expected_challenge
-            
+
         except Exception as e:
             logger.error(f"Proof verification failed: {e}")
             return False
@@ -434,17 +435,17 @@ class ZKProofGenerator:
 
 class PhantomWalletIntegration:
     """Enhanced Phantom wallet integration"""
-    
+
     def __init__(self):
         self.connected_wallets: Dict[str, Dict[str, Any]] = {}
         self.pending_signatures: Dict[str, Dict[str, Any]] = {}
-        
+
     async def create_connection_request(self) -> Dict[str, Any]:
         """Create wallet connection request"""
         nonce = base64.b64encode(
             struct.pack('<Q', int(datetime.now().timestamp() * 1000))
         ).decode()
-        
+
         return {
             "method": "connect",
             "params": {
@@ -458,7 +459,7 @@ class PhantomWalletIntegration:
             },
             "id": datetime.now().timestamp()
         }
-        
+
     async def verify_wallet_signature(self,
                                     message: bytes,
                                     signature: bytes,
@@ -467,26 +468,26 @@ class PhantomWalletIntegration:
         try:
             # Convert public key
             pubkey_bytes = base58.b58decode(public_key)
-            
+
             # Create verify key
             verify_key = nacl.signing.VerifyKey(pubkey_bytes)
-            
+
             # Verify signature
             verify_key.verify(message, signature)
-            
+
             return True
-            
+
         except Exception as e:
             logger.error(f"Signature verification failed: {e}")
             return False
-            
+
     async def prepare_transaction(self,
                                 from_pubkey: str,
                                 to_pubkey: str,
                                 amount: int,
                                 recent_blockhash: str) -> Dict[str, Any]:
         """Prepare transaction for Phantom signing"""
-        
+
         if SOLANA_SDK_AVAILABLE:
             # Create transaction using SDK
             transaction = Transaction()
@@ -500,21 +501,18 @@ class PhantomWalletIntegration:
                 )
             )
             transaction.recent_blockhash = recent_blockhash
-            
+
             # Serialize for Phantom
             serialized = base64.b64encode(transaction.serialize()).decode()
-            
+
             return {
                 "transaction": serialized,
                 "message": f"Send {amount / 1e9} SOL to {to_pubkey[:8]}..."
             }
         else:
-            # Mock transaction
-            return {
-                "transaction": base64.b64encode(f"mock_tx_{amount}".encode()).decode(),
-                "message": f"Send {amount / 1e9} SOL"
-            }
-            
+            # Solana SDK not available - cannot create real transactions
+            raise RuntimeError("Solana SDK required for transaction creation. Install with: pip install solana spl-token")
+
     async def register_wallet(self, public_key: str, connection_data: Dict[str, Any]):
         """Register connected wallet"""
         self.connected_wallets[public_key] = {
@@ -523,18 +521,18 @@ class PhantomWalletIntegration:
             "network": connection_data.get("network", "mainnet-beta"),
             "auto_approve": connection_data.get("auto_approve", [])
         }
-        
+
         logger.info(f"Wallet registered: {public_key[:8]}...")
 
 
 class JupiterAggregatorClient:
     """Jupiter DEX aggregator integration"""
-    
+
     def __init__(self, config: SolanaConfig):
         self.config = config
         self.base_url = "https://quote-api.jup.ag/v6"
         self.rate_limiter = RateLimiter(rate=5)  # 5 requests per second
-        
+
     @lru_cache(maxsize=100)
     async def get_token_list(self) -> List[Dict[str, Any]]:
         """Get Jupiter token list with caching"""
@@ -542,25 +540,25 @@ class JupiterAggregatorClient:
             async with session.get(f"{self.base_url}/tokens") as resp:
                 if resp.status == 200:
                     return await resp.json()
-                    
+
         return []
-        
+
     async def get_quote(self,
                        input_mint: str,
                        output_mint: str,
                        amount: int,
                        slippage_bps: int = 50) -> Optional[Dict[str, Any]]:
         """Get swap quote from Jupiter"""
-        
+
         await self.rate_limiter.acquire()
-        
+
         params = {
             "inputMint": input_mint,
             "outputMint": output_mint,
             "amount": amount,
             "slippageBps": slippage_bps
         }
-        
+
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(
@@ -572,24 +570,24 @@ class JupiterAggregatorClient:
                     else:
                         error = await resp.text()
                         logger.error(f"Jupiter quote error: {error}")
-                        
+
         except Exception as e:
             logger.error(f"Failed to get Jupiter quote: {e}")
-            
+
         return None
-        
+
     async def get_swap_transaction(self,
                                  quote: Dict[str, Any],
                                  user_public_key: str,
                                  wrap_unwrap_sol: bool = True) -> Optional[str]:
         """Get swap transaction from Jupiter"""
-        
+
         payload = {
             "quoteResponse": quote,
             "userPublicKey": user_public_key,
             "wrapAndUnwrapSol": wrap_unwrap_sol
         }
-        
+
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.post(
@@ -599,70 +597,70 @@ class JupiterAggregatorClient:
                     if resp.status == 200:
                         data = await resp.json()
                         return data.get("swapTransaction")
-                        
+
         except Exception as e:
             logger.error(f"Failed to get swap transaction: {e}")
-            
+
         return None
 
 
 class SolanaAITradingSystem:
     """Complete Solana AI trading system with all integrations"""
-    
+
     def __init__(self, config: Optional[SolanaConfig] = None):
         self.config = config or SolanaConfig()
         self.client = EnhancedSolanaClient(self.config)
         self.zk_generator = ZKProofGenerator()
         self.phantom = PhantomWalletIntegration()
         self.jupiter = JupiterAggregatorClient(self.config)
-        
+
         # Trading state
         self.active_positions = {}
         self.transaction_history = []
-        
+
     async def __aenter__(self):
         await self.client.__aenter__()
         return self
-        
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.client.__aexit__(exc_type, exc_val, exc_tb)
-        
+
     async def analyze_token_pair(self,
                                input_token: str,
                                output_token: str,
                                amount: float) -> Dict[str, Any]:
         """Analyze token pair for trading opportunity"""
-        
+
         # Get token information
         token_list = await self.jupiter.get_token_list()
-        
+
         input_info = next((t for t in token_list if t["address"] == input_token), None)
         output_info = next((t for t in token_list if t["address"] == output_token), None)
-        
+
         if not input_info or not output_info:
             return {"error": "Token not found"}
-            
+
         # Convert amount to smallest unit
         amount_lamports = int(amount * (10 ** input_info["decimals"]))
-        
+
         # Get quote
         quote = await self.jupiter.get_quote(
             input_token,
             output_token,
             amount_lamports
         )
-        
+
         if not quote:
             return {"error": "No route found"}
-            
+
         # Calculate metrics
         output_amount = int(quote["outAmount"]) / (10 ** output_info["decimals"])
         price_impact = float(quote.get("priceImpactPct", 0))
-        
+
         # Generate ZK proof for analysis
         analysis_data = f"{input_token}:{output_token}:{amount}:{datetime.now()}"
         zk_proof = await self.zk_generator.generate_proof(analysis_data)
-        
+
         return {
             "input_token": input_info["symbol"],
             "output_token": output_info["symbol"],
@@ -674,34 +672,34 @@ class SolanaAITradingSystem:
             "zk_proof": zk_proof["commitment"],
             "quote": quote
         }
-        
+
     async def execute_swap(self,
                          wallet_pubkey: str,
                          quote: Dict[str, Any],
                          auto_approve: bool = False) -> TransactionResult:
         """Execute token swap via Jupiter"""
-        
+
         # Get swap transaction
         swap_tx = await self.jupiter.get_swap_transaction(
             quote,
             wallet_pubkey
         )
-        
+
         if not swap_tx:
             return TransactionResult(
                 signature="",
                 status=TransactionStatus.FAILED,
                 error="Failed to create swap transaction"
             )
-            
+
         # Send transaction (would need Phantom signature in production)
         if auto_approve:
             try:
                 signature = await self.client.send_transaction(swap_tx)
-                
+
                 # Wait for confirmation
                 result = await self.client.wait_for_confirmation(signature)
-                
+
                 # Record transaction
                 self.transaction_history.append({
                     "type": "swap",
@@ -711,9 +709,9 @@ class SolanaAITradingSystem:
                     "result": result,
                     "timestamp": datetime.now()
                 })
-                
+
                 return result
-                
+
             except Exception as e:
                 return TransactionResult(
                     signature="",
@@ -727,16 +725,16 @@ class SolanaAITradingSystem:
                 status=TransactionStatus.PENDING,
                 error="Awaiting wallet signature"
             )
-            
+
     async def get_wallet_portfolio(self, wallet_pubkey: str) -> Dict[str, Any]:
         """Get wallet token portfolio"""
-        
+
         # Get SOL balance
         sol_balance = await self.client.get_balance(wallet_pubkey)
-        
+
         # Get token accounts (simplified - would use getProgramAccounts in production)
         token_accounts = []
-        
+
         return {
             "wallet": wallet_pubkey,
             "sol_balance": sol_balance / 1e9,  # Convert to SOL

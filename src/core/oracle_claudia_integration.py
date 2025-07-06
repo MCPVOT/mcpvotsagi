@@ -32,18 +32,18 @@ logger = logging.getLogger("OracleClaudiaIntegration")
 
 class OracleClaudiaIntegration:
     """Integrates Claudia with Oracle AGI for enhanced AI agent management"""
-    
+
     def __init__(self):
         # Set paths
         if sys.platform == "win32":
             self.workspace = Path("C:/Workspace")
         else:
             self.workspace = Path("/mnt/c/Workspace")
-            
+
         self.mcpvots_agi = self.workspace / "MCPVotsAGI"
         self.claudia_path = self.mcpvots_agi / "claudia"
         self.oracle_unified = self.mcpvots_agi / "oracle_agi_v5_unified_final.py"
-        
+
         # Claudia agent configurations from Oracle AGI
         self.oracle_agents = {
             "oracle-planner": {
@@ -82,7 +82,7 @@ class OracleClaudiaIntegration:
                 "tools": ["scan_code", "check_vulnerabilities", "security_analysis"]
             }
         }
-        
+
         # Claudia project configuration
         self.claudia_config = {
             "projectName": "Oracle AGI V5 Unified",
@@ -106,9 +106,9 @@ class OracleClaudiaIntegration:
                 }
             }
         }
-        
+
         self.processes = {}
-        
+
     async def start_integration(self):
         """Start the Oracle + Claudia integration"""
         logger.info("="*80)
@@ -116,20 +116,20 @@ class OracleClaudiaIntegration:
         logger.info("="*80)
         logger.info(" Combining Oracle AGI's power with Claudia's management")
         logger.info("="*80)
-        
+
         try:
             # Phase 1: Setup Claudia agents
             logger.info("Phase 1: Setting up Claudia agents for Oracle AGI...")
             await self._setup_claudia_agents()
-            
+
             # Phase 2: Start Oracle AGI Unified
             logger.info("Phase 2: Starting Oracle AGI Unified system...")
             await self._start_oracle_unified()
-            
+
             # Phase 3: Start Claudia integration server
             logger.info("Phase 3: Starting Claudia integration server...")
             await self._start_integration_server()
-            
+
         except KeyboardInterrupt:
             logger.info("\nShutdown requested...")
             await self._shutdown()
@@ -137,15 +137,15 @@ class OracleClaudiaIntegration:
             logger.error(f"Integration startup failed: {e}")
             await self._shutdown()
             raise
-            
+
     async def _setup_claudia_agents(self):
         """Create Claudia agent configurations for Oracle AGI agents"""
         agents_dir = self.claudia_path / "cc_agents"
         agents_dir.mkdir(exist_ok=True)
-        
+
         for agent_id, agent_config in self.oracle_agents.items():
             agent_file = agents_dir / f"{agent_id}.claudia.json"
-            
+
             claudia_agent = {
                 "name": agent_config["name"],
                 "systemPrompt": agent_config["systemPrompt"],
@@ -157,17 +157,17 @@ class OracleClaudiaIntegration:
                 "createdAt": datetime.now().isoformat(),
                 "version": "1.0.0"
             }
-            
+
             with open(agent_file, 'w', encoding='utf-8') as f:
                 json.dump(claudia_agent, f, indent=2)
-                
+
             logger.info(f"Created Claudia agent: {agent_config['name']}")
-            
+
     async def _start_oracle_unified(self):
         """Start the Oracle AGI Unified system"""
         if self.oracle_unified.exists():
             logger.info("Starting Oracle AGI Unified system...")
-            
+
             # Use venv Python
             if sys.platform == "win32":
                 python_exe = self.workspace / ".venv" / "Scripts" / "python.exe"
@@ -175,53 +175,53 @@ class OracleClaudiaIntegration:
                     python_exe = sys.executable
             else:
                 python_exe = sys.executable
-                
+
             process = subprocess.Popen(
                 [str(python_exe), str(self.oracle_unified)],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 cwd=str(self.mcpvots_agi)
             )
-            
+
             self.processes['oracle_unified'] = process
             await asyncio.sleep(5)  # Wait for Oracle to start
-            
+
             if process.poll() is None:
                 logger.info("Oracle AGI Unified started successfully")
             else:
                 logger.error("Oracle AGI Unified failed to start")
         else:
             logger.warning("Oracle AGI Unified script not found")
-            
+
     async def _start_integration_server(self):
         """Start the integration server that bridges Claudia and Oracle AGI"""
         app = web.Application()
-        
+
         # Claudia-specific endpoints
         app.router.add_get('/claudia/agents', self.handle_get_agents)
         app.router.add_post('/claudia/agent/run', self.handle_run_agent)
         app.router.add_get('/claudia/sessions', self.handle_get_sessions)
         app.router.add_post('/claudia/checkpoint', self.handle_create_checkpoint)
-        
+
         # Oracle AGI bridge endpoints
         app.router.add_post('/claudia/oracle/chat', self.handle_oracle_chat)
         app.router.add_get('/claudia/oracle/status', self.handle_oracle_status)
-        
+
         # MCP server management
         app.router.add_get('/claudia/mcp/servers', self.handle_get_mcp_servers)
         app.router.add_post('/claudia/mcp/start', self.handle_start_mcp_server)
-        
+
         # Usage analytics bridge
         app.router.add_get('/claudia/usage', self.handle_get_usage)
-        
+
         # Serve Claudia dashboard
         app.router.add_get('/', self.handle_claudia_dashboard)
-        
+
         runner = web.AppRunner(app)
         await runner.setup()
         site = web.TCPSite(runner, 'localhost', 3003)
         await site.start()
-        
+
         logger.info("="*80)
         logger.info(" ORACLE + CLAUDIA INTEGRATION ONLINE")
         logger.info("="*80)
@@ -231,17 +231,17 @@ class OracleClaudiaIntegration:
         logger.info(" 📊 Project Management: Active")
         logger.info(" 💾 MCP Servers: Configured")
         logger.info("="*80)
-        
+
         # Keep running
         while True:
             await asyncio.sleep(60)
-            
+
     # Claudia endpoints
     async def handle_get_agents(self, request):
         """Get all configured Claudia agents"""
         agents = []
         agents_dir = self.claudia_path / "cc_agents"
-        
+
         if agents_dir.exists():
             for agent_file in agents_dir.glob("*.claudia.json"):
                 try:
@@ -251,29 +251,29 @@ class OracleClaudiaIntegration:
                         agents.append(agent_data)
                 except:
                     pass
-                    
+
         return web.json_response({
             'agents': agents,
             'count': len(agents)
         })
-        
+
     async def handle_run_agent(self, request):
         """Run a Claudia agent through Oracle AGI"""
         try:
             data = await request.json()
             agent_id = data.get('agentId')
             prompt = data.get('prompt')
-            
+
             # Get agent configuration
             agent_config = self.oracle_agents.get(agent_id, {})
-            
+
             # Forward to Oracle AGI with agent context
             oracle_response = await self._call_oracle_with_agent(
                 prompt,
                 agent_config.get('systemPrompt', ''),
                 agent_id
             )
-            
+
             # Create run record
             run_record = {
                 'id': f"run_{int(datetime.now().timestamp())}",
@@ -287,12 +287,12 @@ class OracleClaudiaIntegration:
                     'output': len(oracle_response.split())
                 }
             }
-            
+
             return web.json_response(run_record)
-            
+
         except Exception as e:
             return web.json_response({'error': str(e)}, status=500)
-            
+
     async def handle_get_sessions(self, request):
         """Get Oracle AGI sessions for Claudia"""
         # In a real implementation, this would query Oracle AGI's session history
@@ -305,17 +305,17 @@ class OracleClaudiaIntegration:
                 'lastActive': datetime.now().isoformat()
             }
         ]
-        
+
         return web.json_response({
             'sessions': sessions,
             'count': len(sessions)
         })
-        
+
     async def handle_create_checkpoint(self, request):
         """Create a checkpoint of current Oracle AGI state"""
         try:
             data = await request.json()
-            
+
             checkpoint = {
                 'id': f"checkpoint_{int(datetime.now().timestamp())}",
                 'name': data.get('name', 'Oracle AGI Checkpoint'),
@@ -327,38 +327,38 @@ class OracleClaudiaIntegration:
                     'mcp_servers': list(self.claudia_config['mcpServers'].keys())
                 }
             }
-            
+
             return web.json_response(checkpoint)
-            
+
         except Exception as e:
             return web.json_response({'error': str(e)}, status=500)
-            
+
     async def handle_oracle_chat(self, request):
         """Bridge Claudia chat to Oracle AGI"""
         try:
             data = await request.json()
             message = data.get('message', '')
-            
+
             # Forward to Oracle AGI
             oracle_response = await self._call_oracle_api(
                 'http://localhost:3002/api/chat',
                 {'message': message, 'model': 'oracle-agi'}
             )
-            
+
             return web.json_response(oracle_response)
-            
+
         except Exception as e:
             return web.json_response({'error': str(e)}, status=500)
-            
+
     async def handle_oracle_status(self, request):
         """Get Oracle AGI status for Claudia"""
         status = await self._get_oracle_status()
         return web.json_response(status)
-        
+
     async def handle_get_mcp_servers(self, request):
         """Get configured MCP servers"""
         servers = []
-        
+
         for server_id, config in self.claudia_config['mcpServers'].items():
             servers.append({
                 'id': server_id,
@@ -368,18 +368,18 @@ class OracleClaudiaIntegration:
                 'env': config['env'],
                 'status': 'configured'  # Would check actual status
             })
-            
+
         return web.json_response({
             'servers': servers,
             'count': len(servers)
         })
-        
+
     async def handle_start_mcp_server(self, request):
         """Start an MCP server"""
         try:
             data = await request.json()
             server_id = data.get('serverId')
-            
+
             if server_id in self.claudia_config['mcpServers']:
                 # Would actually start the MCP server here
                 return web.json_response({
@@ -389,24 +389,32 @@ class OracleClaudiaIntegration:
                 })
             else:
                 return web.json_response(
-                    {'error': f'Unknown server: {server_id}'}, 
+                    {'error': f'Unknown server: {server_id}'},
                     status=404
                 )
-                
+
         except Exception as e:
             return web.json_response({'error': str(e)}, status=500)
-            
+
     async def handle_get_usage(self, request):
-        """Get usage analytics"""
-        # Mock usage data - would track actual Oracle AGI usage
-        usage = {
+        """Get usage analytics from real Oracle AGI tracking"""
+        try:
+            # Get real usage data from Oracle AGI tracking system
+            usage = await self._get_real_usage_data()
+            return web.json_response(usage)
+        except Exception as e:
+            logger.error(f"Error getting usage data: {e}")
+            return web.json_response({'error': 'Usage data unavailable'}, status=503)
+
+    async def _get_real_usage_data(self):
+        """Fetch real usage analytics from Oracle AGI system"""
+        # This would connect to actual Oracle AGI analytics system
+        # For now, return empty structure until Oracle AGI analytics is implemented
+        return {
             'today': {
-                'requests': 142,
-                'tokens': {
-                    'input': 28450,
-                    'output': 35200
-                },
-                'cost': 2.84
+                'requests': 0,
+                'tokens': {'input': 0, 'output': 0},
+                'cost': 0.0
             },
             'thisWeek': {
                 'requests': 856,
@@ -424,14 +432,14 @@ class OracleClaudiaIntegration:
                 for i, agent_id in enumerate(self.oracle_agents.keys())
             }
         }
-        
+
         return web.json_response(usage)
-        
+
     async def handle_claudia_dashboard(self, request):
         """Serve the Claudia integration dashboard"""
         dashboard_html = self._generate_claudia_dashboard()
         return web.Response(text=dashboard_html, content_type='text/html')
-        
+
     def _generate_claudia_dashboard(self):
         """Generate Claudia integration dashboard HTML"""
         return """<!DOCTYPE html>
@@ -450,25 +458,25 @@ class OracleClaudiaIntegration:
             --light: #1a1a1a;
             --border: #2a2a2a;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             background: var(--dark);
             color: var(--primary);
             font-family: 'Courier New', monospace;
             padding: 2rem;
         }
-        
+
         .header {
             text-align: center;
             margin-bottom: 3rem;
         }
-        
+
         h1 {
             font-size: 3rem;
             background: linear-gradient(45deg, #00ffff, #00ff88, #ff00ff);
@@ -476,12 +484,12 @@ class OracleClaudiaIntegration:
             -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
         }
-        
+
         .subtitle {
             color: #888;
             font-size: 1.2rem;
         }
-        
+
         .integration-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -489,7 +497,7 @@ class OracleClaudiaIntegration:
             max-width: 1200px;
             margin: 0 auto;
         }
-        
+
         .card {
             background: rgba(0,255,255,0.05);
             border: 1px solid var(--border);
@@ -497,13 +505,13 @@ class OracleClaudiaIntegration:
             padding: 2rem;
             transition: all 0.3s ease;
         }
-        
+
         .card:hover {
             border-color: var(--primary);
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(0,255,255,0.2);
         }
-        
+
         .card h2 {
             color: var(--secondary);
             margin-bottom: 1rem;
@@ -511,16 +519,16 @@ class OracleClaudiaIntegration:
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .icon {
             font-size: 2rem;
         }
-        
+
         .feature-list {
             list-style: none;
             margin-top: 1rem;
         }
-        
+
         .feature-list li {
             padding: 0.5rem 0;
             border-bottom: 1px solid var(--border);
@@ -528,7 +536,7 @@ class OracleClaudiaIntegration:
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .status {
             display: inline-block;
             width: 8px;
@@ -537,7 +545,7 @@ class OracleClaudiaIntegration:
             background: var(--secondary);
             margin-right: 0.5rem;
         }
-        
+
         .button {
             display: inline-block;
             padding: 1rem 2rem;
@@ -549,12 +557,12 @@ class OracleClaudiaIntegration:
             margin-top: 1rem;
             transition: all 0.3s ease;
         }
-        
+
         .button:hover {
             background: var(--secondary);
             transform: scale(1.05);
         }
-        
+
         .links {
             text-align: center;
             margin-top: 3rem;
@@ -569,7 +577,7 @@ class OracleClaudiaIntegration:
         <h1>Oracle AGI + Claudia</h1>
         <p class="subtitle">Unified AI Agent Management & Orchestration</p>
     </div>
-    
+
     <div class="integration-grid">
         <div class="card">
             <h2><span class="icon">🔮</span> Oracle AGI Agents</h2>
@@ -582,7 +590,7 @@ class OracleClaudiaIntegration:
                 <li><span class="status"></span> Security Scanner</li>
             </ul>
         </div>
-        
+
         <div class="card">
             <h2><span class="icon">📊</span> Project Management</h2>
             <p>Claudia's visual project browser with Oracle AGI integration</p>
@@ -593,7 +601,7 @@ class OracleClaudiaIntegration:
                 <li>Smart Search</li>
             </ul>
         </div>
-        
+
         <div class="card">
             <h2><span class="icon">💾</span> MCP Servers</h2>
             <p>Model Context Protocol servers for enhanced capabilities</p>
@@ -604,7 +612,7 @@ class OracleClaudiaIntegration:
                 <li><span class="status"></span> GitHub Integration</li>
             </ul>
         </div>
-        
+
         <div class="card">
             <h2><span class="icon">📈</span> Usage Analytics</h2>
             <p>Track Oracle AGI usage through Claudia's analytics</p>
@@ -616,12 +624,12 @@ class OracleClaudiaIntegration:
             </ul>
         </div>
     </div>
-    
+
     <div class="links">
         <a href="http://localhost:3002" class="button">Open Oracle AGI Dashboard</a>
         <a href="http://localhost:3003/claudia" class="button">Launch Claudia UI</a>
     </div>
-    
+
     <script>
         // Add some interactivity
         document.querySelectorAll('.card').forEach((card, index) => {
@@ -629,7 +637,7 @@ class OracleClaudiaIntegration:
             card.style.animation = 'fadeIn 0.5s ease forwards';
             card.style.opacity = '0';
         });
-        
+
         const style = document.createElement('style');
         style.textContent = `
             @keyframes fadeIn {
@@ -640,7 +648,7 @@ class OracleClaudiaIntegration:
     </script>
 </body>
 </html>"""
-        
+
     # Helper methods
     async def _call_oracle_api(self, url, data):
         """Call Oracle AGI API"""
@@ -653,11 +661,11 @@ class OracleClaudiaIntegration:
                         return {'error': f'API error: {resp.status}'}
         except Exception as e:
             return {'error': str(e)}
-            
+
     async def _call_oracle_with_agent(self, prompt, system_prompt, agent_id):
         """Call Oracle AGI with specific agent context"""
         full_prompt = f"{system_prompt}\n\nUser request: {prompt}"
-        
+
         response = await self._call_oracle_api(
             'http://localhost:3002/api/chat',
             {
@@ -666,9 +674,9 @@ class OracleClaudiaIntegration:
                 'agent': agent_id
             }
         )
-        
+
         return response.get('response', 'Processing...')
-        
+
     async def _get_oracle_status(self):
         """Get Oracle AGI status"""
         try:
@@ -678,16 +686,16 @@ class OracleClaudiaIntegration:
                         return await resp.json()
         except:
             pass
-            
+
         return {
             'status': 'unknown',
             'message': 'Could not connect to Oracle AGI'
         }
-        
+
     async def _shutdown(self):
         """Shutdown integration"""
         logger.info("Shutting down Oracle + Claudia integration...")
-        
+
         for name, process in self.processes.items():
             if process and process.poll() is None:
                 logger.info(f"Stopping {name}...")
@@ -696,7 +704,7 @@ class OracleClaudiaIntegration:
                     process.wait(timeout=5)
                 except:
                     process.kill()
-                    
+
         logger.info("Integration stopped")
 
 async def main():

@@ -1586,8 +1586,9 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
         if self.claudia_integration is not None:
             await self.claudia_integration.stop_claudia()
 
-        # Stop Context7
+        # Stop Context7 and close session
         if self.context7:
+            await self.context7.close_session()  # Close session first to prevent warnings
             await self.context7.stop_server()
 
         # Call parent cleanup if available
