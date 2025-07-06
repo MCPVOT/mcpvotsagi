@@ -910,20 +910,41 @@ class DeepSeekR1Agent:
             'performance_suggestions': []
         }
 
-        # React patterns
-        if 'useState' in content or 'useEffect' in content:
-            analysis['insights'].append("⚛️ React hooks patterns detected")
+        # Pattern recognition for JavaScript/TypeScript
+        if 'async' in content and 'await' in content:
+            analysis['insights'].append("� Asynchronous patterns detected")
+
+        if 'useEffect' in content or 'useState' in content:
+            analysis['insights'].append("⚛️ React hooks implementation found")
+
+        if 'export' in content and 'import' in content:
+            analysis['insights'].append("📦 ES6 modules structure detected")
 
         # Security analysis
         if 'eval(' in content:
-            analysis['security_issues'].append("🚨 eval() usage detected - security risk")
+            analysis['security_issues'].append("🚨 eval() usage detected - potential security risk")
 
-        if 'innerHTML' in content:
-            analysis['security_issues'].append("🔒 innerHTML usage - potential XSS vulnerability")
+        if 'dangerouslySetInnerHTML' in content:
+            analysis['security_issues'].append("⚠️ dangerouslySetInnerHTML usage - XSS risk")
 
-        # Performance analysis
-        if content.count('map(') > 3:
-            analysis['performance_suggestions'].append("🚀 Multiple map operations - consider optimization")
+        # Performance suggestions
+        if content.count('console.log') > 3:
+            analysis['performance_suggestions'].append("🗂️ Consider removing console.log statements for production")
+
+        if 'document.getElementById' in content:
+            analysis['performance_suggestions'].append("🎯 Consider using refs or modern selectors")
+
+        # Documentation analysis
+        if '/**' in content:
+            analysis['insights'].append("📚 JSDoc documentation found")
+
+        if 'TODO' in content.upper():
+            analysis['recommendations'].append("📝 TODO items found - consider completion")
+
+        # Check for code examples
+        if '```' in content:
+            code_blocks = content.count('```') // 2
+            analysis['insights'].append(f"💻 {code_blocks} code examples found")
 
         return analysis
 
@@ -937,17 +958,35 @@ class DeepSeekR1Agent:
             'performance_suggestions': []
         }
 
-        # Documentation quality
-        if content.count('#') > 10:
+        # Documentation structure analysis
+        headings = content.count('#')
+        if headings > 10:
             analysis['insights'].append("📚 Well-structured documentation with multiple sections")
 
-        if 'TODO' in content.upper():
-            analysis['recommendations'].append("📝 TODO items found - consider completion")
+        # Check for links
+        if 'http' in content or 'https' in content:
+            analysis['insights'].append("🔗 External links found")
 
-        # Check for code examples
+        # Check for code blocks
         if '```' in content:
             code_blocks = content.count('```') // 2
             analysis['insights'].append(f"💻 {code_blocks} code examples found")
+
+        # Check for images
+        if '![' in content:
+            images = content.count('![')
+            analysis['insights'].append(f"🖼️ {images} images/diagrams included")
+
+        # Check for tables
+        if '|' in content and '---' in content:
+            analysis['insights'].append("📊 Tables present for data organization")
+
+        # Quality checks
+        if 'TODO' in content.upper():
+            analysis['recommendations'].append("📝 TODO items found - consider completion")
+
+        if len(content) < 100:
+            analysis['recommendations'].append("📄 Documentation seems brief - consider expanding")
 
         return analysis
 

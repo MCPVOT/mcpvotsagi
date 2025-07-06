@@ -1,0 +1,47 @@
+{
+  "name": "@mcpvotsagi/web",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Next.js web application for MCPVotsAGI",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "analyze": "cross-env ANALYZE=true next build"
+  },
+  "dependencies": {
+    "@mcpvotsagi/core": "workspace:*",
+    "@mcpvotsagi/agents": "workspace:*",
+    "@mcpvotsagi/ui": "workspace:*",
+    "@mcpvotsagi/types": "workspace:*",
+    "next": "14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@solana/wallet-adapter-react": "^0.15.35",
+    "@solana/wallet-adapter-react-ui": "^0.9.34",
+    "@solana/wallet-adapter-wallets": "^0.19.26",
+    "@solana/web3.js": "^1.87.6",
+    "@rainbow-me/rainbowkit": "^2.0.0",
+    "wagmi": "^2.5.0",
+    "viem": "^2.7.0",
+    "framer-motion": "^11.0.3",
+    "lucide-react": "^0.323.0",
+    "recharts": "^2.12.0",
+    "zustand": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@next/bundle-analyzer": "^14.1.0",
+    "autoprefixer": "^10.4.17",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "14.1.0",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3"
+  }
+}
