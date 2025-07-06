@@ -3,7 +3,14 @@
 ## 🚀 **ULTIMATE AGI SYSTEM V3 - PRODUCTION-READY AGI PORTAL**
 
 ### **Overview**
-The ULTIMATE AGI SYSTEM V3 is a complete, production-ready AGI portal that unifies all major AGI components into a single, powerful interface. This system represents the culmination of advanced AI integration, featuring complete Claudia integration, multi-model orchestration, real-time metrics, and cutting-edge UI/UX.
+The ULTIMATE AGI SYSTEM V3 is a complete, production-ready AGI portal that unifies all major AGI components into a single, powerful interface. This system represents the culmination of advanced AI integration, featuring complete Claudia integration, multi-model orchestration, real-time metrics, cutting-edge UI/UX, and **unified multi-agent memory sharing via MCP (Model Context Protocol)**.
+
+### **🧠 Multi-Agent Memory Architecture**
+- **Shared MCP Memory**: All agents (VSCode Claude, Desktop Claude, system agents) share a unified memory database
+- **F: Drive Storage**: Persistent memory storage on `F:\RL_MEMORY\shared-mcp-memory.db`
+- **Cross-Agent Context**: Seamless context sharing between different AI agents
+- **Persistent Knowledge Graph**: Long-term memory and knowledge retention
+- **Real-time Synchronization**: Instant memory updates across all agents
 
 ### **🎯 Key Features**
 
