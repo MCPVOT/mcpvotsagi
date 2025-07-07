@@ -1,4 +1,4 @@
-import { getProduct, Product } from '@/lib/products-api';
+import { getProduct } from '@/lib/products-api';
 import { notFound } from 'next/navigation';
 import ProductForm from './product-form';
 

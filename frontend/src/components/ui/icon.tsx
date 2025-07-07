@@ -1,5 +1,6 @@
 
 import { FC } from "react";
+import Image from 'next/image';
 
 interface IconProps {
   name: string;
@@ -9,7 +10,7 @@ interface IconProps {
 
 export const Icon: FC<IconProps> = ({ name, size = 24, className = "" }) => {
   return (
-    <img
+    <Image
       src={`/icons/${name}.svg`}
       alt={name}
       width={size}

@@ -1,0 +1,149 @@
+{
+  "timestamp": "2025-07-06T18:29:47.681088",
+  "repository_analysis": {
+    "terminal": {
+      "dependencies": {
+        "@jup-ag/react-hook": "6.2.0",
+        "@jup-ag/wallet-adapter": "0.2.3",
+        "@mercurial-finance/optimist": "0.4.0",
+        "@popperjs/core": "^2.11.8",
+        "@solana/spl-token": "0.1.8",
+        "@solana/spl-token-0.4": "npm:@solana/spl-token@0.4.0",
+        "@solana/spl-token-registry": "~0.2.4574",
+        "@solana/wallet-adapter-wallets": "0.19.33",
+        "@tanstack/react-query": "^4.36.1",
+        "bn.js": "5.2.1",
+        "clsx": "^2.1.1",
+        "decimal.js": "10.4.3",
+        "jotai": "^2.8.3",
+        "jsbi": "4.3.0",
+        "lodash.debounce": "^4.0.8",
+        "next": "13.4.19",
+        "next-seo": "5.15.0",
+        "react-hook-form": "7.42.1",
+        "react-number-format": "5.1.3",
+        "react-popper": "^2.3.0",
+        "react-syntax-highlighter": "^15.5.0",
+        "react-use": "^17.5.0",
+        "react-virtualized-auto-sizer": "1.0.7",
+        "react-window": "1.8.8",
+        "superstruct": "1.0.3",
+        "tailwind-merge": "^2.5.2",
+        "tailwindcss-animate": "^1.0.7"
+      },
+      "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "tsup": "tsup && npx tailwindcss --yes -i ./src/styles/globals.css -o ./dist/global.css",
+        "start": "next start",
+        "lint": "next lint",
+        "format:fix": "prettier --write src",
+        "build-widget": "NODE_ENV=production MODE=widget webpack",
+        "analyse": "NODE_ENV=production MODE=widget ANALYSE=true webpack"
+      },
+      "key_files": {
+        "src/contexts/SwapContext.tsx": {
+          "exists": true,
+          "size": 11813
+        }
+      },
+      "integration_opportunities": [
+        "Embed Jupiter swap UI into MCPVotsAGI frontend",
+        "Connect to existing Knowledge Graph Browser",
+        "Integrate with RL trading signals",
+        "Add perpetual trading interface",
+        "Connect to F: drive for trade history storage"
+      ]
+    },
+    "swap_api": {
+      "cargo_config": "[workspace]\nmembers = [\n    \"jupiter-swap-api-client\",\n    \"example\",\n]\nresolver = \"2\"\n\n[workspace.package]\nedition = \"2021\"\n\n[workspace.dependencies]\nsolana-sdk = \"2\"\nsolana-client = \"2\"\nsolana-account-decoder = \"2\"\n",
+      "integration_opportunities": [
+        "Create Python wrapper for Rust API client",
+        "Integrate with DeepSeek trading agent",
+        "Connect to RL training data pipeline",
+        "Add risk management layer",
+        "Implement portfolio rebalancing"
+      ]
+    },
+    "cpi": {
+      "integration_opportunities": [
+        "Create custom CPI calls for RL strategies",
+        "Implement automated arbitrage programs",
+        "Add position management smart contracts",
+        "Integrate with MCPVotsAGI risk engine",
+        "Build perpetual trading automation"
+      ]
+    }
+  },
+  "integration_plan": {
+    "phase_1_immediate": {
+      "timeline": "1-2 weeks",
+      "priority": "HIGH",
+      "tasks": [
+        "Setup Jupiter Terminal in MCPVotsAGI frontend",
+        "Create Python wrapper for Jupiter Swap API",
+        "Connect Jupiter data to RL training monitor",
+        "Integrate with existing F: drive storage",
+        "Add Jupiter endpoints to Ultimate AGI System V3"
+      ]
+    },
+    "phase_2_enhancement": {
+      "timeline": "2-3 weeks",
+      "priority": "MEDIUM",
+      "tasks": [
+        "Implement RL strategies for Jupiter swaps",
+        "Add DeepSeek reasoning for trade decisions",
+        "Create perpetual trading interface",
+        "Build risk management automation",
+        "Add portfolio tracking dashboard"
+      ]
+    },
+    "phase_3_advanced": {
+      "timeline": "3-4 weeks",
+      "priority": "LOW",
+      "tasks": [
+        "Multi-DEX arbitrage strategies",
+        "Advanced RL training with Jupiter data",
+        "Cross-chain trading capabilities",
+        "Automated strategy backtesting",
+        "Performance monitoring and alerting"
+      ]
+    }
+  },
+  "environment_setup": {
+    "environment_setup": [
+      "cd jupiter-terminal && npm install",
+      "cd jupiter-swap-api-client && cargo build",
+      "cd jupiter-cpi-swap-example && anchor build"
+    ],
+    "required_tools": [
+      "Node.js 18+ for Jupiter Terminal",
+      "Rust/Cargo for Swap API client",
+      "Anchor framework for CPI programs",
+      "Solana CLI for blockchain interaction"
+    ],
+    "integration_endpoints": {
+      "terminal_ui": "http://localhost:3000",
+      "agi_system": "http://localhost:8889",
+      "frontend": "http://localhost:3002"
+    }
+  },
+  "code_generation": {
+    "files_created": [
+      "C:\\Workspace\\MCPVotsAGI\\jupiter_api_wrapper.py",
+      "C:\\Workspace\\MCPVotsAGI\\jupiter_rl_integration.py"
+    ],
+    "next_steps": [
+      "Test Jupiter API wrapper",
+      "Integrate with RL training system",
+      "Add to Ultimate AGI System V3",
+      "Create UI integration with terminal"
+    ]
+  },
+  "summary": {
+    "repositories_analyzed": 3,
+    "integration_phases": 3,
+    "immediate_tasks": 5,
+    "files_generated": 2
+  }
+}

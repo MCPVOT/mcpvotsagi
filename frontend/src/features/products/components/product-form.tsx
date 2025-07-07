@@ -76,6 +76,7 @@ export default function ProductForm({
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Form submission logic would be implemented here
+    console.log('Form submitted with values:', values);
   }
 
   return (

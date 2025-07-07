@@ -15,16 +15,27 @@ export default function Providers({
   // we need the resolvedTheme value to set the baseTheme for clerk based on the dark or light theme
   const { resolvedTheme } = useTheme();
 
+  // Check if we have valid Clerk keys or if Clerk is disabled
+  const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+  const isClerkEnabled = clerkPublishableKey &&
+    clerkPublishableKey !== 'pk_test_demo_key_for_development' &&
+    !clerkPublishableKey.includes('demo');
+
   return (
     <>
       <ActiveThemeProvider initialTheme={activeThemeValue}>
-        <ClerkProvider
-          appearance={{
-            baseTheme: resolvedTheme === 'dark' ? dark : undefined
-          }}
-        >
-          {children}
-        </ClerkProvider>
+        {isClerkEnabled ? (
+          <ClerkProvider
+            appearance={{
+              baseTheme: resolvedTheme === 'dark' ? dark : undefined
+            }}
+          >
+            {children}
+          </ClerkProvider>
+        ) : (
+          // Render children without Clerk when disabled/demo mode
+          children
+        )}
       </ActiveThemeProvider>
     </>
   );

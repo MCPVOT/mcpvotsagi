@@ -1,0 +1,23 @@
+{
+  "watchyourlan_host": "localhost",
+  "watchyourlan_port": 8840,
+  "scan_interval": 30,
+  "database_path": "data/watchyourlan_cyber.db",
+  "enable_jupiter_integration": true,
+  "enable_threat_detection": true,
+  "enable_crypto_monitoring": true,
+  "cyberpunk_theme": {
+    "colors": [
+      "#00ff00",
+      "#ff00ff",
+      "#00ffff",
+      "#ffff00"
+    ],
+    "effects": [
+      "glow",
+      "pulse",
+      "matrix"
+    ]
+  },
+  "demo_mode": true
+}

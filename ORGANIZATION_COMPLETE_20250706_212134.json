@@ -1,0 +1,1667 @@
+{
+  "organization_timestamp": "2025-07-06T21:21:34.172201",
+  "analysis": {
+    "categorized_files": {
+      "rl_trading": [
+        {
+          "name": "deepseek_r1_trading_agent_enhanced.py",
+          "type": "file",
+          "size": 20925,
+          "modified": "2025-07-06T20:36:41.253467"
+        },
+        {
+          "name": "deploy_jupiter_phase1.py",
+          "type": "file",
+          "size": 16615,
+          "modified": "2025-07-06T20:36:41.253467"
+        },
+        {
+          "name": "dgm_evolution_connector.py",
+          "type": "file",
+          "size": 10693,
+          "modified": "2025-07-02T17:59:19.224481"
+        },
+        {
+          "name": "jupiter_api_wrapper.py",
+          "type": "file",
+          "size": 21197,
+          "modified": "2025-07-06T20:25:43.105338"
+        },
+        {
+          "name": "jupiter_api_wrapper_fixed.py",
+          "type": "file",
+          "size": 19390,
+          "modified": "2025-07-06T20:36:07.186024"
+        },
+        {
+          "name": "JUPITER_DEX_ANALYSIS_20250706_175144.json",
+          "type": "file",
+          "size": 5523,
+          "modified": "2025-07-06T17:51:44.878875"
+        },
+        {
+          "name": "JUPITER_DEX_ANALYSIS_20250706_180357.json",
+          "type": "file",
+          "size": 5523,
+          "modified": "2025-07-06T18:03:57.017505"
+        },
+        {
+          "name": "JUPITER_DEX_ANALYSIS_20250706_180423.json",
+          "type": "file",
+          "size": 5523,
+          "modified": "2025-07-06T18:04:23.490635"
+        },
+        {
+          "name": "jupiter_dex_comprehensive_analyzer.py",
+          "type": "file",
+          "size": 12806,
+          "modified": "2025-07-06T17:51:42.516746"
+        },
+        {
+          "name": "JUPITER_DEX_INTEGRATION_REPORT_20250706_175144.md",
+          "type": "file",
+          "size": 3045,
+          "modified": "2025-07-06T17:51:44.878875"
+        },
+        {
+          "name": "JUPITER_DEX_INTEGRATION_REPORT_20250706_180357.md",
+          "type": "file",
+          "size": 3045,
+          "modified": "2025-07-06T18:03:57.018522"
+        },
+        {
+          "name": "JUPITER_DEX_INTEGRATION_REPORT_20250706_180423.md",
+          "type": "file",
+          "size": 3045,
+          "modified": "2025-07-06T18:04:23.490635"
+        },
+        {
+          "name": "JUPITER_INTEGRATION_COMPLETE_20250706_175928.json",
+          "type": "file",
+          "size": 5256,
+          "modified": "2025-07-06T17:59:28.287601"
+        },
+        {
+          "name": "JUPITER_INTEGRATION_COMPLETE_20250706_180633.json",
+          "type": "file",
+          "size": 5256,
+          "modified": "2025-07-06T18:06:33.948734"
+        },
+        {
+          "name": "JUPITER_INTEGRATION_COMPLETE_20250706_182655.json",
+          "type": "file",
+          "size": 5256,
+          "modified": "2025-07-06T18:26:55.267093"
+        },
+        {
+          "name": "JUPITER_INTEGRATION_COMPLETE_20250706_182947.json",
+          "type": "file",
+          "size": 5256,
+          "modified": "2025-07-06T18:29:47.682092"
+        },
+        {
+          "name": "JUPITER_INTEGRATION_PLAN.json",
+          "type": "file",
+          "size": 1060,
+          "modified": "2025-07-06T18:29:47.681088"
+        },
+        {
+          "name": "jupiter_rl_integration.py",
+          "type": "file",
+          "size": 32707,
+          "modified": "2025-07-06T20:01:41.080761"
+        },
+        {
+          "name": "jupiter_terminal_comprehensive_analysis.py",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-06T17:31:05.412446"
+        },
+        {
+          "name": "launch_trading_system_fixed.py",
+          "type": "file",
+          "size": 11223,
+          "modified": "2025-07-06T20:25:43.107485"
+        },
+        {
+          "name": "launch_trading_system_unicode_safe.py",
+          "type": "file",
+          "size": 20227,
+          "modified": "2025-07-06T20:34:07.169850"
+        },
+        {
+          "name": "launch_ultimate_trading_system_v3.py",
+          "type": "file",
+          "size": 19800,
+          "modified": "2025-07-06T20:01:41.083765"
+        },
+        {
+          "name": "mcpvotsagi_jupiter_integration.py",
+          "type": "file",
+          "size": 15044,
+          "modified": "2025-07-06T17:59:25.532186"
+        },
+        {
+          "name": "real_rl_training_monitor.py",
+          "type": "file",
+          "size": 10287,
+          "modified": "2025-07-03T08:05:34.822403"
+        },
+        {
+          "name": "solana_phantom_trading_integration.py",
+          "type": "file",
+          "size": 28393,
+          "modified": "2025-07-03T17:10:50.927185"
+        },
+        {
+          "name": "solana_precious_metals_trading.py",
+          "type": "file",
+          "size": 32649,
+          "modified": "2025-07-02T21:57:37.734946"
+        },
+        {
+          "name": "start_trading_systems.py",
+          "type": "file",
+          "size": 4691,
+          "modified": "2025-07-06T16:03:20.768823"
+        },
+        {
+          "name": "test_trading_systems.py",
+          "type": "file",
+          "size": 4228,
+          "modified": "2025-07-06T16:02:13.110616"
+        },
+        {
+          "name": "test_ultimate_trading_system_v3.py",
+          "type": "file",
+          "size": 11910,
+          "modified": "2025-07-06T20:01:41.083765"
+        },
+        {
+          "name": "ultimate_trading_dashboard_v3.py",
+          "type": "file",
+          "size": 26919,
+          "modified": "2025-07-06T20:33:35.807544"
+        },
+        {
+          "name": "ultimate_trading_dashboard_v3_fixed.py",
+          "type": "file",
+          "size": 31915,
+          "modified": "2025-07-06T20:33:35.808546"
+        },
+        {
+          "name": "ultimate_trading_system_v3.py",
+          "type": "file",
+          "size": 30414,
+          "modified": "2025-07-06T20:36:07.186024"
+        },
+        {
+          "name": "VERIFY_AND_INTEGRATE_RL.py",
+          "type": "file",
+          "size": 14785,
+          "modified": "2025-07-03T22:17:02.398504"
+        },
+        {
+          "name": "watchyourlan_analysis.py",
+          "type": "file",
+          "size": 7095,
+          "modified": "2025-07-06T20:49:21.254544"
+        },
+        {
+          "name": "WatchYourLAN_ANALYSIS_20250706_204924.json",
+          "type": "file",
+          "size": 3042,
+          "modified": "2025-07-06T20:49:24.085322"
+        },
+        {
+          "name": "WatchYourLAN_ANALYSIS_20250706_205147.json",
+          "type": "file",
+          "size": 3042,
+          "modified": "2025-07-06T20:51:47.646439"
+        },
+        {
+          "name": "WatchYourLAN_ANALYSIS_20250706_210505.json",
+          "type": "file",
+          "size": 3042,
+          "modified": "2025-07-06T21:05:05.737111"
+        },
+        {
+          "name": "watchyourlan_api_wrapper.py",
+          "type": "file",
+          "size": 10172,
+          "modified": "2025-07-06T20:50:29.959486"
+        },
+        {
+          "name": "watchyourlan_complete_integration.py",
+          "type": "file",
+          "size": 13617,
+          "modified": "2025-07-06T20:54:48.807213"
+        },
+        {
+          "name": "watchyourlan_dashboard_integration.py",
+          "type": "file",
+          "size": 24365,
+          "modified": "2025-07-06T20:54:48.806213"
+        },
+        {
+          "name": "WatchYourLAN_INTEGRATION_COMPLETE_20250706_205512.json",
+          "type": "file",
+          "size": 5993,
+          "modified": "2025-07-06T20:55:12.639843"
+        }
+      ],
+      "dashboards": [
+        {
+          "name": "ai_tools_integration_dashboard.py",
+          "type": "file",
+          "size": 2445,
+          "modified": "2025-07-06T18:16:35.347646"
+        },
+        {
+          "name": "build_frontend.sh",
+          "type": "file",
+          "size": 425,
+          "modified": "2025-07-06T01:38:17.506379"
+        },
+        {
+          "name": "CLAUDE_CODE_QUICK_TASKS.md",
+          "type": "file",
+          "size": 2103,
+          "modified": "2025-07-06T18:26:51.700860"
+        },
+        {
+          "name": "CREATE_INTEGRATED_FRONTEND.py",
+          "type": "file",
+          "size": 17195,
+          "modified": "2025-07-05T18:02:31.299007"
+        },
+        {
+          "name": "dashboard_metrics.db",
+          "type": "file",
+          "size": 24576,
+          "modified": "2025-07-02T21:40:35.815089"
+        },
+        {
+          "name": "integrated_status_dashboard.py",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-06T16:17:36.788391"
+        },
+        {
+          "name": "MIGRATION_GUIDE.md",
+          "type": "file",
+          "size": 9281,
+          "modified": "2025-07-05T22:30:25.133427"
+        },
+        {
+          "name": "production_dashboard_v3.py",
+          "type": "file",
+          "size": 42911,
+          "modified": "2025-07-06T21:17:27.677936"
+        },
+        {
+          "name": "quick_verify.py",
+          "type": "file",
+          "size": 1042,
+          "modified": "2025-07-05T22:58:11.678172"
+        },
+        {
+          "name": "requirements.txt",
+          "type": "file",
+          "size": 1494,
+          "modified": "2025-07-06T18:52:00.782447"
+        },
+        {
+          "name": "requirements_complete.txt",
+          "type": "file",
+          "size": 787,
+          "modified": "2025-07-03T22:15:37.809827"
+        },
+        {
+          "name": "requirements_real_data.txt",
+          "type": "file",
+          "size": 195,
+          "modified": "2025-07-03T08:05:34.832619"
+        },
+        {
+          "name": "start_frontend.js",
+          "type": "file",
+          "size": 786,
+          "modified": "2025-07-06T12:33:25.176596"
+        },
+        {
+          "name": "start_frontend.sh",
+          "type": "file",
+          "size": 63,
+          "modified": "2025-07-06T12:28:51.296962"
+        }
+      ],
+      "agents": [
+        {
+          "name": "analyze_claudia_system.py",
+          "type": "file",
+          "size": 22788,
+          "modified": "2025-07-05T21:25:11.659430"
+        },
+        {
+          "name": "claudia_advanced_api_server.py",
+          "type": "file",
+          "size": 5451,
+          "modified": "2025-07-06T18:16:35.347646"
+        },
+        {
+          "name": "claudia_advanced_model_upgrade.py",
+          "type": "file",
+          "size": 20695,
+          "modified": "2025-07-06T18:16:31.056878"
+        },
+        {
+          "name": "CLAUDIA_ADVANCED_UPGRADE_REPORT_20250706_181635.json",
+          "type": "file",
+          "size": 3129,
+          "modified": "2025-07-06T18:16:35.348646"
+        },
+        {
+          "name": "claudia_complete_model_upgrade.py",
+          "type": "file",
+          "size": 23604,
+          "modified": "2025-07-06T19:03:42.120718"
+        },
+        {
+          "name": "claudia_config.json",
+          "type": "file",
+          "size": 2040,
+          "modified": "2025-07-06T18:16:35.346646"
+        },
+        {
+          "name": "CLAUDIA_DEEPSEEK_ANALYSIS_REPORT.md",
+          "type": "file",
+          "size": 2948,
+          "modified": "2025-07-06T15:49:00.972717"
+        },
+        {
+          "name": "CLAUDIA_DEEPSEEK_INTEGRATION_SUMMARY.json",
+          "type": "file",
+          "size": 284,
+          "modified": "2025-07-06T15:49:00.973717"
+        },
+        {
+          "name": "claudia_deepseek_system_analyzer.py",
+          "type": "file",
+          "size": 32870,
+          "modified": "2025-07-06T15:08:38.690370"
+        },
+        {
+          "name": "claudia_integration_bridge.py",
+          "type": "file",
+          "size": 18674,
+          "modified": "2025-07-05T21:30:46.073869"
+        },
+        {
+          "name": "claudia_integration_completion_report.py",
+          "type": "file",
+          "size": 16196,
+          "modified": "2025-07-05T21:35:53.350212"
+        },
+        {
+          "name": "CLAUDIA_INTEGRATION_COMPLETION_REPORT_20250705_213532.json",
+          "type": "file",
+          "size": 7169,
+          "modified": "2025-07-05T21:35:32.314544"
+        },
+        {
+          "name": "CLAUDIA_INTEGRATION_COMPLETION_REPORT_20250705_213555.json",
+          "type": "file",
+          "size": 7139,
+          "modified": "2025-07-05T21:35:55.271738"
+        },
+        {
+          "name": "CLAUDIA_INTEGRATION_SUMMARY_20250705_213532.md",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-05T21:35:32.315536"
+        },
+        {
+          "name": "CLAUDIA_INTEGRATION_SUMMARY_20250705_213555.md",
+          "type": "file",
+          "size": 3681,
+          "modified": "2025-07-05T21:35:55.271738"
+        },
+        {
+          "name": "claudia_model_selection_demo.py",
+          "type": "file",
+          "size": 8817,
+          "modified": "2025-07-06T20:45:28.592417"
+        },
+        {
+          "name": "claudia_model_selection_demo_20250706_204529.json",
+          "type": "file",
+          "size": 5749,
+          "modified": "2025-07-06T20:45:29.991395"
+        },
+        {
+          "name": "claudia_model_upgrade_config.py",
+          "type": "file",
+          "size": 21552,
+          "modified": "2025-07-06T18:13:00.619629"
+        },
+        {
+          "name": "CLAUDIA_MODEL_UPGRADE_REPORT_20250706_182233.json",
+          "type": "file",
+          "size": 643,
+          "modified": "2025-07-06T18:22:33.350473"
+        },
+        {
+          "name": "CLAUDIA_OPTIMAL_CONFIG_REPORT_20250706_193547.json",
+          "type": "file",
+          "size": 1629,
+          "modified": "2025-07-06T19:35:47.886471"
+        },
+        {
+          "name": "CLAUDIA_OPTIMAL_CONFIG_REPORT_20250706_193645.json",
+          "type": "file",
+          "size": 1629,
+          "modified": "2025-07-06T19:36:45.195778"
+        },
+        {
+          "name": "claudia_optimal_performance_monitor.py",
+          "type": "file",
+          "size": 8029,
+          "modified": "2025-07-06T20:36:41.253467"
+        },
+        {
+          "name": "claudia_performance_log.json",
+          "type": "file",
+          "size": 1415,
+          "modified": "2025-07-06T19:41:56.362267"
+        },
+        {
+          "name": "claudia_performance_monitor_fixed.py",
+          "type": "file",
+          "size": 4251,
+          "modified": "2025-07-06T19:41:26.409106"
+        },
+        {
+          "name": "claudia_production_integration.py",
+          "type": "file",
+          "size": 25277,
+          "modified": "2025-07-05T21:30:46.074870"
+        },
+        {
+          "name": "CLAUDIA_SCRIPT_UPDATE_REPORT_20250706_193817.json",
+          "type": "file",
+          "size": 85,
+          "modified": "2025-07-06T19:38:17.917997"
+        },
+        {
+          "name": "CLAUDIA_SCRIPT_UPDATE_REPORT_20250706_193845.json",
+          "type": "file",
+          "size": 85,
+          "modified": "2025-07-06T19:38:45.293149"
+        },
+        {
+          "name": "CLAUDIA_SCRIPT_UPDATE_REPORT_20250706_194011.json",
+          "type": "file",
+          "size": 3178,
+          "modified": "2025-07-06T19:40:11.920493"
+        },
+        {
+          "name": "CLAUDIA_SCRIPT_UPDATE_REPORT_20250706_203641.json",
+          "type": "file",
+          "size": 3178,
+          "modified": "2025-07-06T20:36:41.254469"
+        },
+        {
+          "name": "claudia_setup_script.py",
+          "type": "file",
+          "size": 29123,
+          "modified": "2025-07-05T21:30:46.074870"
+        },
+        {
+          "name": "claudia_system_analysis_20250705_212513.json",
+          "type": "file",
+          "size": 11002,
+          "modified": "2025-07-05T21:25:13.196778"
+        },
+        {
+          "name": "CLAUDIA_UPGRADE_REPORT_20250706_185429.json",
+          "type": "file",
+          "size": 6530,
+          "modified": "2025-07-06T18:54:29.748804"
+        },
+        {
+          "name": "CLAUDIA_UPGRADE_REPORT_20250706_185453.json",
+          "type": "file",
+          "size": 7260,
+          "modified": "2025-07-06T18:54:53.052705"
+        },
+        {
+          "name": "CLAUDIA_UPGRADE_REPORT_20250706_190411.json",
+          "type": "file",
+          "size": 9691,
+          "modified": "2025-07-06T19:04:11.267547"
+        },
+        {
+          "name": "claudia_usage_monitor.py",
+          "type": "file",
+          "size": 1548,
+          "modified": "2025-07-06T18:16:35.346646"
+        },
+        {
+          "name": "DEEPSEEK_R1_AGENT_INTEGRATION_COMPLETE.md",
+          "type": "file",
+          "size": 4712,
+          "modified": "2025-07-05T21:11:44.327269"
+        },
+        {
+          "name": "deepseek_r1_mission_DEEPSEEK_R1_MISSION_20250705_210951.json",
+          "type": "file",
+          "size": 23174,
+          "modified": "2025-07-05T21:10:03.834727"
+        },
+        {
+          "name": "demonstrate_claudia_deepseek.py",
+          "type": "file",
+          "size": 11817,
+          "modified": "2025-07-06T15:12:18.955535"
+        },
+        {
+          "name": "deploy_agent_mission.py",
+          "type": "file",
+          "size": 8926,
+          "modified": "2025-07-05T20:49:27.964075"
+        },
+        {
+          "name": "deploy_context7_agent_mission.py",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-06T17:49:13.639160"
+        },
+        {
+          "name": "deploy_deepseek_r1_agent.py",
+          "type": "file",
+          "size": 12279,
+          "modified": "2025-07-05T21:09:49.609341"
+        },
+        {
+          "name": "execute_claudia_deepseek_analysis.py",
+          "type": "file",
+          "size": 6593,
+          "modified": "2025-07-06T15:08:38.690370"
+        },
+        {
+          "name": "generate_optimal_claudia_config.py",
+          "type": "file",
+          "size": 20728,
+          "modified": "2025-07-06T19:35:45.794379"
+        },
+        {
+          "name": "hierarchical_agent_system.py",
+          "type": "file",
+          "size": 18356,
+          "modified": "2025-07-05T23:09:13.237425"
+        },
+        {
+          "name": "LAUNCH_ULTIMATE_AGI_DEEPSEEK.py",
+          "type": "file",
+          "size": 12597,
+          "modified": "2025-07-04T21:22:14.306832"
+        },
+        {
+          "name": "START_ORACLE_V9.bat",
+          "type": "file",
+          "size": 516,
+          "modified": "2025-07-06T15:17:54.850837"
+        },
+        {
+          "name": "START_ULTIMATE_AGI_WITH_CLAUDIA.py",
+          "type": "file",
+          "size": 5480,
+          "modified": "2025-07-03T23:41:40.356821"
+        },
+        {
+          "name": "SYSTEM_CLEANUP_DEEPSEEK_REPORT.md",
+          "type": "file",
+          "size": 8896,
+          "modified": "2025-07-06T19:10:39.460165"
+        },
+        {
+          "name": "test_ollama_models_for_claudia.py",
+          "type": "file",
+          "size": 14993,
+          "modified": "2025-07-06T19:24:37.820725"
+        },
+        {
+          "name": "update_claudia_cc_scripts_optimal.py",
+          "type": "file",
+          "size": 18253,
+          "modified": "2025-07-06T19:40:09.576711"
+        },
+        {
+          "name": "verify_claudia_claude_config.py",
+          "type": "file",
+          "size": 9969,
+          "modified": "2025-07-06T20:43:48.761565"
+        }
+      ],
+      "integrations": [
+        {
+          "name": "acp_ipfs_integration.py",
+          "type": "file",
+          "size": 19045,
+          "modified": "2025-07-02T21:06:27.878627"
+        },
+        {
+          "name": "CLAUDE_CODE_WSL_INTEGRATION_TASKS.md",
+          "type": "file",
+          "size": 11685,
+          "modified": "2025-07-06T18:26:51.700860"
+        },
+        {
+          "name": "CONFIGURE_MCP_MEMORY.py",
+          "type": "file",
+          "size": 7164,
+          "modified": "2025-07-05T18:36:45.735094"
+        },
+        {
+          "name": "configure_mcp_memory_integration.py",
+          "type": "file",
+          "size": 13505,
+          "modified": "2025-07-05T19:07:44.745486"
+        },
+        {
+          "name": "configure_mcp_memory_integration_v2.py",
+          "type": "file",
+          "size": 21349,
+          "modified": "2025-07-05T19:07:44.747486"
+        },
+        {
+          "name": "context7_full_integration.py",
+          "type": "file",
+          "size": 17558,
+          "modified": "2025-07-05T23:24:21.867704"
+        },
+        {
+          "name": "CONTEXT7_INTEGRATION_COMPLETE.md",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-06T17:49:14.006681"
+        },
+        {
+          "name": "context7_stdio_integration.py",
+          "type": "file",
+          "size": 13184,
+          "modified": "2025-07-05T23:26:07.524625"
+        },
+        {
+          "name": "finnhub_integration.py",
+          "type": "file",
+          "size": 15100,
+          "modified": "2025-07-03T17:17:38.038930"
+        },
+        {
+          "name": "FULL_INTEGRATION_SETUP.bat",
+          "type": "file",
+          "size": 4476,
+          "modified": "2025-07-05T17:25:23.433934"
+        },
+        {
+          "name": "mcpvotsagi_claude_usage_monitor.py",
+          "type": "file",
+          "size": 23525,
+          "modified": "2025-07-06T18:22:14.464121"
+        },
+        {
+          "name": "mcpvotsagi_complete_organizer.py",
+          "type": "file",
+          "size": 49329,
+          "modified": "2025-07-06T21:21:32.968074"
+        },
+        {
+          "name": "MCP_INSTALLATION_SUCCESS.md",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-05T18:12:40.805647"
+        },
+        {
+          "name": "mcp_server_manager.py",
+          "type": "file",
+          "size": 11100,
+          "modified": "2025-07-03T21:22:03.170223"
+        },
+        {
+          "name": "MILESTONE_COMPLETE_FORK_INTEGRATION.md",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-05T18:12:40.481531"
+        },
+        {
+          "name": "n8n_enhanced_integration.py",
+          "type": "file",
+          "size": 22158,
+          "modified": "2025-07-03T08:41:25.419724"
+        },
+        {
+          "name": "n8n_workflow_integration.py",
+          "type": "file",
+          "size": 19108,
+          "modified": "2025-07-03T17:33:08.567073"
+        },
+        {
+          "name": "opencti_integration.py",
+          "type": "file",
+          "size": 23912,
+          "modified": "2025-07-02T21:43:43.600491"
+        },
+        {
+          "name": "real_backend_api.py",
+          "type": "file",
+          "size": 11434,
+          "modified": "2025-07-06T13:37:04.701046"
+        },
+        {
+          "name": "setup_core_mcp_servers.py",
+          "type": "file",
+          "size": 10159,
+          "modified": "2025-07-03T21:19:58.595433"
+        },
+        {
+          "name": "SETUP_MCP_SERVERS.bat",
+          "type": "file",
+          "size": 2078,
+          "modified": "2025-07-03T21:25:55.348734"
+        },
+        {
+          "name": "START_AGI_WITH_MCP.py",
+          "type": "file",
+          "size": 8231,
+          "modified": "2025-07-03T23:41:40.374439"
+        },
+        {
+          "name": "START_MCP_CHROME.bat",
+          "type": "file",
+          "size": 246,
+          "modified": "2025-07-04T23:05:39.963791"
+        },
+        {
+          "name": "START_MCP_SERVERS.bat",
+          "type": "file",
+          "size": 77,
+          "modified": "2025-07-03T21:52:35.546780"
+        },
+        {
+          "name": "START_MCP_SERVERS.py",
+          "type": "file",
+          "size": 13108,
+          "modified": "2025-07-04T21:31:46.916453"
+        },
+        {
+          "name": "test_ultimate_agi_v3_integration.py",
+          "type": "file",
+          "size": 13906,
+          "modified": "2025-07-05T19:10:07.553140"
+        },
+        {
+          "name": "ultimate_agi_api.py",
+          "type": "file",
+          "size": 6850,
+          "modified": "2025-07-06T02:10:25.442932"
+        }
+      ],
+      "configs": [
+        {
+          "name": "claude_monitor_config.json",
+          "type": "file",
+          "size": 1161,
+          "modified": "2025-07-06T18:22:33.349473"
+        },
+        {
+          "name": "configure_f_drive_storage.py",
+          "type": "file",
+          "size": 21518,
+          "modified": "2025-07-03T02:17:33.528157"
+        },
+        {
+          "name": "CONFIGURE_SYSTEM.py",
+          "type": "file",
+          "size": 19281,
+          "modified": "2025-07-04T21:22:14.306832"
+        },
+        {
+          "name": "EXTERNAL_LIBRARIES_SETUP_COMPLETE.md",
+          "type": "file",
+          "size": 4417,
+          "modified": "2025-07-05T17:36:47.193892"
+        },
+        {
+          "name": "install_all_dependencies.py",
+          "type": "file",
+          "size": 5005,
+          "modified": "2025-07-02T16:52:01.552724"
+        },
+        {
+          "name": "INSTALL_DEPS.sh",
+          "type": "file",
+          "size": 582,
+          "modified": "2025-07-03T22:17:20.093264"
+        },
+        {
+          "name": "INSTALL_EVERYTHING.py",
+          "type": "file",
+          "size": 12586,
+          "modified": "2025-07-03T22:15:23.250198"
+        },
+        {
+          "name": "orchestrator_config.json",
+          "type": "file",
+          "size": 5023,
+          "modified": "2025-07-06T21:17:27.676935"
+        },
+        {
+          "name": "setup.py",
+          "type": "file",
+          "size": 12869,
+          "modified": "2025-07-03T19:47:23.069515"
+        },
+        {
+          "name": "SETUP_COMPLETE_SYSTEM.bat",
+          "type": "file",
+          "size": 2044,
+          "modified": "2025-07-04T14:09:25.259157"
+        },
+        {
+          "name": "setup_unified_agi_portal.py",
+          "type": "file",
+          "size": 9635,
+          "modified": "2025-07-03T21:52:11.737042"
+        },
+        {
+          "name": "setup_unified_agi_portal_fixed.py",
+          "type": "file",
+          "size": 9594,
+          "modified": "2025-07-03T21:52:11.738043"
+        },
+        {
+          "name": "WINDOWS_SETUP_COMPLETE.md",
+          "type": "file",
+          "size": 8408,
+          "modified": "2025-07-04T21:35:16.817702"
+        }
+      ],
+      "docs": [
+        {
+          "name": "AI_TOOLS_RESEARCH_COORDINATION.md",
+          "type": "file",
+          "size": 7484,
+          "modified": "2025-07-06T18:21:10.814851"
+        },
+        {
+          "name": "AI_TOOLS_RESEARCH_COORDINATION_PLAN.md",
+          "type": "file",
+          "size": 7924,
+          "modified": "2025-07-06T18:16:31.057872"
+        },
+        {
+          "name": "analysis_results_analysis_20250706_154900.json",
+          "type": "file",
+          "size": 6922,
+          "modified": "2025-07-06T15:49:00.971717"
+        },
+        {
+          "name": "CHANGELOG.md",
+          "type": "file",
+          "size": 4816,
+          "modified": "2025-07-03T18:47:11.012120"
+        },
+        {
+          "name": "CLAUDE_OPUS_4_ANALYSIS_READY.md",
+          "type": "file",
+          "size": 5734,
+          "modified": "2025-07-05T22:14:25.265114"
+        },
+        {
+          "name": "COMPLETE_AI_TOOL_STACK_FINAL.md",
+          "type": "file",
+          "size": 6689,
+          "modified": "2025-07-06T18:56:21.324077"
+        },
+        {
+          "name": "COMPREHENSIVE_SYSTEM_ANALYSIS.md",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-05T18:12:39.530511"
+        },
+        {
+          "name": "CONTEXT7_COMPLETE_DOCUMENTATION.md",
+          "type": "file",
+          "size": 6664,
+          "modified": "2025-07-06T00:48:17.881565"
+        },
+        {
+          "name": "CONTEXT7_PORT_RESOLUTION_COMPLETE.md",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-06T17:49:14.240894"
+        },
+        {
+          "name": "CONTRIBUTING.md",
+          "type": "file",
+          "size": 4325,
+          "modified": "2025-07-03T18:47:11.011598"
+        },
+        {
+          "name": "CONVERSATION_SUMMARY_COMPRESSED.md",
+          "type": "file",
+          "size": 2097,
+          "modified": "2025-07-05T22:24:20.959854"
+        },
+        {
+          "name": "CONVERSATION_SUMMARY_FINAL.md",
+          "type": "file",
+          "size": 5293,
+          "modified": "2025-07-05T22:24:20.959854"
+        },
+        {
+          "name": "DEPLOYMENT_SUCCESS_JULY_3_2025.md",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-05T18:12:40.751178"
+        },
+        {
+          "name": "DEVELOPMENT.md",
+          "type": "file",
+          "size": 8850,
+          "modified": "2025-07-05T20:38:24.424893"
+        },
+        {
+          "name": "ENHANCED_README.md",
+          "type": "file",
+          "size": 5991,
+          "modified": "2025-07-04T22:00:44.046768"
+        },
+        {
+          "name": "ENHANCEMENT_REPORT.py",
+          "type": "file",
+          "size": 9356,
+          "modified": "2025-07-04T22:00:27.075043"
+        },
+        {
+          "name": "FINAL_VERIFICATION_REPORT.py",
+          "type": "file",
+          "size": 5306,
+          "modified": "2025-07-05T20:57:49.148709"
+        },
+        {
+          "name": "MISSION_ACCOMPLISHED_FINAL.md",
+          "type": "file",
+          "size": 4707,
+          "modified": "2025-07-06T19:44:40.019135"
+        },
+        {
+          "name": "MISSION_ACCOMPLISHED_SUMMARY.md",
+          "type": "file",
+          "size": 3159,
+          "modified": "2025-07-05T20:58:32.839274"
+        },
+        {
+          "name": "MOCK_REMOVAL_SUCCESS_REPORT.py",
+          "type": "file",
+          "size": 4436,
+          "modified": "2025-07-05T20:45:31.646329"
+        },
+        {
+          "name": "PRODUCTION_READY_SUMMARY.md",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-05T18:12:40.684811"
+        },
+        {
+          "name": "README.md",
+          "type": "file",
+          "size": 12819,
+          "modified": "2025-07-06T00:48:17.881565"
+        },
+        {
+          "name": "README_COMPLETE.md",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-04T21:22:15.774015"
+        },
+        {
+          "name": "README_ENHANCED.md",
+          "type": "file",
+          "size": 6233,
+          "modified": "2025-07-05T22:30:25.132427"
+        },
+        {
+          "name": "README_PROFESSIONAL.md",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-05T18:12:39.942453"
+        },
+        {
+          "name": "REPOSITORY_CLEANUP.md",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-05T18:12:40.844725"
+        },
+        {
+          "name": "REPOSITORY_ENHANCEMENT_COMPLETE.md",
+          "type": "file",
+          "size": 5860,
+          "modified": "2025-07-05T22:31:19.406437"
+        },
+        {
+          "name": "REPOSITORY_ORGANIZATION.md",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-05T18:12:40.201246"
+        },
+        {
+          "name": "SECURITY.md",
+          "type": "file",
+          "size": 3526,
+          "modified": "2025-07-03T18:47:11.012120"
+        },
+        {
+          "name": "SYSTEM_ARCHITECTURE_V3.md",
+          "type": "file",
+          "size": 9731,
+          "modified": "2025-07-06T19:03:42.123717"
+        },
+        {
+          "name": "ULTIMATE_AGI_ARCHITECTURE.md",
+          "type": "file",
+          "size": 8382,
+          "modified": "2025-07-06T00:42:34.663418"
+        },
+        {
+          "name": "ULTIMATE_AGI_CONSOLIDATION_SUCCESS.md",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-05T18:12:41.042271"
+        },
+        {
+          "name": "ULTIMATE_AGI_SYSTEM_V3_COMPLETE_DOCS.md",
+          "type": "file",
+          "size": 16338,
+          "modified": "2025-07-05T19:54:07.995789"
+        },
+        {
+          "name": "ULTIMATE_AGI_SYSTEM_V3_PRODUCTION_DOCS.md",
+          "type": "file",
+          "size": 17845,
+          "modified": "2025-07-06T00:48:17.881565"
+        },
+        {
+          "name": "ULTIMATE_AI_STACK_V4_COMPLETE.md",
+          "type": "file",
+          "size": 9077,
+          "modified": "2025-07-06T19:44:40.018132"
+        },
+        {
+          "name": "UPDATE_COMPLETE_SUMMARY.md",
+          "type": "file",
+          "size": 4894,
+          "modified": "2025-07-05T00:21:45.472100"
+        }
+      ],
+      "utils": [
+        {
+          "name": "CHECK_PORT.ps1",
+          "type": "file",
+          "size": 873,
+          "modified": "2025-07-03T22:58:39.749835"
+        },
+        {
+          "name": "fix_python_popup.ps1",
+          "type": "file",
+          "size": 2474,
+          "modified": "2025-07-06T15:24:09.429730"
+        },
+        {
+          "name": "fix_venv_associations.bat",
+          "type": "file",
+          "size": 1435,
+          "modified": "2025-07-06T15:27:12.052720"
+        },
+        {
+          "name": "fix_venv_associations.ps1",
+          "type": "file",
+          "size": 2374,
+          "modified": "2025-07-06T15:27:12.052720"
+        },
+        {
+          "name": "launcher.py",
+          "type": "file",
+          "size": 8375,
+          "modified": "2025-07-02T22:23:05.305604"
+        },
+        {
+          "name": "LAUNCH_ENHANCED_AGI.py",
+          "type": "file",
+          "size": 5366,
+          "modified": "2025-07-04T22:00:27.075043"
+        },
+        {
+          "name": "LAUNCH_ULTIMATE_AGI_V3.py",
+          "type": "file",
+          "size": 6818,
+          "modified": "2025-07-04T22:41:08.693815"
+        },
+        {
+          "name": "LAUNCH_ULTIMATE_AGI_V3_ENHANCED.py",
+          "type": "file",
+          "size": 4091,
+          "modified": "2025-07-05T17:55:00.012038"
+        },
+        {
+          "name": "launch_with_venv.sh",
+          "type": "file",
+          "size": 853,
+          "modified": "2025-07-02T21:35:01.454059"
+        },
+        {
+          "name": "ollama_model_test_results_20250706_193108.json",
+          "type": "file",
+          "size": 12999,
+          "modified": "2025-07-06T19:31:08.516816"
+        },
+        {
+          "name": "START_ECOSYSTEM_FIXED.ps1",
+          "type": "file",
+          "size": 2561,
+          "modified": "2025-07-06T14:58:48.826861"
+        },
+        {
+          "name": "START_SAFE_LAUNCHER.bat",
+          "type": "file",
+          "size": 2462,
+          "modified": "2025-07-06T15:17:54.851171"
+        },
+        {
+          "name": "test_claude_models.py",
+          "type": "file",
+          "size": 12233,
+          "modified": "2025-07-06T20:39:58.052754"
+        },
+        {
+          "name": "test_context7_full.py",
+          "type": "file",
+          "size": 7076,
+          "modified": "2025-07-05T23:26:48.656345"
+        },
+        {
+          "name": "TEST_F_DRIVE.bat",
+          "type": "file",
+          "size": 551,
+          "modified": "2025-07-05T17:08:07.604493"
+        },
+        {
+          "name": "test_script.py",
+          "type": "file",
+          "size": 15,
+          "modified": "2025-07-06T15:24:57.924083"
+        },
+        {
+          "name": "TEST_SYSTEM.py",
+          "type": "file",
+          "size": 3818,
+          "modified": "2025-07-04T23:08:15.306917"
+        },
+        {
+          "name": "ultimate_agi_launcher_v3.py",
+          "type": "file",
+          "size": 30737,
+          "modified": "2025-07-06T21:17:27.676935"
+        }
+      ],
+      "legacy": [
+        {
+          "name": ".env",
+          "type": "file",
+          "size": 837,
+          "modified": "2025-07-03T21:52:35.545729"
+        },
+        {
+          "name": ".env.example",
+          "type": "file",
+          "size": 4127,
+          "modified": "2025-07-05T20:33:44.017113"
+        },
+        {
+          "name": ".env.template",
+          "type": "file",
+          "size": 876,
+          "modified": "2025-07-04T21:22:15.773013"
+        },
+        {
+          "name": ".gitattributes",
+          "type": "file",
+          "size": 800,
+          "modified": "2025-07-03T19:54:53.624573"
+        },
+        {
+          "name": ".gitignore",
+          "type": "file",
+          "size": 3726,
+          "modified": "2025-07-03T19:57:50.554717"
+        },
+        {
+          "name": ".gitmodules",
+          "type": "file",
+          "size": 387,
+          "modified": "2025-07-04T21:05:05.042932"
+        },
+        {
+          "name": "AI_TOOLS_RESEARCH_COORDINATION.json",
+          "type": "file",
+          "size": 3523,
+          "modified": "2025-07-06T18:22:33.352468"
+        },
+        {
+          "name": "analyze_backend.py",
+          "type": "file",
+          "size": 20751,
+          "modified": "2025-07-06T14:11:00.778273"
+        },
+        {
+          "name": "backend_logs.txt",
+          "type": "file",
+          "size": 7909,
+          "modified": "2025-07-05T20:22:51.732443"
+        },
+        {
+          "name": "CLOUD_COMPUTE.bat",
+          "type": "file",
+          "size": 1101,
+          "modified": "2025-07-04T13:57:39.155158"
+        },
+        {
+          "name": "context7_http_client.py",
+          "type": "file",
+          "size": 9821,
+          "modified": "2025-07-05T23:25:08.030444"
+        },
+        {
+          "name": "context7_production_demo.py",
+          "type": "file",
+          "size": 10827,
+          "modified": "2025-07-06T00:54:51.452745"
+        },
+        {
+          "name": "docker-compose.yml",
+          "type": "file",
+          "size": 3507,
+          "modified": "2025-07-03T19:47:23.069515"
+        },
+        {
+          "name": "Dockerfile",
+          "type": "file",
+          "size": 1459,
+          "modified": "2025-07-03T19:47:23.069515"
+        },
+        {
+          "name": "ecosystem_core.py",
+          "type": "file",
+          "size": 27549,
+          "modified": "2025-07-02T22:21:45.396771"
+        },
+        {
+          "name": "ecosystem_index.py",
+          "type": "file",
+          "size": 17422,
+          "modified": "2025-07-02T21:22:39.314105"
+        },
+        {
+          "name": "ecosystem_knowledge.db",
+          "type": "file",
+          "size": 36864,
+          "modified": "2025-07-02T21:37:30.306776"
+        },
+        {
+          "name": "ecosystem_manager.py",
+          "type": "file",
+          "size": 39614,
+          "modified": "2025-07-03T02:10:49.253380"
+        },
+        {
+          "name": "ecosystem_manager_v3.py",
+          "type": "file",
+          "size": 54881,
+          "modified": "2025-07-03T02:27:32.732012"
+        },
+        {
+          "name": "ecosystem_manager_v4_clean.py",
+          "type": "file",
+          "size": 29651,
+          "modified": "2025-07-03T08:03:09.809507"
+        },
+        {
+          "name": "ecosystem_orchestrator.log",
+          "type": "file",
+          "size": 0,
+          "modified": "2025-07-04T23:02:12.681370"
+        },
+        {
+          "name": "enhanced_agi.db",
+          "type": "file",
+          "size": 16384,
+          "modified": "2025-07-04T22:00:56.384238"
+        },
+        {
+          "name": "F_DRIVE_DATA_INTELLIGENCE.py",
+          "type": "file",
+          "size": 11571,
+          "modified": "2025-07-05T17:07:58.232832"
+        },
+        {
+          "name": "health_monitor_v3.py",
+          "type": "file",
+          "size": 30888,
+          "modified": "2025-07-06T21:17:27.676935"
+        },
+        {
+          "name": "IMPLEMENTATION_COMPLETE.py",
+          "type": "file",
+          "size": 7615,
+          "modified": "2025-07-04T22:31:10.524892"
+        },
+        {
+          "name": "knowledge_base_system.py",
+          "type": "file",
+          "size": 22943,
+          "modified": "2025-07-05T17:06:58.219384"
+        },
+        {
+          "name": "LICENSE",
+          "type": "file",
+          "size": 1088,
+          "modified": "2025-07-03T18:47:11.012120"
+        },
+        {
+          "name": "package.json",
+          "type": "file",
+          "size": 858,
+          "modified": "2025-07-01T19:48:17.125096"
+        },
+        {
+          "name": "production_hierarchical_system.py",
+          "type": "file",
+          "size": 10031,
+          "modified": "2025-07-05T23:09:13.237425"
+        },
+        {
+          "name": "python_runner.ps1",
+          "type": "file",
+          "size": 1404,
+          "modified": "2025-07-06T15:24:09.429730"
+        },
+        {
+          "name": "realtime_market_data_collector.py",
+          "type": "file",
+          "size": 7721,
+          "modified": "2025-07-03T08:05:34.799258"
+        },
+        {
+          "name": "real_system_metrics_collector.py",
+          "type": "file",
+          "size": 9844,
+          "modified": "2025-07-03T08:05:34.820401"
+        },
+        {
+          "name": "run_python.bat",
+          "type": "file",
+          "size": 763,
+          "modified": "2025-07-06T15:23:01.230254"
+        },
+        {
+          "name": "run_python.ps1",
+          "type": "file",
+          "size": 1553,
+          "modified": "2025-07-06T15:23:01.230254"
+        },
+        {
+          "name": "simple_backend.js",
+          "type": "file",
+          "size": 2914,
+          "modified": "2025-07-06T12:20:22.606418"
+        },
+        {
+          "name": "start.sh",
+          "type": "file",
+          "size": 1196,
+          "modified": "2025-07-02T22:29:36.795116"
+        },
+        {
+          "name": "START_AGI.bat",
+          "type": "file",
+          "size": 2224,
+          "modified": "2025-07-06T15:17:54.852086"
+        },
+        {
+          "name": "START_AGI_CHAT.bat",
+          "type": "file",
+          "size": 133,
+          "modified": "2025-07-03T21:14:00.786651"
+        },
+        {
+          "name": "START_AGI_CHAT.ps1",
+          "type": "file",
+          "size": 231,
+          "modified": "2025-07-03T21:14:00.786651"
+        },
+        {
+          "name": "start_backend.py",
+          "type": "file",
+          "size": 2680,
+          "modified": "2025-07-06T02:09:43.726706"
+        },
+        {
+          "name": "START_COMPLETE_ECOSYSTEM.ps1",
+          "type": "file",
+          "size": 2600,
+          "modified": "2025-07-06T14:58:48.825862"
+        },
+        {
+          "name": "START_ECOSYSTEM.bat",
+          "type": "file",
+          "size": 482,
+          "modified": "2025-07-06T14:58:48.826861"
+        },
+        {
+          "name": "START_FULL_SYSTEM.bat",
+          "type": "file",
+          "size": 2470,
+          "modified": "2025-07-05T17:25:42.165316"
+        },
+        {
+          "name": "START_NO_POPUP.bat",
+          "type": "file",
+          "size": 3391,
+          "modified": "2025-07-06T15:17:54.852086"
+        },
+        {
+          "name": "START_ULTIMATE_AGI.bat",
+          "type": "file",
+          "size": 392,
+          "modified": "2025-07-03T22:02:27.876350"
+        },
+        {
+          "name": "START_ULTIMATE_AGI.py",
+          "type": "file",
+          "size": 1379,
+          "modified": "2025-07-03T22:02:53.659771"
+        },
+        {
+          "name": "START_UNIFIED_AGI_PORTAL.bat",
+          "type": "file",
+          "size": 988,
+          "modified": "2025-07-03T21:49:52.162943"
+        },
+        {
+          "name": "START_UNIFIED_AGI_PORTAL.py",
+          "type": "file",
+          "size": 5084,
+          "modified": "2025-07-03T21:49:52.162943"
+        },
+        {
+          "name": "START_UNIX.sh",
+          "type": "file",
+          "size": 2561,
+          "modified": "2025-07-04T21:22:14.311341"
+        },
+        {
+          "name": "START_V2.py",
+          "type": "file",
+          "size": 4250,
+          "modified": "2025-07-04T14:44:48.274564"
+        },
+        {
+          "name": "START_V3_CONTEXT7.py",
+          "type": "file",
+          "size": 5450,
+          "modified": "2025-07-04T21:10:24.115354"
+        },
+        {
+          "name": "START_WINDOWS.bat",
+          "type": "file",
+          "size": 3182,
+          "modified": "2025-07-06T15:15:39.428067"
+        },
+        {
+          "name": "STOP_ALL_AGI.bat",
+          "type": "file",
+          "size": 519,
+          "modified": "2025-07-03T22:58:08.452439"
+        },
+        {
+          "name": "ultimate_agi.db",
+          "type": "file",
+          "size": 24576,
+          "modified": "2025-07-03T22:02:55.665959"
+        },
+        {
+          "name": "ultimate_agi_capabilities_demo.py",
+          "type": "file",
+          "size": 14639,
+          "modified": "2025-07-06T00:42:34.663418"
+        },
+        {
+          "name": "ULTIMATE_AGI_DEMO_20250706_205652.json",
+          "type": "file",
+          "size": 6069,
+          "modified": "2025-07-06T20:56:52.513400"
+        },
+        {
+          "name": "ULTIMATE_AGI_DEMO_20250706_210530.json",
+          "type": "file",
+          "size": 6069,
+          "modified": "2025-07-06T21:05:30.693894"
+        },
+        {
+          "name": "ultimate_agi_orchestrator_v3.py",
+          "type": "file",
+          "size": 28325,
+          "modified": "2025-07-06T21:17:27.674935"
+        },
+        {
+          "name": "ultimate_agi_system_demo.py",
+          "type": "file",
+          "size": 14445,
+          "modified": "2025-07-06T20:56:51.484194"
+        },
+        {
+          "name": "ultimate_agi_v2.db",
+          "type": "file",
+          "size": 28672,
+          "modified": "2025-07-04T23:02:08.006488"
+        },
+        {
+          "name": "update_ecosystem_for_f_drive.py",
+          "type": "file",
+          "size": 24930,
+          "modified": "2025-07-03T02:24:45.330076"
+        },
+        {
+          "name": "UPDATE_SYSTEM.py",
+          "type": "file",
+          "size": 14340,
+          "modified": "2025-07-04T21:26:07.287237"
+        },
+        {
+          "name": "VERIFY_ALL_FUNCTIONAL.py",
+          "type": "file",
+          "size": 11351,
+          "modified": "2025-07-04T14:08:33.300874"
+        },
+        {
+          "name": "verify_mocks_removed.py",
+          "type": "file",
+          "size": 3404,
+          "modified": "2025-07-05T20:40:18.797538"
+        },
+        {
+          "name": "verify_port_resolution.py",
+          "type": "file",
+          "size": 1194,
+          "modified": "2025-07-05T22:58:11.678172"
+        },
+        {
+          "name": "verify_system_ready.py",
+          "type": "file",
+          "size": 7875,
+          "modified": "2025-07-03T20:55:33.492283"
+        },
+        {
+          "name": "VIEW_MEMORY_CONTENTS.py",
+          "type": "file",
+          "size": 5264,
+          "modified": "2025-07-05T18:37:16.579851"
+        }
+      ]
+    },
+    "total_files": 267
+  },
+  "directory_structure": {
+    "created_directories": [],
+    "target_structure": {
+      "core/": "Core system files and orchestrators",
+      "core/rl_trading/": "Reinforcement Learning trading system",
+      "core/agents/": "AI agents (DeepSeek, Claudia, etc.)",
+      "core/mcp/": "MCP servers and integrations",
+      "dashboards/": "Dashboard applications",
+      "dashboards/trading/": "Trading dashboards",
+      "dashboards/network/": "Network monitoring dashboards",
+      "integrations/": "External integrations",
+      "integrations/jupiter/": "Jupiter DEX integration",
+      "integrations/solana/": "Solana blockchain integration",
+      "integrations/watchyourlan/": "Network monitoring integration",
+      "utils/": "Utility scripts and helpers",
+      "config/": "Configuration files",
+      "docs/": "Documentation and reports",
+      "archive/": "Archived and legacy files",
+      "logs/": "Log files",
+      "data/": "Data storage",
+      "data/rl_models/": "RL model storage",
+      "data/trading_history/": "Trading history data",
+      "data/network_data/": "Network monitoring data"
+    }
+  },
+  "file_organization": {
+    "moved_files": [],
+    "files_moved": 0
+  },
+  "enhanced_systems": {
+    "rl_trading_system": "C:\\Workspace\\MCPVotsAGI\\core\\rl_trading\\enhanced_24x7_rl_system.py",
+    "claudia_ai_system": "C:\\Workspace\\MCPVotsAGI\\core\\agents\\claudia_advanced_system.py",
+    "master_orchestrator": "C:\\Workspace\\MCPVotsAGI\\core\\master_orchestrator.py"
+  },
+  "recommendations": [
+    "Run the master orchestrator to start all systems: python core/master_orchestrator.py",
+    "Monitor system performance through the trading dashboard",
+    "Use Claudia for continuous system improvement",
+    "Implement real Jupiter DEX API integration",
+    "Set up automated model training and deployment"
+  ]
+}

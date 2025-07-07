@@ -1,0 +1,102 @@
+{
+  "project_info": {
+    "name": "WatchYourLAN",
+    "description": "Lightweight network IP scanner with web GUI",
+    "technology_stack": {
+      "backend": "Go (Gin framework)",
+      "frontend": "TypeScript/SolidJS",
+      "database": "SQLite/PostgreSQL",
+      "monitoring": "Prometheus/InfluxDB integration"
+    },
+    "key_features": [
+      "Network IP scanning",
+      "Host discovery notifications",
+      "Online/offline history tracking",
+      "Web GUI dashboard",
+      "InfluxDB2 and Prometheus integration",
+      "Grafana dashboard support",
+      "Multi-architecture support"
+    ]
+  },
+  "architecture": {
+    "backend_structure": {
+      "main_entry": "cmd/",
+      "core_logic": "internal/",
+      "modules": [
+        "arp/ - ARP scanning functionality",
+        "check/ - Network checking",
+        "conf/ - Configuration management",
+        "db/ - Database operations",
+        "influx/ - InfluxDB integration",
+        "models/ - Data models",
+        "notify/ - Notification system",
+        "portscan/ - Port scanning",
+        "prometheus/ - Prometheus metrics",
+        "web/ - Web server and API"
+      ]
+    },
+    "frontend_structure": {
+      "framework": "SolidJS with TypeScript",
+      "build_tool": "Vite",
+      "components": "Component-based architecture",
+      "pages": "Multi-page application"
+    }
+  },
+  "integration_opportunities": {
+    "api_endpoints": [
+      "GET /api/hosts - Get all discovered hosts",
+      "GET /api/host/{id} - Get specific host details",
+      "GET /api/history - Get host history",
+      "POST /api/scan - Trigger manual scan",
+      "GET /api/stats - Get scanning statistics"
+    ],
+    "data_formats": {
+      "prometheus_metrics": "Network monitoring metrics",
+      "influxdb_data": "Time-series network data",
+      "json_api": "REST API responses"
+    },
+    "notification_system": {
+      "library": "Shoutrrr",
+      "supported_services": [
+        "Discord",
+        "Email",
+        "Gotify",
+        "Matrix",
+        "Ntfy",
+        "Pushover",
+        "Slack",
+        "Telegram",
+        "Generic Webhook"
+      ]
+    }
+  },
+  "dashboard_integration_plan": {
+    "phase_1": {
+      "title": "Basic Integration",
+      "tasks": [
+        "Create Python API wrapper for WatchYourLAN",
+        "Add network monitoring widget to main dashboard",
+        "Integrate host discovery data",
+        "Add basic network visualization"
+      ]
+    },
+    "phase_2": {
+      "title": "Advanced Features",
+      "tasks": [
+        "Real-time network monitoring",
+        "Network topology visualization",
+        "Security threat detection",
+        "Integration with trading system security"
+      ]
+    },
+    "phase_3": {
+      "title": "AI Enhancement",
+      "tasks": [
+        "AI-powered network anomaly detection",
+        "Predictive network analysis",
+        "Automated security responses",
+        "Integration with RL trading system"
+      ]
+    }
+  }
+}

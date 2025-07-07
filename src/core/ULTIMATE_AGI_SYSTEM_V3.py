@@ -996,6 +996,12 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
             self.app.router.add_get('/api/v3/storage/status', self.get_storage_status)
             self.app.router.add_post('/api/v3/storage/initialize', self.initialize_storage)
 
+            # Memory and Knowledge Graph routes
+            self.app.router.add_get('/api/v3/memory/graph', self.get_knowledge_graph)
+            self.app.router.add_get('/api/v3/memory/nodes', self.get_memory_nodes)
+            self.app.router.add_get('/api/v3/memory/search/{query}', self.search_memory)
+            self.app.router.add_post('/api/v3/memory/update', self.update_memory)
+
             # WebSocket for real-time updates
             self.app.router.add_get('/ws/v3/realtime', self.handle_websocket)
 

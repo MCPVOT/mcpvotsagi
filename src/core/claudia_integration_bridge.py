@@ -30,6 +30,54 @@ try:
 except ImportError:
     HAS_AIOHTTP = False
 
+# OPTIMAL MODEL CONFIGURATION (Generated from Performance Tests)
+OPTIMAL_MODELS = {
+    "primary": "{'name': 'qwen2.5-coder:latest', 'description': 'Primary model for complex tasks', 'use_cases': ['Complex reasoning', 'Mathematical analysis', 'System design', 'General problem solving'], 'performance': {'score': 0.945, 'avg_time': 8.94, 'success_rate': 1.0}, 'ollama_config': {'temperature': 0.1, 'top_p': 0.9, 'num_ctx': 4096, 'repeat_penalty': 1.1}}",
+    "code_generation": "{'name': 'hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL', 'description': 'Specialized for code generation', 'use_cases': ['Python/JavaScript/TypeScript code generation', 'Code debugging and analysis', 'API wrapper creation', 'Documentation generation'], 'performance': {'score': 0.4, 'avg_time': 24.43, 'success_rate': 0.4}, 'ollama_config': {'temperature': 0.05, 'top_p': 0.8, 'num_ctx': 8192, 'repeat_penalty': 1.05}}",
+    "fast_response": "{'name': 'llama3.2:latest', 'description': 'Fastest model for quick responses', 'use_cases': ['Quick queries', 'Status checks', 'Simple questions', 'Real-time responses'], 'performance': {'score': 0.92, 'avg_time': 5.37, 'success_rate': 1.0}, 'ollama_config': {'temperature': 0.3, 'top_p': 0.7, 'num_ctx': 2048, 'repeat_penalty': 1.0}}",
+    "jupiter_specialist": "{'name': 'deepseek-r1:latest', 'description': 'Specialized for Jupiter DEX integration', 'use_cases': ['Jupiter DEX analysis', 'Solana blockchain queries', 'Trading strategy development', 'DeFi protocol analysis'], 'performance': {'score': 0.4, 'avg_time': 28.23, 'success_rate': 0.4}, 'ollama_config': {'temperature': 0.2, 'top_p': 0.85, 'num_ctx': 4096, 'repeat_penalty': 1.1}}"
+}
+
+# Model routing configuration
+MODEL_ROUTING = {
+    "code_tasks": OPTIMAL_MODELS["code_generation"],
+    "reasoning_tasks": OPTIMAL_MODELS["primary"],
+    "quick_tasks": OPTIMAL_MODELS["fast_response"],
+    "jupiter_tasks": OPTIMAL_MODELS["jupiter_specialist"],
+    "general_tasks": OPTIMAL_MODELS["primary"]
+}
+
+# Performance metrics from testing
+MODEL_PERFORMANCE = {
+    "{'name': 'qwen2.5-coder:latest', 'description': 'Primary model for complex tasks', 'use_cases': ['Complex reasoning', 'Mathematical analysis', 'System design', 'General problem solving'], 'performance': {'score': 0.945, 'avg_time': 8.94, 'success_rate': 1.0}, 'ollama_config': {'temperature': 0.1, 'top_p': 0.9, 'num_ctx': 4096, 'repeat_penalty': 1.1}}": {"score": 0.945, "speed": 8.94, "success_rate": 1.0},
+    "{'name': 'llama3.2:latest', 'description': 'Fastest model for quick responses', 'use_cases': ['Quick queries', 'Status checks', 'Simple questions', 'Real-time responses'], 'performance': {'score': 0.92, 'avg_time': 5.37, 'success_rate': 1.0}, 'ollama_config': {'temperature': 0.3, 'top_p': 0.7, 'num_ctx': 2048, 'repeat_penalty': 1.0}}": {"score": 0.92, "speed": 5.37, "success_rate": 1.0},
+    "{'name': 'hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL', 'description': 'Specialized for code generation', 'use_cases': ['Python/JavaScript/TypeScript code generation', 'Code debugging and analysis', 'API wrapper creation', 'Documentation generation'], 'performance': {'score': 0.4, 'avg_time': 24.43, 'success_rate': 0.4}, 'ollama_config': {'temperature': 0.05, 'top_p': 0.8, 'num_ctx': 8192, 'repeat_penalty': 1.05}}": {"score": 0.4, "speed": 24.43, "success_rate": 0.4},
+}
+
+# OPTIMAL MODEL CONFIGURATION (Generated from Performance Tests)
+OPTIMAL_MODELS = {
+    "primary": "{'name': 'qwen2.5-coder:latest', 'description': 'Primary model for complex tasks', 'use_cases': ['Complex reasoning', 'Mathematical analysis', 'System design', 'General problem solving'], 'performance': {'score': 0.945, 'avg_time': 8.94, 'success_rate': 1.0}, 'ollama_config': {'temperature': 0.1, 'top_p': 0.9, 'num_ctx': 4096, 'repeat_penalty': 1.1}}",
+    "code_generation": "{'name': 'hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL', 'description': 'Specialized for code generation', 'use_cases': ['Python/JavaScript/TypeScript code generation', 'Code debugging and analysis', 'API wrapper creation', 'Documentation generation'], 'performance': {'score': 0.4, 'avg_time': 24.43, 'success_rate': 0.4}, 'ollama_config': {'temperature': 0.05, 'top_p': 0.8, 'num_ctx': 8192, 'repeat_penalty': 1.05}}",
+    "fast_response": "{'name': 'llama3.2:latest', 'description': 'Fastest model for quick responses', 'use_cases': ['Quick queries', 'Status checks', 'Simple questions', 'Real-time responses'], 'performance': {'score': 0.92, 'avg_time': 5.37, 'success_rate': 1.0}, 'ollama_config': {'temperature': 0.3, 'top_p': 0.7, 'num_ctx': 2048, 'repeat_penalty': 1.0}}",
+    "jupiter_specialist": "{'name': 'deepseek-r1:latest', 'description': 'Specialized for Jupiter DEX integration', 'use_cases': ['Jupiter DEX analysis', 'Solana blockchain queries', 'Trading strategy development', 'DeFi protocol analysis'], 'performance': {'score': 0.4, 'avg_time': 28.23, 'success_rate': 0.4}, 'ollama_config': {'temperature': 0.2, 'top_p': 0.85, 'num_ctx': 4096, 'repeat_penalty': 1.1}}"
+}
+
+# Model routing configuration
+MODEL_ROUTING = {
+    "code_tasks": OPTIMAL_MODELS["code_generation"],
+    "reasoning_tasks": OPTIMAL_MODELS["primary"],
+    "quick_tasks": OPTIMAL_MODELS["fast_response"],
+    "jupiter_tasks": OPTIMAL_MODELS["jupiter_specialist"],
+    "general_tasks": OPTIMAL_MODELS["primary"]
+}
+
+# Performance metrics from testing
+MODEL_PERFORMANCE = {
+    "{'name': 'qwen2.5-coder:latest', 'description': 'Primary model for complex tasks', 'use_cases': ['Complex reasoning', 'Mathematical analysis', 'System design', 'General problem solving'], 'performance': {'score': 0.945, 'avg_time': 8.94, 'success_rate': 1.0}, 'ollama_config': {'temperature': 0.1, 'top_p': 0.9, 'num_ctx': 4096, 'repeat_penalty': 1.1}}": {"score": 0.945, "speed": 8.94, "success_rate": 1.0},
+    "{'name': 'llama3.2:latest', 'description': 'Fastest model for quick responses', 'use_cases': ['Quick queries', 'Status checks', 'Simple questions', 'Real-time responses'], 'performance': {'score': 0.92, 'avg_time': 5.37, 'success_rate': 1.0}, 'ollama_config': {'temperature': 0.3, 'top_p': 0.7, 'num_ctx': 2048, 'repeat_penalty': 1.0}}": {"score": 0.92, "speed": 5.37, "success_rate": 1.0},
+    "{'name': 'hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL', 'description': 'Specialized for code generation', 'use_cases': ['Python/JavaScript/TypeScript code generation', 'Code debugging and analysis', 'API wrapper creation', 'Documentation generation'], 'performance': {'score': 0.4, 'avg_time': 24.43, 'success_rate': 0.4}, 'ollama_config': {'temperature': 0.05, 'top_p': 0.8, 'num_ctx': 8192, 'repeat_penalty': 1.05}}": {"score": 0.4, "speed": 24.43, "success_rate": 0.4},
+}
+
 logger = logging.getLogger(__name__)
 
 class ClaudiaCompleteIntegration:

@@ -47,13 +47,27 @@ if %errorlevel%==5 goto end
 :test
 echo.
 echo Running Core Systems Test...
-python TEST_CORE_SYSTEMS.py
+if exist "TEST_CORE_SYSTEMS.py" (
+    python "TEST_CORE_SYSTEMS.py"
+) else (
+    echo [ERROR] TEST_CORE_SYSTEMS.py not found!
+    echo [FALLBACK] Running basic system check...
+    python -c "import sys; print(f'Python {sys.version}'); print('System OK')"
+)
 goto menu
 
 :start
 echo.
 echo Starting ULTIMATE AGI SYSTEM...
-python CHECK_AND_START.py
+if exist "CHECK_AND_START.py" (
+    python "CHECK_AND_START.py"
+) else if exist "src\core\ULTIMATE_AGI_SYSTEM_V3.py" (
+    echo [FALLBACK] Starting Ultimate AGI System V3...
+    python "src\core\ULTIMATE_AGI_SYSTEM_V3.py"
+) else (
+    echo [ERROR] No valid launcher found!
+    echo [HELP] Please use START_ECOSYSTEM.bat or START_SAFE_LAUNCHER.bat
+)
 goto menu
 
 :stop

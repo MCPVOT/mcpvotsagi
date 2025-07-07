@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import Link from 'next/link';
 import { useState } from 'react';
 
-export default function SignInView() {
+export default function SignInView({ stars }: { stars?: number }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -55,9 +56,9 @@ export default function SignInView() {
           </form>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{' '}
-            <a href="/auth/sign-up" className="text-primary hover:underline">
+            <Link href="/auth/sign-up" className="text-primary hover:underline">
               Sign up
-            </a>
+            </Link>
           </div>
         </CardContent>
       </Card>

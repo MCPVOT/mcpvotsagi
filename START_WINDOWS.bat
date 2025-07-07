@@ -74,7 +74,25 @@ echo [WEB] Dashboard will be available at: http://localhost:8888
 echo [STOP] Press Ctrl+C to stop the system
 echo.
 
-python LAUNCH_ULTIMATE_AGI_DEEPSEEK.py
+REM Check if launch script exists
+if exist "LAUNCH_ULTIMATE_AGI_DEEPSEEK.py" (
+    echo [LAUNCH] Starting Ultimate AGI System...
+    python "LAUNCH_ULTIMATE_AGI_DEEPSEEK.py"
+) else (
+    echo [ERROR] Launch script not found: LAUNCH_ULTIMATE_AGI_DEEPSEEK.py
+    echo [FALLBACK] Starting alternative launcher...
+    if exist "src\core\ULTIMATE_AGI_SYSTEM_V3.py" (
+        python "src\core\ULTIMATE_AGI_SYSTEM_V3.py"
+    ) else (
+        echo [ERROR] No launch script found!
+        echo Available options:
+        echo   1. Use START_COMPLETE_ECOSYSTEM.ps1
+        echo   2. Use START_ECOSYSTEM.bat
+        echo   3. Run: python src\core\ULTIMATE_AGI_SYSTEM_V3.py
+        pause
+        exit /b 1
+    )
+)
 
 echo.
 echo [STOP] Ultimate AGI System stopped

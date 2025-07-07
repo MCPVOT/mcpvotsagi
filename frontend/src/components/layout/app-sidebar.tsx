@@ -61,11 +61,21 @@ const tenants = [
 
 export default function AppSidebar() {
   const pathname = usePathname();
-  const { isOpen } = useMediaQuery();
+  const { isOpen } = useMediaQuery("(min-width: 768px)");
   const { user } = useUser();
   const router = useRouter();
-  const handleSwitchTenant = (_tenantId: string) => {
+
+  // Mock user data when Clerk is disabled or user is null
+  const displayUser = user || {
+    imageUrl: "/default-avatar.png",
+    firstName: "Demo",
+    lastName: "User",
+    emailAddresses: [{ emailAddress: "demo@example.com" }]
+  };
+
+  const handleSwitchTenant = () => {
     // Tenant switching functionality would be implemented here
+    console.log('Switching tenant');
   };
 
   const activeTenant = tenants[0];
@@ -200,7 +210,11 @@ export default function AppSidebar() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   <IconLogout className='mr-2 h-4 w-4' />
-                  <SignOutButton redirectUrl='/auth/sign-in' />
+                  {user ? (
+                    <SignOutButton redirectUrl='/auth/sign-in' />
+                  ) : (
+                    <span onClick={() => router.push('/auth/sign-in')}>Sign In</span>
+                  )}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

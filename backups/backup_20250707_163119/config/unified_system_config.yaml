@@ -1,0 +1,85 @@
+claudia:
+  capabilities:
+  - agent_orchestration
+  - gui_automation
+  - workflow_management
+  path: claudia
+context7:
+  cache_ttl: 3600
+  capabilities:
+  - documentation
+  - library_detection
+  - code_context
+  path: tools/context7
+  port: 3001
+deepseek:
+  fallback_models:
+  - deepseek-r1
+  - deepseek-r1:latest
+  max_tokens: 4096
+  model_id: 2cfa2d3c7a64
+  preferred_model: unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL
+  timeout: 1200
+features:
+  1m_token_context: true
+  agent_orchestration: true
+  browser_automation: true
+  continuous_learning: true
+  ipfs_storage: true
+  knowledge_graph: true
+  multi_model_support: true
+  real_time_documentation: true
+  trading_engine: true
+mcp:
+  servers:
+  - capabilities:
+    - read
+    - write
+    - list
+    - search
+    name: filesystem
+    path: tools/mcp-filesystem
+    port: 3000
+  - capabilities:
+    - repositories
+    - issues
+    - pull_requests
+    name: github
+    path: tools/mcp-github
+    port: 3001
+  - capabilities:
+    - knowledge_graph
+    - entities
+    - relations
+    name: memory
+    path: tools/mcp-memory
+    port: 3002
+  - capabilities:
+    - navigate
+    - click
+    - type
+    - screenshot
+    name: browser
+    path: tools/mcp-browser
+    port: 3003
+  - capabilities:
+    - web_search
+    - local_search
+    name: brave-search
+    path: tools/mcp-brave-search
+    port: 3004
+system:
+  components:
+    claudia: true
+    context7: true
+    deepseek: true
+    ipfs: true
+    mcp_tools: true
+    memory: true
+    trading: true
+  database: ultimate_agi.db
+  host: 0.0.0.0
+  log_level: INFO
+  name: Ultimate AGI System
+  port: 8888
+  version: 2.0.0

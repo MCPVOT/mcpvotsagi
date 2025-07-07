@@ -9,6 +9,7 @@ import asyncio
 import json
 import logging
 import re
+import socket
 import subprocess
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
@@ -22,9 +23,13 @@ logger = logging.getLogger(__name__)
 class Context7Integration:
     """Integrates Context7 MCP server for real-time documentation"""
 
+    # Class variable to track used ports across all instances
+    _used_ports = set()
+    _port_lock = asyncio.Lock() if 'asyncio' in globals() else None
+
     def __init__(self, port: int = 3000):
-        self.port = port
-        self.base_url = f"http://localhost:{port}"
+        self.port = self._find_available_port(port)
+        self.base_url = f"http://localhost:{self.port}"
         self.mcp_process = None
         self.connected = False
         self.cache = {}
@@ -60,6 +65,32 @@ class Context7Integration:
             'ecosystem_analysis': self.deepseek_ecosystem_analysis
         }
 
+    def _find_available_port(self, start_port: int = 3000) -> int:
+        """Find an available port starting from start_port and reserve it"""
+        for port in range(start_port, start_port + 100):
+            # Skip if port is already reserved by another instance
+            if port in Context7Integration._used_ports:
+                continue
+
+            try:
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                    sock.bind(('localhost', port))
+                    # Reserve this port
+                    Context7Integration._used_ports.add(port)
+                    logger.info(f"🔍 Found and reserved available port: {port}")
+                    return port
+            except OSError:
+                continue
+
+        # If no port found in range, use a random available port
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.bind(('localhost', 0))
+            port = sock.getsockname()[1]
+            # Reserve this port
+            Context7Integration._used_ports.add(port)
+            logger.info(f"🔍 Using and reserved random available port: {port}")
+            return port
+
     async def connect(self) -> bool:
         """Connect to Context7 MCP server"""
         try:
@@ -88,22 +119,27 @@ class Context7Integration:
         try:
             # Check if already running
             if await self._check_server_health():
-                logger.info("Context7 server already running")
+                logger.info(f"✅ Context7 server already running on port {self.port}")
                 self.connected = True
                 return True
 
             # Try different methods to start Context7
             commands_to_try = [
-                # Try with npx.cmd on Windows
+                # Try with SSE transport (Server-Sent Events)
+                ['npx.cmd', '-y', '@upstash/context7-mcp', '--transport', 'sse', '--port', str(self.port)],
+                # Try with full path and SSE
+                ['C:\\Program Files\\nodejs\\npx.cmd', '-y', '@upstash/context7-mcp', '--transport', 'sse', '--port', str(self.port)],
+                # Try regular npx with SSE
+                ['npx', '-y', '@upstash/context7-mcp', '--transport', 'sse', '--port', str(self.port)],
+                # Fallback to HTTP transport
                 ['npx.cmd', '-y', '@upstash/context7-mcp', '--transport', 'http', '--port', str(self.port)],
-                # Try with full path to npm on Windows
-                ['C:\\Program Files\\nodejs\\npx.cmd', '-y', '@upstash/context7-mcp', '--transport', 'http', '--port', str(self.port)],
-                # Try with regular npx
                 ['npx', '-y', '@upstash/context7-mcp', '--transport', 'http', '--port', str(self.port)]
             ]
 
             for cmd in commands_to_try:
                 try:
+                    logger.info(f"🚀 Starting Context7 MCP server: {' '.join(cmd)}")
+
                     self.mcp_process = subprocess.Popen(
                         cmd,
                         stdout=subprocess.PIPE,
@@ -112,14 +148,28 @@ class Context7Integration:
                         shell=True if cmd[0].endswith('.cmd') else False
                     )
 
-                    # Wait for server to start
-                    await asyncio.sleep(3)
+                    # Wait for server to start with progressive checks
+                    for i in range(10):  # Try for 10 seconds
+                        await asyncio.sleep(1)
+                        if await self._check_server_health():
+                            self.connected = True
+                            logger.info(f"✅ Context7 MCP server started successfully on port {self.port}")
+                            return True
+                        logger.debug(f"⏳ Waiting for server startup... ({i+1}/10)")
 
-                    # Check health
-                    if await self._check_server_health():
-                        self.connected = True
-                        logger.info(f"✅ Context7 MCP server started on port {self.port}")
-                        return True
+                    # Check if process is still running
+                    if self.mcp_process and self.mcp_process.poll() is None:
+                        logger.warning(f"⚠️ Context7 server started but health check failed on port {self.port}")
+                        # Try to get output for debugging
+                        try:
+                            stdout, stderr = self.mcp_process.communicate(timeout=1)
+                            if stdout:
+                                logger.debug(f"Server stdout: {stdout.decode()}")
+                            if stderr:
+                                logger.debug(f"Server stderr: {stderr.decode()}")
+                        except:
+                            pass
+
                 except Exception as e:
                     logger.debug(f"Failed with command {cmd[0]}: {e}")
                     if self.mcp_process:
@@ -149,15 +199,37 @@ class Context7Integration:
             self.mcp_process.terminate()
             self.mcp_process = None
         self.connected = False
-        logger.info("Context7 server stopped")
+
+        # Release the reserved port
+        Context7Integration._used_ports.discard(self.port)
+        logger.info(f"Context7 server stopped and port {self.port} released")
 
     async def _check_server_health(self) -> bool:
-        """Check if Context7 server is healthy"""
+        """Check if Context7 server is healthy using SSE endpoints"""
         try:
             session = await self._get_session()
-            async with session.get(f"{self.base_url}/health") as resp:
-                return resp.status == 200
-        except:
+
+            # Test SSE endpoints first (Context7 with SSE transport)
+            sse_endpoints = [
+                f"{self.base_url}/mcp",
+                f"{self.base_url}/sse",
+                f"{self.base_url}/"
+            ]
+
+            for endpoint in sse_endpoints:
+                try:
+                    async with session.get(endpoint, timeout=5) as resp:
+                        logger.debug(f"🔍 Testing endpoint {endpoint}: {resp.status}")
+                        if resp.status in [200, 404, 406]:  # 406 = method not allowed (expected for SSE)
+                            logger.info(f"✅ Context7 server responding on port {self.port}")
+                            return True
+                except Exception as e:
+                    logger.debug(f"Endpoint {endpoint} failed: {e}")
+
+            return False
+
+        except Exception as e:
+            logger.debug(f"Health check error: {e}")
             return False
 
     def detect_libraries(self, text: str) -> Set[str]:
@@ -578,6 +650,19 @@ class Context7Integration:
     def get_deepseek_agent_status(self) -> Dict:
         """Get current status of DeepSeek-R1 agent"""
         return self.deepseek_agent.generate_agent_report()
+
+    def _release_port(self):
+        """Release the port used by this instance"""
+        if hasattr(self, 'port'):
+            Context7Integration._used_ports.discard(self.port)
+            logger.debug(f"🔓 Released port: {self.port}")
+
+    def __del__(self):
+        """Release port when instance is destroyed"""
+        try:
+            self._release_port()
+        except:
+            pass  # Ignore errors during cleanup
 
 # Utility class for Context7-enhanced code generation
 class Context7CodeAssistant:

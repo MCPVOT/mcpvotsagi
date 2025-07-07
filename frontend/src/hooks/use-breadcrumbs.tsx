@@ -26,6 +26,9 @@ export function useBreadcrumbs() {
   const pathname = usePathname();
 
   const breadcrumbs = useMemo(() => {
+    // Handle null pathname
+    if (!pathname) return [];
+
     // Check if we have a custom mapping for this exact path
     if (routeMapping[pathname]) {
       return routeMapping[pathname];

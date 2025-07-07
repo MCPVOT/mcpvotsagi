@@ -1,5 +1,4 @@
-import { Product, getProducts } from '@/lib/products-api';
-import { searchParamsCache } from '@/lib/searchparams';
+import { getProducts } from '@/lib/products-api';
 
 type ProductListingPageProps = Record<string, never>;
 
