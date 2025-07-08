@@ -32,7 +32,8 @@ import yaml
 sys.path.append(str(Path(__file__).parent / "TradingAgents"))
 
 # Import all components
-from dgm_trading_algorithms import (
+# Import path adjusted - see services/dgm_integration_manager.py for proper imports
+# from dgm_trading_algorithms import (
     UnifiedTradingAlgorithmEngine,
     TradingStrategy,
     MarketState,

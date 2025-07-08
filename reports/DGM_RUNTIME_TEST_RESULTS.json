@@ -1,0 +1,31 @@
+{
+  "imports": {
+    "dgm_evolution_connector": true,
+    "dgm_trading_algorithms_v2": true,
+    "dgm_trading_algorithms": true,
+    "ecosystem_manager": true
+  },
+  "syntax": {
+    "services/dgm_evolution_connector.py": true,
+    "src/trading/dgm_trading_algorithms_v2.py": true,
+    "src/trading/dgm_trading_algorithms.py": true,
+    "services/ecosystem_manager.py": true
+  },
+  "startup": {
+    "dgm_evolution_connector": false,
+    "dgm_trading_algorithms_v2": false
+  },
+  "configuration": {
+    "ecosystem_config.yaml": true,
+    "package.json": true
+  },
+  "utilities": {
+    "import_helper": true
+  },
+  "summary": {
+    "total_tests": 13,
+    "passed_tests": 11,
+    "failed_tests": 2,
+    "success_rate": 84.61538461538461
+  }
+}

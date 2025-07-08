@@ -558,7 +558,8 @@ class OptimizedTradingEngine(BaseComponent):
     async def _initialize(self):
         """Initialize trading engine components"""
         # Import algorithm components
-        from dgm_trading_algorithms import UnifiedTradingAlgorithmEngine
+        # Import path adjusted - see services/dgm_integration_manager.py for proper imports
+# from dgm_trading_algorithms import UnifiedTradingAlgorithmEngine
 
         self.algorithm_engine = UnifiedTradingAlgorithmEngine()
         self.algorithm_engine.load_checkpoint()

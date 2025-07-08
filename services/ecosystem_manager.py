@@ -832,7 +832,8 @@ import os
 import asyncio
 
 sys.path.append(r"C:\Workspace\MCPVotsAGI")
-from ecosystem_manager import EcosystemManager
+# Import path adjusted - see services/dgm_integration_manager.py for proper imports
+# from ecosystem_manager import EcosystemManager
 
 class MCPVotsAGIService(win32serviceutil.ServiceFramework):
     _svc_name_ = "MCPVotsAGI"
