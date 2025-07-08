@@ -1,0 +1,39 @@
+{
+  "timestamp": "2025-07-07T20:37:46.566658",
+  "scores": {
+    "health": 0.0,
+    "a2a": 50.0,
+    "overall": 25.0
+  },
+  "components": [
+    {
+      "name": "dgm_evolution_connector",
+      "description": "DGM Evolution Learning System",
+      "port": 8013,
+      "status": "offline"
+    },
+    {
+      "name": "dgm_trading_algorithms",
+      "description": "DGM Trading Algorithms",
+      "port": 8014,
+      "status": "offline"
+    },
+    {
+      "name": "a2a_protocol",
+      "description": "Agent-to-Agent Communication",
+      "port": 8001,
+      "status": "offline"
+    }
+  ],
+  "a2a_results": {
+    "redis": {
+      "success": true,
+      "message": "Redis connected"
+    },
+    "websocket": {
+      "success": false,
+      "error": "Not tested"
+    },
+    "overall": false
+  }
+}

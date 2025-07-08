@@ -12,6 +12,12 @@ pandas>=2.1.0
 pyyaml>=6.0.1
 requests>=2.31.0
 
+# Enhanced A2A Communication System
+redis>=4.5.0
+aioredis>=2.0.0
+msgpack>=1.0.0
+aiodns>=3.0.0
+
 # Jupiter DEX Integration
 solana>=0.30.0
 anchorpy>=0.18.0
@@ -83,6 +89,11 @@ click>=8.1.7
 # Claude Code Usage Monitor
 typer>=0.9.0
 typing-extensions>=4.8.0
+
+# DGM Integration Dependencies
+prometheus-client>=0.19.0
+aiocache>=0.12.0
+tenacity>=8.2.0
 
 # Optional Dependencies
 jupyter>=1.0.0

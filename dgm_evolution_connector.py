@@ -18,7 +18,7 @@ logger = logging.getLogger("DGMEvolutionConnector")
 
 class DGMEvolutionConnector:
     """Connect to DGM Evolution Engine 2.0"""
-    
+
     def __init__(self):
         self.dgm_url = "http://localhost:8013"  # DGM Evolution port
         self.session = None
@@ -36,17 +36,17 @@ class DGMEvolutionConnector:
                 'proof-generation'
             ]
         }
-        
+
     async def connect(self):
         """Initialize connection to DGM"""
         self.session = aiohttp.ClientSession()
         logger.info("Connected to DGM Evolution Engine")
-        
+
     async def close(self):
         """Close connection"""
         if self.session:
             await self.session.close()
-            
+
     async def create_program(self, task: str) -> Dict[str, Any]:
         """Create a self-modifying program"""
         try:
@@ -61,7 +61,7 @@ class DGMEvolutionConnector:
                     return self._simulate_program_creation(task)
         except:
             return self._simulate_program_creation(task)
-            
+
     async def evolve(self, program_id: str) -> Dict[str, Any]:
         """Evolve a program using genetic algorithms"""
         try:
@@ -79,7 +79,7 @@ class DGMEvolutionConnector:
                     return self._simulate_evolution()
         except:
             return self._simulate_evolution()
-            
+
     async def self_modify(self, program_id: str, modification: str) -> Dict[str, Any]:
         """Perform Gödel machine self-modification"""
         try:
@@ -96,7 +96,7 @@ class DGMEvolutionConnector:
                     return self._simulate_self_modification(modification)
         except:
             return self._simulate_self_modification(modification)
-            
+
     async def meta_learn(self, experiences: List[Dict]) -> Dict[str, Any]:
         """Meta-learning from experiences"""
         try:
@@ -110,18 +110,18 @@ class DGMEvolutionConnector:
                     return self._simulate_meta_learning(len(experiences))
         except:
             return self._simulate_meta_learning(len(experiences))
-            
+
     async def get_evolution_metrics(self) -> Dict[str, Any]:
         """Get current evolution metrics"""
         self.current_generation += 1
-        
+
         # Update fitness score
         improvement = random.uniform(-2, 5)
-        self.evolution_state['fitness_score'] = min(100, max(0, 
+        self.evolution_state['fitness_score'] = min(100, max(0,
             self.evolution_state['fitness_score'] + improvement))
-        
+
         self.fitness_history.append(self.evolution_state['fitness_score'])
-        
+
         # Occasionally discover new capabilities
         if random.random() < 0.1:
             new_capabilities = [
@@ -139,7 +139,7 @@ class DGMEvolutionConnector:
                     'name': capability,
                     'generation': self.current_generation
                 })
-        
+
         return {
             'generation': self.current_generation,
             'fitness_score': self.evolution_state['fitness_score'],
@@ -149,7 +149,7 @@ class DGMEvolutionConnector:
             'recent_improvements': self.evolution_state['improvements'][-5:],
             'fitness_trend': 'improving' if improvement > 0 else 'declining'
         }
-        
+
     def _simulate_program_creation(self, task: str) -> Dict[str, Any]:
         """Simulate program creation when DGM offline"""
         return {
@@ -159,7 +159,7 @@ class DGMEvolutionConnector:
             'fitness': random.uniform(70, 90),
             'created': datetime.now().isoformat()
         }
-        
+
     def _simulate_evolution(self) -> Dict[str, Any]:
         """Simulate evolution process"""
         best_fitness = random.uniform(85, 95)
@@ -170,7 +170,7 @@ class DGMEvolutionConnector:
             'Adaptive learning rate',
             'Dynamic resource allocation'
         ]
-        
+
         return {
             'generation': self.current_generation,
             'best_fitness': best_fitness,
@@ -178,11 +178,11 @@ class DGMEvolutionConnector:
             'mutations_applied': random.sample(mutations, 2),
             'improvement': random.uniform(0, 5)
         }
-        
+
     def _simulate_self_modification(self, modification: str) -> Dict[str, Any]:
         """Simulate self-modification"""
         proof_valid = random.random() > 0.3  # 70% success rate
-        
+
         return {
             'modification': modification,
             'proof_status': 'valid' if proof_valid else 'invalid',
@@ -190,11 +190,11 @@ class DGMEvolutionConnector:
             'expected_improvement': random.uniform(2, 10) if proof_valid else 0,
             'risk_assessment': 'low' if proof_valid else 'high'
         }
-        
+
     def _simulate_meta_learning(self, experience_count: int) -> Dict[str, Any]:
         """Simulate meta-learning"""
         patterns_discovered = random.randint(1, min(5, experience_count // 10))
-        
+
         return {
             'experiences_processed': experience_count,
             'patterns_discovered': patterns_discovered,
@@ -205,33 +205,33 @@ class DGMEvolutionConnector:
 
 class DGMEvolutionMonitor:
     """Monitor DGM Evolution in real-time"""
-    
+
     def __init__(self, connector: DGMEvolutionConnector):
         self.connector = connector
         self.monitoring = False
-        
+
     async def start_monitoring(self, broadcast_func):
         """Start monitoring DGM evolution"""
         self.monitoring = True
-        
+
         while self.monitoring:
             try:
                 # Get evolution metrics
                 metrics = await self.connector.get_evolution_metrics()
-                
+
                 # Format log messages
                 logs = []
-                
+
                 logs.append(f"[DGM] Generation: {metrics['generation']} | Fitness: {metrics['fitness_score']:.1f}%")
-                
+
                 if metrics['fitness_trend'] == 'improving':
                     logs.append(f"[DGM] Fitness improving (↑ {metrics['fitness_score'] - 85:.1f}%)")
-                
+
                 # Check for new capabilities
                 for improvement in metrics['recent_improvements']:
                     if improvement['type'] == 'new_capability':
                         logs.append(f"[DGM] New capability discovered: {improvement['name']}")
-                
+
                 # Simulate various DGM activities
                 activities = [
                     "[DGM] Self-modification proof found: Valid",
@@ -241,11 +241,11 @@ class DGMEvolutionMonitor:
                     "[DGM] Cross-validation score: {:.1f}%".format(random.uniform(82, 95)),
                     "[DGM] Gödel machine reasoning depth: {} levels".format(random.randint(3, 7))
                 ]
-                
+
                 # Add random activity
                 if random.random() < 0.3:
                     logs.append(random.choice(activities))
-                
+
                 # Broadcast logs
                 for log in logs:
                     await broadcast_func({
@@ -257,13 +257,182 @@ class DGMEvolutionMonitor:
                         }
                     })
                     await asyncio.sleep(0.5)
-                
+
                 await asyncio.sleep(random.uniform(8, 15))
-                
+
             except Exception as e:
                 logger.error(f"DGM monitoring error: {e}")
                 await asyncio.sleep(10)
-                
+
     def stop_monitoring(self):
         """Stop monitoring"""
         self.monitoring = False
+
+    async def get_metrics(self) -> Dict[str, Any]:
+        """Get current evolution metrics"""
+        return {
+            'current_generation': self.current_generation,
+            'fitness_score': self.evolution_state['fitness_score'],
+            'population_size': self.evolution_state['population_size'],
+            'mutation_rate': self.evolution_state['mutation_rate'],
+            'capabilities': self.evolution_state['capabilities'],
+            'improvements': self.evolution_state['improvements'][-5:],  # Last 5 improvements
+            'fitness_history': self.fitness_history[-10:],  # Last 10 fitness scores
+            'timestamp': datetime.now().isoformat()
+        }
+
+# Web Service Interface for DGM Evolution Connector
+# =================================================
+
+from aiohttp import web
+import aiohttp_cors
+
+class DGMEvolutionService:
+    """Web service wrapper for DGM Evolution Connector"""
+
+    def __init__(self, port: int = 8002):
+        self.port = port
+        self.connector = DGMEvolutionConnector()
+        self.app = web.Application()
+        self.setup_routes()
+        self.setup_cors()
+
+    def setup_routes(self):
+        """Setup web service routes"""
+        self.app.router.add_get('/health', self.health_check)
+        self.app.router.add_get('/status', self.get_status)
+        self.app.router.add_post('/evolve', self.evolve_program)
+        self.app.router.add_post('/optimize', self.optimize_algorithm)
+        self.app.router.add_get('/metrics', self.get_metrics)
+
+    def setup_cors(self):
+        """Setup CORS for web API"""
+        cors = aiohttp_cors.setup(self.app, defaults={
+            "*": aiohttp_cors.ResourceOptions(
+                allow_credentials=True,
+                expose_headers="*",
+                allow_headers="*",
+                allow_methods="*"
+            )
+        })
+
+        for route in list(self.app.router.routes()):
+            cors.add(route)
+
+    async def health_check(self, request):
+        """Health check endpoint"""
+        return web.json_response({
+            'status': 'healthy',
+            'service': 'DGM Evolution Connector',
+            'timestamp': datetime.now().isoformat(),
+            'generation': self.connector.current_generation
+        })
+
+    async def get_status(self, request):
+        """Get DGM evolution status"""
+        return web.json_response({
+            'evolution_state': self.connector.evolution_state,
+            'current_generation': self.connector.current_generation,
+            'fitness_history': self.connector.fitness_history[-10:],  # Last 10 entries
+            'monitoring': self.connector.monitoring
+        })
+
+    async def evolve_program(self, request):
+        """Evolve a program for a given task"""
+        try:
+            data = await request.json()
+            task = data.get('task', 'optimization')
+
+            result = await self.connector.create_program(task)
+            return web.json_response(result)
+
+        except Exception as e:
+            return web.json_response({
+                'error': str(e),
+                'status': 'failed'
+            }, status=500)
+
+    async def optimize_algorithm(self, request):
+        """Optimize an existing algorithm"""
+        try:
+            data = await request.json()
+            algorithm = data.get('algorithm', {})
+
+            result = await self.connector.optimize_algorithm(algorithm)
+            return web.json_response(result)
+
+        except Exception as e:
+            return web.json_response({
+                'error': str(e),
+                'status': 'failed'
+            }, status=500)
+
+    async def get_metrics(self, request):
+        """Get evolution metrics"""
+        try:
+            metrics = await self.connector.get_metrics()
+            return web.json_response(metrics)
+
+        except Exception as e:
+            return web.json_response({
+                'error': str(e),
+                'status': 'failed'
+            }, status=500)
+
+    async def start_service(self):
+        """Start the DGM Evolution web service"""
+        await self.connector.connect()
+
+        logger.info(f"🚀 DGM Evolution Service starting on port {self.port}")
+
+        runner = web.AppRunner(self.app)
+        await runner.setup()
+
+        site = web.TCPSite(runner, '0.0.0.0', self.port)
+        await site.start()
+
+        logger.info(f"✅ DGM Evolution Service running on http://localhost:{self.port}")
+
+    async def broadcast_to_clients(self, message: Dict[str, Any]):
+        """Broadcast message to connected clients"""
+        # For now, just log the message
+        # In the future, this could broadcast to WebSocket clients
+        logger.info(f"DGM Evolution: {message.get('type', 'update')}")
+
+async def main():
+    """Main entry point for DGM Evolution Service"""
+    service = DGMEvolutionService(port=8002)
+
+    try:
+        await service.start_service()
+
+        print("✅ DGM Evolution Service is running!")
+        print("📊 Available endpoints:")
+        print("   - GET  /health   - Health check")
+        print("   - GET  /status   - Evolution status")
+        print("   - POST /evolve   - Evolve program")
+        print("   - POST /optimize - Optimize algorithm")
+        print("   - GET  /metrics  - Evolution metrics")
+        print("\n🎯 Press Ctrl+C to stop the service")
+
+        # Keep the service running
+        while True:
+            await asyncio.sleep(1)
+
+    except KeyboardInterrupt:
+        print("\n🛑 Shutting down DGM Evolution Service...")
+        await service.connector.close()
+        print("✅ Service stopped successfully")
+    except Exception as e:
+        logger.error(f"❌ Service error: {e}")
+        await service.connector.close()
+
+if __name__ == "__main__":
+    # Configure logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+
+    # Run the service
+    asyncio.run(main())

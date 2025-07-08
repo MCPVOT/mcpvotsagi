@@ -1,0 +1,49 @@
+{
+  "components": [
+    {
+      "name": "dgm_evolution_connector",
+      "description": "DGM Evolution Learning System",
+      "file_path": "dgm_evolution_connector.py",
+      "dependencies": [
+        "redis",
+        "memory_service"
+      ],
+      "health_check_url": "http://localhost:8002/health",
+      "metadata": {
+        "port": 8002,
+        "type": "core"
+      }
+    },
+    {
+      "name": "dgm_trading_algorithms_v2",
+      "description": "Advanced DGM Trading Algorithms",
+      "file_path": "src/trading/dgm_trading_algorithms_v2.py",
+      "dependencies": [
+        "dgm_evolution_connector",
+        "deepseek_mcp"
+      ],
+      "health_check_url": "http://localhost:8004/health",
+      "metadata": {
+        "port": 8004,
+        "type": "trading"
+      }
+    },
+    {
+      "name": "dgm_trading_algorithms",
+      "description": "Legacy DGM Trading System",
+      "file_path": "src/trading/dgm_trading_algorithms.py",
+      "dependencies": [
+        "redis"
+      ],
+      "health_check_url": "http://localhost:8005/health",
+      "metadata": {
+        "port": 8005,
+        "type": "legacy"
+      }
+    }
+  ],
+  "redis_url": "redis://:mcpvotsagi2025@localhost:6379/0",
+  "enable_metrics": true,
+  "enable_a2a": true,
+  "log_level": "INFO"
+}

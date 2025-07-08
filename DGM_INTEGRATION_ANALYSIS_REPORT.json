@@ -1,0 +1,70 @@
+{
+  "metrics": {
+    "components_analyzed": 3,
+    "health_checks_passed": 0,
+    "health_checks_total": 3,
+    "a2a_tests_passed": 2,
+    "a2a_tests_total": 3,
+    "redis_available": true,
+    "prometheus_available": true,
+    "analysis_timestamp": "2025-07-07T20:47:17.214541"
+  },
+  "errors": [
+    {
+      "source": "health_check",
+      "component": "dgm_evolution_connector",
+      "error": "Port 8002 not accessible, service not running",
+      "severity": "high"
+    },
+    {
+      "source": "health_check",
+      "component": "dgm_trading_algorithms_v2",
+      "error": "File not found and port 8004 not accessible",
+      "severity": "high"
+    },
+    {
+      "source": "health_check",
+      "component": "dgm_trading_algorithms",
+      "error": "File not found and port 8005 not accessible",
+      "severity": "high"
+    },
+    {
+      "source": "a2a_test",
+      "component": "websocket",
+      "error": "WebSocket connection failed due to timeout parameter issue",
+      "severity": "medium"
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "high",
+      "action": "Start DGM services",
+      "description": "Launch dgm_evolution_connector.py and other DGM services on their designated ports"
+    },
+    {
+      "priority": "high",
+      "action": "Create missing DGM files",
+      "description": "Implement or restore dgm_trading_algorithms_v2.py and dgm_trading_algorithms.py"
+    },
+    {
+      "priority": "medium",
+      "action": "Fix WebSocket timeout issue",
+      "description": "Update websockets library or adjust connection parameters in A2A protocol"
+    },
+    {
+      "priority": "medium",
+      "action": "Implement service auto-start",
+      "description": "Create startup scripts to automatically launch all DGM services"
+    }
+  ],
+  "scores": {
+    "health_score": 0.0,
+    "a2a_score": 66.66666666666666,
+    "overall_score": 33.33333333333333
+  },
+  "summary": {
+    "status": "needs_improvement",
+    "critical_issues": 3,
+    "total_issues": 4
+  }
+}

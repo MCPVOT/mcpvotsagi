@@ -1,0 +1,48 @@
+{
+  "consolidated_services": {
+    "unified_agi_portal": {
+      "port": 8000,
+      "status": "primary"
+    },
+    "a2a_enhanced_protocol": {
+      "port": 8001,
+      "status": "primary"
+    },
+    "enhanced_mcp_memory": {
+      "port": 3002,
+      "status": "primary"
+    },
+    "deepseek_trading_enhanced": {
+      "port": 8004,
+      "status": "primary"
+    },
+    "ecosystem_manager_v4": {
+      "port": 8002,
+      "status": "primary"
+    },
+    "consolidated_mcp_servers": {
+      "ports": "3000-3007",
+      "status": "primary"
+    }
+  },
+  "deprecated_services": {
+    "oracle_agi_v5_*": "replaced by unified_agi_portal",
+    "oracle_agi_v6_*": "replaced by unified_agi_portal",
+    "oracle_agi_v7_*": "replaced by unified_agi_portal",
+    "oracle_agi_v8_*": "replaced by unified_agi_portal",
+    "oracle_agi_ultimate_*": "replaced by unified_agi_portal",
+    "knowledge_base_system": "replaced by enhanced_mcp_memory",
+    "basic_a2a_protocol": "replaced by a2a_enhanced_protocol",
+    "dgm_trading_algorithms": "replaced by deepseek_trading_enhanced"
+  },
+  "redis_integration": {
+    "host": "localhost",
+    "port": 6379,
+    "password": "MCPVotsAGI2025!",
+    "databases": {
+      "0": "a2a_communication",
+      "1": "mcp_memory",
+      "2": "system_cache"
+    }
+  }
+}
