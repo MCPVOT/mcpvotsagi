@@ -35,6 +35,9 @@ from collections import defaultdict, OrderedDict
 import copy
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
+import aiohttp
+from aiohttp import web, web_response
+import aiohttp_cors
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("NeuralArchitectureSearch")
@@ -704,7 +707,24 @@ class NASController:
         }
 
 async def main():
-    """Main function for testing NAS"""
+    """Main function - start web server for NAS API"""
+    from aiohttp import web, web_response
+    import aiohttp_cors
+
+    # Create web application
+    app = web.Application()
+
+    # Setup CORS
+    cors = aiohttp_cors.setup(app, defaults={
+        "*": aiohttp_cors.ResourceOptions(
+            allow_credentials=True,
+            expose_headers="*",
+            allow_headers="*",
+            allow_methods="*"
+        )
+    })
+
+    # Global NAS controller
     config = ArchitectureConfig(
         num_cells=6,
         num_nodes_per_cell=4,
@@ -712,16 +732,151 @@ async def main():
         input_channels=1,
         num_classes=2
     )
+    nas_controller = NASController(config)
 
-    controller = NASController(config)
+    # Health check endpoint
+    async def health_check(request):
+        return web_response.json_response({
+            "status": "healthy",
+            "service": "Neural Architecture Search",
+            "version": "1.0.0",
+            "timestamp": time.time()
+        })
 
-    # Run evolutionary search
-    logger.info("🚀 Starting Neural Architecture Search")
-    result = await controller.search_architecture("evolutionary", generations=5)
+    # Status endpoint
+    async def get_status(request):
+        return web_response.json_response({
+            "service": "Neural Architecture Search",
+            "status": "running",
+            "supported_methods": ["darts", "evolutionary", "progressive"],
+            "active_searches": 0,
+            "timestamp": time.time()
+        })
 
-    logger.info("✅ NAS Complete!")
-    logger.info(f"Best fitness: {result['best_fitness']:.4f}")
-    logger.info(f"Best architecture: {json.dumps(result['best_architecture'], indent=2)}")
+    # DARTS search endpoint
+    async def darts_search(request):
+        try:
+            data = await request.json()
+            search_space = data.get('search_space', 'macro')
+            epochs = data.get('epochs', 10)
+            channels = data.get('channels', 16)
+
+            logger.info(f"� Starting DARTS search: epochs={epochs}, channels={channels}")
+
+            # Run DARTS search
+            result = await nas_controller.search_architecture("darts", generations=epochs)
+
+            logger.info(f"✅ DARTS search complete: {result['best_fitness']:.4f}")
+
+            return web_response.json_response({
+                "message": "DARTS search completed successfully",
+                "search_method": "darts",
+                "result": result,
+                "timestamp": time.time()
+            })
+
+        except Exception as e:
+            logger.error(f"❌ DARTS search failed: {e}")
+            return web_response.json_response({
+                "error": str(e),
+                "message": "DARTS search failed"
+            }, status=500)
+
+    # Evolutionary search endpoint
+    async def evolutionary_search(request):
+        try:
+            data = await request.json()
+            population_size = data.get('population_size', 20)
+            generations = data.get('generations', 10)
+            mutation_rate = data.get('mutation_rate', 0.2)
+
+            logger.info(f"🧬 Starting evolutionary search: pop={population_size}, gen={generations}")
+
+            # Run evolutionary search
+            result = await nas_controller.search_architecture("evolutionary", generations=generations)
+
+            logger.info(f"✅ Evolutionary search complete: {result['best_fitness']:.4f}")
+
+            return web_response.json_response({
+                "message": "Evolutionary search completed successfully",
+                "search_method": "evolutionary",
+                "result": result,
+                "timestamp": time.time()
+            })
+
+        except Exception as e:
+            logger.error(f"❌ Evolutionary search failed: {e}")
+            return web_response.json_response({
+                "error": str(e),
+                "message": "Evolutionary search failed"
+            }, status=500)
+
+    # Progressive search endpoint
+    async def progressive_search(request):
+        try:
+            data = await request.json()
+            initial_channels = data.get('initial_channels', 8)
+            max_channels = data.get('max_channels', 64)
+            stages = data.get('stages', 4)
+
+            logger.info(f"📈 Starting progressive search: {initial_channels}->{max_channels}, stages={stages}")
+
+            # Run progressive search
+            result = await nas_controller.search_architecture("progressive", generations=stages)
+
+            logger.info(f"✅ Progressive search complete: {result['best_fitness']:.4f}")
+
+            return web_response.json_response({
+                "message": "Progressive search completed successfully",
+                "search_method": "progressive",
+                "result": result,
+                "timestamp": time.time()
+            })
+
+        except Exception as e:
+            logger.error(f"❌ Progressive search failed: {e}")
+            return web_response.json_response({
+                "error": str(e),
+                "message": "Progressive search failed"
+            }, status=500)
+
+    # Setup routes
+    app.router.add_get('/health', health_check)
+    app.router.add_get('/status', get_status)
+    app.router.add_post('/search/darts', darts_search)
+    app.router.add_post('/search/evolutionary', evolutionary_search)
+    app.router.add_post('/search/progressive', progressive_search)
+
+    # Add CORS to all routes
+    for route in list(app.router.routes()):
+        cors.add(route)
+
+    # Start server
+    port = 8088
+    logger.info(f"🚀 Starting Neural Architecture Search on port {port}")
+    logger.info(f"🔍 Health check: http://localhost:{port}/health")
+    logger.info(f"📊 Status: http://localhost:{port}/status")
+
+    try:
+        runner = web.AppRunner(app)
+        await runner.setup()
+        site = web.TCPSite(runner, '0.0.0.0', port)
+        await site.start()
+
+        logger.info(f"✅ Neural Architecture Search running on http://0.0.0.0:{port}")
+
+        # Keep the server running
+        try:
+            while True:
+                await asyncio.sleep(3600)  # Sleep for 1 hour
+        except KeyboardInterrupt:
+            logger.info("🛑 Shutting down Neural Architecture Search")
+        finally:
+            await runner.cleanup()
+
+    except Exception as e:
+        logger.error(f"❌ Failed to start NAS server: {e}")
+        raise
 
 if __name__ == "__main__":
     asyncio.run(main())

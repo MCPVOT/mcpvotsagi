@@ -876,7 +876,7 @@ class AdvancedDGMEvolutionEngine:
 
         return nn.Sequential(*layers)
 
-    async def start_server(self, port: int = 8013):
+    async def start_server(self, port: int = 8087):
         """Start the evolution engine web server"""
         logger.info(f"🚀 Starting Advanced DGM Evolution Engine on port {port}")
 
@@ -901,7 +901,7 @@ async def main():
     engine = AdvancedDGMEvolutionEngine(population_size=20)
 
     try:
-        runner = await engine.start_server(port=8013)
+        runner = await engine.start_server(port=8087)
 
         # Keep running
         while True:
