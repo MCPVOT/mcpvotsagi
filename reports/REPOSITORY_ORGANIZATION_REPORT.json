@@ -1,0 +1,455 @@
+{
+  "timestamp": "2025-07-07",
+  "total_files_moved": 88,
+  "organization_summary": {
+    "tools": 5,
+    "scripts": 36,
+    "config": 13,
+    "services": 13,
+    "data": 1,
+    "notebooks": 1,
+    "tests": 19
+  },
+  "moved_files": [
+    {
+      "file": "ai_tools_integration_dashboard.py",
+      "from": "root",
+      "to": "tools"
+    },
+    {
+      "file": "check_services.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "check_unified_system.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "claude_monitor_config.json",
+      "from": "root",
+      "to": "config"
+    },
+    {
+      "file": "claudia_advanced_api_server.py",
+      "from": "root",
+      "to": "services"
+    },
+    {
+      "file": "claudia_config.json",
+      "from": "root",
+      "to": "config"
+    },
+    {
+      "file": "claudia_deepseek_system_analyzer.py",
+      "from": "root",
+      "to": "tools"
+    },
+    {
+      "file": "claudia_ecosystem_config.yaml",
+      "from": "root",
+      "to": "config"
+    },
+    {
+      "file": "claudia_image_analyzer.py",
+      "from": "root",
+      "to": "tools"
+    },
+    {
+      "file": "claudia_ollama_dgm_helper.py",
+      "from": "root",
+      "to": "tools"
+    },
+    {
+      "file": "claudia_optimal_config.yaml",
+      "from": "root",
+      "to": "config"
+    },
+    {
+      "file": "CLAUDIA_OPTIMAL_CONFIG_REPORT_20250706_193547.json",
+      "from": "root",
+      "to": "config"
+    },
+    {
+      "file": "CLAUDIA_OPTIMAL_CONFIG_REPORT_20250706_193645.json",
+      "from": "root",
+      "to": "config"
+    },
+    {
+      "file": "consolidated_services_config.json",
+      "from": "root",
+      "to": "config"
+    },
+    {
+      "file": "dashboard_metrics.db",
+      "from": "root",
+      "to": "data"
+    },
+    {
+      "file": "dgm_config.json",
+      "from": "root",
+      "to": "config"
+    },
+    {
+      "file": "dgm_evolution_connector.py",
+      "from": "root",
+      "to": "services"
+    },
+    {
+      "file": "DGM_Integration_Analysis.ipynb",
+      "from": "root",
+      "to": "notebooks"
+    },
+    {
+      "file": "dgm_integration_manager.py",
+      "from": "root",
+      "to": "services"
+    },
+    {
+      "file": "dgm_integration_manager_v2.py",
+      "from": "root",
+      "to": "services"
+    },
+    {
+      "file": "ecosystem_manager.py",
+      "from": "root",
+      "to": "services"
+    },
+    {
+      "file": "ecosystem_manager_v3.py",
+      "from": "root",
+      "to": "services"
+    },
+    {
+      "file": "ecosystem_manager_v4_clean.py",
+      "from": "root",
+      "to": "services"
+    },
+    {
+      "file": "execute_claudia_deepseek_analysis.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "execute_immediate_improvements.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "fix_issues.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "fix_redis_config.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "install_all_dependencies.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "INSTALL_EVERYTHING.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "jupiter_dex_comprehensive_analyzer.py",
+      "from": "root",
+      "to": "tools"
+    },
+    {
+      "file": "launch_a2a_enhanced.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "launch_a2a_services.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "launch_claudia_enhanced_ecosystem.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "launch_claudia_enhanced_ecosystem_fixed.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "launch_dgm_services.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "LAUNCH_ENHANCED_AGI.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "launch_enhanced_ecosystem.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "launch_simple_ecosystem.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "launch_stable_ecosystem.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "launch_trading_system_fixed.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "launch_trading_system_unicode_safe.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "LAUNCH_ULTIMATE_AGI_DEEPSEEK.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "LAUNCH_ULTIMATE_AGI_V3.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "LAUNCH_ULTIMATE_AGI_V3_ENHANCED.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "launch_ultimate_trading_system_v3.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "launch_ultimate_trading_system_v3_fixed.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "launch_unified_dashboard.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "launch_working_services.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "master_service_launcher.py",
+      "from": "root",
+      "to": "services"
+    },
+    {
+      "file": "mcp_server_manager.py",
+      "from": "root",
+      "to": "services"
+    },
+    {
+      "file": "orchestrator_config.json",
+      "from": "root",
+      "to": "config"
+    },
+    {
+      "file": "package.json",
+      "from": "root",
+      "to": "config"
+    },
+    {
+      "file": "port_resolution_config.json",
+      "from": "root",
+      "to": "config"
+    },
+    {
+      "file": "redis_working_config.json",
+      "from": "root",
+      "to": "config"
+    },
+    {
+      "file": "requirements.txt",
+      "from": "root",
+      "to": "config"
+    },
+    {
+      "file": "run_dgm_analysis.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "setup_core_mcp_servers.py",
+      "from": "root",
+      "to": "services"
+    },
+    {
+      "file": "START_AGI_WITH_MCP.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "start_backend.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "START_MCP_SERVERS.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "start_trading_systems.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "START_ULTIMATE_AGI.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "START_ULTIMATE_AGI_WITH_CLAUDIA.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "START_UNIFIED_AGI_PORTAL.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "START_V2.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "START_V3_CONTEXT7.py",
+      "from": "root",
+      "to": "scripts"
+    },
+    {
+      "file": "test_a2a_redis_integration.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "test_claude_models.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "test_claudia_system.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "test_context7_full.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "test_dgm_health.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "test_individual_services.py",
+      "from": "root",
+      "to": "services"
+    },
+    {
+      "file": "test_ollama_models_for_claudia.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "test_redis_connection.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "test_redis_connection_fixed.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "test_script.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "TEST_SYSTEM.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "test_trading_systems.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "test_ultimate_agi_v3_integration.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "test_ultimate_trading_system_v3.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "ultimate_mcp_resource_manager_v3.py",
+      "from": "root",
+      "to": "services"
+    },
+    {
+      "file": "ultimate_mcp_resource_manager_v4.py",
+      "from": "root",
+      "to": "services"
+    },
+    {
+      "file": "VERIFY_ALL_FUNCTIONAL.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "VERIFY_AND_INTEGRATE_RL.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "verify_claudia_claude_config.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "verify_mocks_removed.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "verify_port_resolution.py",
+      "from": "root",
+      "to": "tests"
+    },
+    {
+      "file": "verify_system_ready.py",
+      "from": "root",
+      "to": "tests"
+    }
+  ]
+}
