@@ -1,12 +1,27 @@
+[build-system]
+requires = ["setuptools>=75.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "mcpvotsagi"
 version = "2.0.0"
-description = "MCP integration suite with voting mechanisms, agent orchestration, and DGM support"
+description = "MCP integration SDK — agent orchestration, persistent memory, AI reasoning, and DGM evolution"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.11"
 authors = [{ name = "MCPVOT" }]
-keywords = ["mcp", "ai", "agents", "trading", "solana", "voting"]
+keywords = ["mcp", "ai", "agents", "trading", "solana", "voting", "orchestration", "dgm"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Framework :: AsyncIO",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 
 dependencies = [
     "redis[hiredis]>=5.0",
@@ -16,16 +31,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-ai = [
-    "openai>=1.0",
-]
-trading = [
-    "solana>=0.35",
-    "solders>=0.21",
-]
-monitoring = [
-    "prometheus-client>=0.20",
-]
+ai = ["openai>=1.0"]
+trading = ["solana>=0.35", "solders>=0.21"]
+monitoring = ["prometheus-client>=0.20"]
+all = ["mcpvotsagi[ai,trading,monitoring]"]
 dev = [
     "ruff>=0.8",
     "mypy>=1.11",
@@ -33,32 +42,31 @@ dev = [
     "pytest-asyncio>=0.24",
 ]
 
+[project.urls]
+Homepage = "https://github.com/MCPVOT/mcpvotsagi"
+Repository = "https://github.com/MCPVOT/mcpvotsagi"
+Issues = "https://github.com/MCPVOT/mcpvotsagi/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
 [tool.ruff]
 target-version = "py311"
 line-length = 120
+src = ["src"]
 
 [tool.ruff.lint]
-select = [
-    "E",    # pycodestyle errors
-    "W",    # pycodestyle warnings
-    "F",    # pyflakes
-    "I",    # isort
-    "UP",   # pyupgrade
-    "B",    # flake8-bugbear
-    "SIM",  # flake8-simplify
-    "TCH",  # flake8-type-checking
-    "RUF",  # ruff-specific rules
-]
-ignore = ["E501"]  # line length handled by formatter
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "TCH", "RUF"]
+ignore = ["E501"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["core", "servers", "services", "src", "tools", "utils"]
+known-first-party = ["mcpvotsagi"]
 
 [tool.mypy]
 python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
-disallow_untyped_defs = false  # gradual adoption
+disallow_untyped_defs = false
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
