@@ -17,7 +17,7 @@ REDIS_HOSTS = [
 ]
 REDIS_PORT = 6379
 REDIS_DB = 0
-REDIS_PASSWORD = "mcpvotsagi2025"  # Password set by configuration script
+REDIS_PASSWORD = "os.environ.get('REDIS_PASSWORD', '')"  # Password set by configuration script
 
 def test_sync_redis():
     """Test synchronous Redis connection"""

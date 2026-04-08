@@ -328,3 +328,21 @@ docker-compose*.yml
 *.trace
 performance_*.json
 monitoring_*.log
+
+# Credentials and secrets
+.env
+.env.*
+*.secret
+credentials*.json
+secrets/
+*_password_*
+
+# Generated reports
+reports/
+backups/
+*_REPORT_*.md
+*_REPORT_*.json
+*_SUCCESS_*.md
+
+# Archive
+archive/

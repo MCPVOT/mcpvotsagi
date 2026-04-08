@@ -543,7 +543,7 @@ class ClaudiaSystemSetup:
                 port=5432,
                 database='postgres',
                 user='postgres',
-                password='password'
+                password=os.environ.get('REDIS_PASSWORD', '')
             )
             conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
 
@@ -568,7 +568,7 @@ class ClaudiaSystemSetup:
                 port=5432,
                 database='claudia_agi',
                 user='postgres',
-                password='password'
+                password=os.environ.get('REDIS_PASSWORD', '')
             )
 
             cursor = conn.cursor()

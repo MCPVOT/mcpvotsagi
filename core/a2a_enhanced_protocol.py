@@ -103,7 +103,7 @@ class A2AMessage:
 class A2AMessageQueue:
     """Redis-based message queue for reliable A2A communication"""
 
-    def __init__(self, redis_url: str = "redis://:mcpvotsagi2025@localhost:6379/0"):
+    def __init__(self, redis_url: str = "redis://:os.environ.get('REDIS_PASSWORD', '')@localhost:6379/0"):
         self.redis_url = redis_url
         self.redis: Optional[redis.Redis] = None
         self.subscribers: Dict[str, Set[Callable]] = {}

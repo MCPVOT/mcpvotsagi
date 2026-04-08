@@ -119,7 +119,7 @@ class MasterServiceLauncher:
         """Check Redis health"""
         try:
             import redis
-            r = redis.Redis(host='localhost', port=6379, password='MCPVotsAGI2025!')
+            r = redis.Redis(host='localhost', port=6379, password='os.environ.get('REDIS_PASSWORD', '')')
             r.ping()
             return True
         except Exception:
@@ -280,7 +280,7 @@ class MasterServiceLauncher:
 
             print(f"\n🔧 REDIS ACCESS:")
             print(f"   Host: localhost:6379")
-            print(f"   Password: MCPVotsAGI2025!")
+            print(f"   Password: os.environ.get('REDIS_PASSWORD', '')")
             print(f"   Databases: 0=A2A, 1=MCP Memory, 2=Cache")
 
             return True

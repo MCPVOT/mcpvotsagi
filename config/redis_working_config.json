@@ -1,7 +1,7 @@
 {
   "redis_host": "localhost",
   "redis_port": 6379,
-  "redis_password": "mcpvotsagi2025",
+  "redis_password": "os.environ.get('REDIS_PASSWORD', '')",
   "redis_db": 0,
   "sync_working": true,
   "async_working": true,

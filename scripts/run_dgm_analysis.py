@@ -83,7 +83,7 @@ async def run_dgm_analysis():
     # Test Redis
     try:
         import redis
-        r = redis.Redis(host='localhost', port=6379, password='mcpvotsagi2025', socket_connect_timeout=2)
+        r = redis.Redis(host='localhost', port=6379, password='os.environ.get('REDIS_PASSWORD', '')', socket_connect_timeout=2)
         r.ping()
         a2a_results['redis'] = {'success': True, 'message': 'Redis connected'}
         print("  ✅ Redis connectivity verified")

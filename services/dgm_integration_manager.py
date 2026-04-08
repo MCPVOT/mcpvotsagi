@@ -192,7 +192,7 @@ class UnifiedDGMServer:
         """Start the unified DGM server"""
         # Connect to Redis
         self.redis_client = redis.from_url(
-            "redis://:mcpvotsagi2025@localhost:6379/2",
+            "redis://:os.environ.get('REDIS_PASSWORD', '')@localhost:6379/2",
             decode_responses=True
         )
 

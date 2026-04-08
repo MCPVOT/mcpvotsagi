@@ -55,7 +55,7 @@ def fix_redis_configuration():
                    "Disabling Redis protected mode")
 
     # Set password for security (optional)
-    run_wsl_command("sudo sed -i 's/^# requirepass foobared/requirepass mcpvotsagi2025/' /etc/redis/redis.conf",
+    run_wsl_command("sudo sed -i 's/^# requirepass foobared/requirepass os.environ.get('REDIS_PASSWORD', '')/' /etc/redis/redis.conf",
                    "Setting Redis password")
 
     # Start Redis service
@@ -146,8 +146,8 @@ def main():
         wsl_ip = "172.27.187.70"  # Fallback
 
     # Test connections
-    localhost_success = test_redis_connection("localhost", 6379, "mcpvotsagi2025")
-    wsl_success = test_redis_connection(wsl_ip, 6379, "mcpvotsagi2025")
+    localhost_success = test_redis_connection("localhost", 6379, "os.environ.get('REDIS_PASSWORD', '')")
+    wsl_success = test_redis_connection(wsl_ip, 6379, "os.environ.get('REDIS_PASSWORD', '')")
 
     print("\n" + "=" * 70)
     print("📊 REDIS CONFIGURATION SUMMARY")
@@ -160,13 +160,13 @@ def main():
         print(f"\n🎉 SUCCESS! Redis is configured and accessible.")
         print(f"🔗 Connection Details:")
         if localhost_success:
-            print(f"   - localhost:6379 (password: mcpvotsagi2025)")
+            print(f"   - localhost:6379 (password: os.environ.get('REDIS_PASSWORD', ''))")
         if wsl_success:
-            print(f"   - {wsl_ip}:6379 (password: mcpvotsagi2025)")
+            print(f"   - {wsl_ip}:6379 (password: os.environ.get('REDIS_PASSWORD', ''))")
 
         # Update test script with working configuration
         working_host = "localhost" if localhost_success else wsl_ip
-        update_test_script(working_host, "mcpvotsagi2025")
+        update_test_script(working_host, "os.environ.get('REDIS_PASSWORD', '')")
 
         return True
     else:

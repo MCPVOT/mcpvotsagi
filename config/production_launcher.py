@@ -70,7 +70,7 @@ class ProductionLauncher:
             r = redis.Redis(
                 host="localhost",
                 port=6379,
-                password="mcpvotsagi2025",
+                password="os.environ.get('REDIS_PASSWORD', '')",
                 socket_connect_timeout=2
             )
             r.ping()
@@ -267,7 +267,7 @@ class ProductionLauncher:
 
         if system_healthy:
             print(f"\n🌐 ACCESS POINTS:")
-            print(f"   🔗 Redis: localhost:6379 (password: mcpvotsagi2025)")
+            print(f"   🔗 Redis: localhost:6379 (password: os.environ.get('REDIS_PASSWORD', ''))")
             print(f"   🤖 A2A Protocol: ws://localhost:8001")
             print(f"   🧠 DGM Server: http://localhost:8002")
             print(f"   💾 MCP Memory: http://localhost:3002")

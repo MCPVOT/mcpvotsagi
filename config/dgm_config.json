@@ -42,7 +42,7 @@
       }
     }
   ],
-  "redis_url": "redis://:mcpvotsagi2025@localhost:6379/0",
+  "redis_url": "redis://:os.environ.get('REDIS_PASSWORD', '')@localhost:6379/0",
   "enable_metrics": true,
   "enable_a2a": true,
   "log_level": "INFO"

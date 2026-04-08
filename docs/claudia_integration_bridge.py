@@ -174,7 +174,7 @@ class ClaudiaIntegrationBridge:
                     port=5432,
                     database='postgres',
                     user='postgres',
-                    password='password',
+                    password=os.environ.get('REDIS_PASSWORD', ''),
                     connect_timeout=5
                 )
                 conn.close()
