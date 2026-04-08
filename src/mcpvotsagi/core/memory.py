@@ -19,6 +19,10 @@ import redis.asyncio as redis
 logger = logging.getLogger(__name__)
 
 
+class MemoryNotConnectedError(Exception):
+    """Raised when a memory operation is attempted before Redis is connected."""
+
+
 class EnhancedMCPMemoryServer:
     """Enhanced MCP Memory server with Redis backend.
 
@@ -37,6 +41,14 @@ class EnhancedMCPMemoryServer:
         self.redis_password = redis_password or os.environ.get("REDIS_PASSWORD")
         self.redis_client: redis.Redis | None = None
         self.memory_namespace = "mcp:memory"
+
+    def _require_redis(self) -> redis.Redis:
+        """Return the Redis client or raise if not connected."""
+        if self.redis_client is None:
+            raise MemoryNotConnectedError(
+                "Redis client not connected. Call start() before using memory operations."
+            )
+        return self.redis_client
 
     async def start(self) -> bool:
         """Connect to Redis and verify connectivity."""
@@ -62,6 +74,8 @@ class EnhancedMCPMemoryServer:
 
     async def store_memory(self, key: str, value: Any, category: str = "general") -> str:
         """Store memory with metadata. Returns the memory ID."""
+        client = self._require_redis()
+
         memory_id = str(uuid.uuid4())
         memory_data: dict[str, str] = {
             "id": memory_id,
@@ -73,7 +87,7 @@ class EnhancedMCPMemoryServer:
         }
 
         redis_key = f"{self.memory_namespace}:{memory_id}"
-        async with self.redis_client.pipeline() as pipe:
+        async with client.pipeline() as pipe:
             pipe.hset(redis_key, mapping=memory_data)
             pipe.sadd(f"{self.memory_namespace}:categories:{category}", memory_id)
             pipe.set(f"{self.memory_namespace}:keys:{key}", memory_id)
@@ -84,16 +98,18 @@ class EnhancedMCPMemoryServer:
 
     async def retrieve_memory(self, key: str) -> dict[str, Any] | None:
         """Retrieve memory by key."""
-        memory_id = await self.redis_client.get(f"{self.memory_namespace}:keys:{key}")
+        client = self._require_redis()
+
+        memory_id = await client.get(f"{self.memory_namespace}:keys:{key}")
         if not memory_id:
             return None
 
         redis_key = f"{self.memory_namespace}:{memory_id}"
-        memory_data = await self.redis_client.hgetall(redis_key)
+        memory_data = await client.hgetall(redis_key)
         if not memory_data:
             return None
 
-        await self.redis_client.hincrby(redis_key, "access_count", 1)
+        await client.hincrby(redis_key, "access_count", 1)
 
         try:
             memory_data["value"] = json.loads(memory_data["value"])
@@ -104,12 +120,19 @@ class EnhancedMCPMemoryServer:
         return memory_data
 
     async def search_memories(self, category: str | None = None, limit: int = 100) -> list[dict[str, Any]]:
-        """Search memories by category. Uses SCAN for production safety."""
+        """Search memories by category. Uses SCAN for production safety.
+
+        When no category is provided, falls back to a full SCAN which can be
+        slow on large datasets. Prefer querying with a category when possible.
+        """
+        client = self._require_redis()
+
         if category:
-            memory_ids = await self.redis_client.smembers(f"{self.memory_namespace}:categories:{category}")
+            memory_ids = await client.smembers(f"{self.memory_namespace}:categories:{category}")
         else:
+            logger.warning("Searching all memories without category — this may be slow on large datasets")
             memory_ids: set[str] = set()
-            async for key in self.redis_client.scan_iter(match=f"{self.memory_namespace}:*"):
+            async for key in client.scan_iter(match=f"{self.memory_namespace}:*"):
                 parts = key.split(":")
                 if len(parts) == 3:
                     memory_ids.add(parts[-1])
@@ -117,7 +140,7 @@ class EnhancedMCPMemoryServer:
         memories: list[dict[str, Any]] = []
         for memory_id in list(memory_ids)[:limit]:
             redis_key = f"{self.memory_namespace}:{memory_id}"
-            memory_data = await self.redis_client.hgetall(redis_key)
+            memory_data = await client.hgetall(redis_key)
             if memory_data:
                 try:
                     memory_data["value"] = json.loads(memory_data["value"])
@@ -129,17 +152,19 @@ class EnhancedMCPMemoryServer:
 
     async def delete_memory(self, key: str) -> bool:
         """Delete memory by key. Returns True if found and deleted."""
-        memory_id = await self.redis_client.get(f"{self.memory_namespace}:keys:{key}")
+        client = self._require_redis()
+
+        memory_id = await client.get(f"{self.memory_namespace}:keys:{key}")
         if not memory_id:
             return False
 
         redis_key = f"{self.memory_namespace}:{memory_id}"
-        memory_data = await self.redis_client.hgetall(redis_key)
+        memory_data = await client.hgetall(redis_key)
         if not memory_data:
             return False
 
         category = memory_data.get("category", "general")
-        async with self.redis_client.pipeline() as pipe:
+        async with client.pipeline() as pipe:
             pipe.srem(f"{self.memory_namespace}:categories:{category}", memory_id)
             pipe.delete(f"{self.memory_namespace}:keys:{key}")
             pipe.delete(redis_key)
@@ -150,11 +175,13 @@ class EnhancedMCPMemoryServer:
 
     async def get_stats(self) -> dict[str, Any]:
         """Get memory statistics."""
+        client = self._require_redis()
+
         total = 0
         category_stats: dict[str, int] = {}
-        async for key in self.redis_client.scan_iter(match=f"{self.memory_namespace}:categories:*"):
+        async for key in client.scan_iter(match=f"{self.memory_namespace}:categories:*"):
             category = key.split(":")[-1]
-            count = await self.redis_client.scard(key)
+            count = await client.scard(key)
             category_stats[category] = count
             total += count
 
