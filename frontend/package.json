@@ -1,7 +1,7 @@
 {
-  "name": "ultimate-agi-system-v3-frontend",
+  "name": "mcpvotsagi-frontend",
   "version": "3.0.0",
-  "description": "Ultimate AGI System V3 - Modern Frontend with Animations",
+  "description": "MCPVotsAGI SDK - Monitoring Dashboard",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",

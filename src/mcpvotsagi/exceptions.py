@@ -7,11 +7,11 @@ class MCPVotsAGIError(Exception):
     """Base exception for all MCPVotsAGI errors."""
 
 
-class ConnectionError(MCPVotsAGIError):
+class ServiceConnectionError(MCPVotsAGIError):
     """Failed to connect to a service (Redis, WebSocket, etc.)."""
 
 
-class MemoryError(MCPVotsAGIError):
+class MemoryOperationError(MCPVotsAGIError):
     """Error in memory operations (store, retrieve, search)."""
 
 

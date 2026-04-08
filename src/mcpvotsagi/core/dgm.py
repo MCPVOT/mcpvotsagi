@@ -1,12 +1,11 @@
-#!/usr/bin/env python3
 """
-Unified DGM Server V2 - Enhanced with A2A and MCP Integration
+Unified DGM (Darwin Gödel Machine) Server — self-improving evolution engine
 """
 
 import asyncio
 import json
 import logging
-from typing import List, Optional
+from typing import Any
 from datetime import datetime
 import websockets
 from dataclasses import dataclass, asdict
@@ -15,9 +14,7 @@ import sys
 from pathlib import Path
 
 # Add parent directory to path for imports
-sys.path.append(str(Path(__file__).parent.parent))
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("UnifiedDGM")
 
 # Try to import Redis, fallback to in-memory if not available
@@ -78,7 +75,7 @@ class UnifiedDGMServer:
         if REDIS_AVAILABLE:
             try:
                 self.redis_client = redis.from_url(
-                    "redis://localhost:6379/2",
+                    os.environ.get("REDIS_URL", "redis://localhost:6379/2"),
                     decode_responses=True
                 )
                 await self.redis_client.ping()
@@ -259,7 +256,7 @@ class UnifiedDGMServer:
             }
         }
     
-    def _generate_strategy_params(self, risk_profile: str, conditions: Dict) -> dict:
+    def _generate_strategy_params(self, risk_profile: str, conditions: dict) -> dict:
         """Generate strategy parameters based on risk and market"""
         base_params = {
             "conservative": {"stop_loss": 0.02, "take_profit": 0.05, "position_size": 0.05},

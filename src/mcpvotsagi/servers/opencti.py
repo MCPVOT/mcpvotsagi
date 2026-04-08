@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """OpenCTI MCP Server — WebSocket MCP server for OpenCTI threat intelligence.
 
 Requires the `opencti_integration` module to be available in PYTHONPATH,

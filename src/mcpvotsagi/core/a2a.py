@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Enhanced A2A (Agent-to-Agent) Communication System
 Implements advanced A2A protocol with message queues, agent discovery, and fault tolerance
@@ -11,7 +10,7 @@ import os
 import time
 import uuid
 from datetime import datetime, timedelta
-from typing import Callable
+from typing import Any, Callable
 from dataclasses import dataclass, asdict
 from enum import Enum
 import websockets
@@ -21,7 +20,6 @@ import sqlite3
 from pathlib import Path
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class MessageType(Enum):
@@ -69,13 +67,13 @@ class A2AMessage:
     """A2A Message structure"""
     message_id: str
     source_agent: str
-    target_agent: Optional[str]
+    target_agent: None | str]
     message_type: MessageType
     payload: dict[str, Any]
     timestamp: datetime
-    expires_at: Optional[datetime] = None
+    expires_at: None | datetime] = None
     priority: int = 1
-    correlation_id: Optional[str] = None
+    correlation_id: None | str] = None
 
     def to_dict(self) -> dict:
         """Convert to dictionary"""
@@ -109,7 +107,7 @@ class A2AMessageQueue:
             password = os.environ.get("REDIS_PASSWORD", "")
             redis_url = f"redis://:{password}@localhost:6379/0" if password else "redis://localhost:6379/0"
         self.redis_url = redis_url
-        self.redis: Optional[redis.Redis] = None
+        self.redis: None | redis.Redis] = None
         self.subscribers: dict[str, Set[Callable]] = {}
 
     async def connect(self):
@@ -123,16 +121,16 @@ class A2AMessageQueue:
             )
             # Test connection
             await self.redis.ping()
-            logger.info("✅ Connected to Redis message queue")
+            logger.info("Connected to Redis message queue")
         except Exception as e:
-            logger.error(f"❌ Failed to connect to Redis: {e}")
+            logger.error(f"Failed to connect to Redis: {e}")
             raise
 
     async def disconnect(self):
         """Disconnect from Redis"""
         if self.redis:
             await self.redis.aclose()
-            logger.info("🔌 Disconnected from Redis")
+            logger.info("Disconnected from Redis")
 
     async def publish(self, channel: str, message: A2AMessage):
         """Publish message to channel"""
@@ -146,7 +144,7 @@ class A2AMessageQueue:
         queue_key = f"queue:{channel}"
         await self.redis.lpush(queue_key, message_data)
 
-        logger.debug(f"📤 Published message {message.message_id} to {channel}")
+        logger.debug(f"Published message {message.message_id} to {channel}")
 
     async def subscribe(self, agent_id: str, callback: Callable):
         """Subscribe to agent-specific channel"""
@@ -156,7 +154,7 @@ class A2AMessageQueue:
 
         # Start subscription task
         asyncio.create_task(self._subscription_handler(agent_id))
-        logger.info(f"🔔 Subscribed agent {agent_id} to message queue")
+        logger.info(f"Subscribed agent {agent_id} to message queue")
 
     async def _subscription_handler(self, agent_id: str):
         """Handle subscription for agent"""
@@ -177,10 +175,10 @@ class A2AMessageQueue:
                         try:
                             await callback(a2a_message)
                         except Exception as e:
-                            logger.error(f"❌ Callback error for {agent_id}: {e}")
+                            logger.error(f"Callback error for {agent_id}: {e}")
 
                 except Exception as e:
-                    logger.error(f"❌ Message processing error: {e}")
+                    logger.error(f"Message processing error: {e}")
 
     async def get_queued_messages(self, agent_id: str, limit: int = 10) -> list[A2AMessage]:
         """Get queued messages for agent"""
@@ -205,7 +203,7 @@ class A2AMessageQueue:
 
                 messages.append(message)
             except Exception as e:
-                logger.error(f"❌ Failed to parse queued message: {e}")
+                logger.error(f"Failed to parse queued message: {e}")
 
         return messages
 
@@ -239,7 +237,7 @@ class AgentRegistry:
 
         # Load agents from database
         self.load_agents_from_db()
-        logger.info(f"📊 Agent registry initialized with {len(self.agents)} agents")
+        logger.info(f"Agent registry initialized with {len(self.agents)} agents")
 
     def load_agents_from_db(self):
         """Load agents from database"""
@@ -299,11 +297,11 @@ class AgentRegistry:
             conn.commit()
             conn.close()
 
-            logger.info(f"✅ Registered agent: {agent_info.name} ({agent_info.agent_id})")
+            logger.info(f"Registered agent: {agent_info.name} ({agent_info.agent_id})")
             return True
 
         except Exception as e:
-            logger.error(f"❌ Failed to register agent {agent_info.agent_id}: {e}")
+            logger.error(f"Failed to register agent {agent_info.agent_id}: {e}")
             return False
 
     async def unregister_agent(self, agent_id: str) -> bool:
@@ -328,16 +326,16 @@ class AgentRegistry:
                 conn.commit()
                 conn.close()
 
-                logger.info(f"🗑️ Unregistered agent: {agent_id}")
+                logger.info(f"Unregistered agent: {agent_id}")
                 return True
 
             return False
 
         except Exception as e:
-            logger.error(f"❌ Failed to unregister agent {agent_id}: {e}")
+            logger.error(f"Failed to unregister agent {agent_id}: {e}")
             return False
 
-    def discover_agents(self, capability: Optional[str] = None) -> list[AgentInfo]:
+    def discover_agents(self, capability: None | str] = None) -> list[AgentInfo]:
         """Discover agents by capability"""
         if capability:
             agent_ids = self.capabilities_index.get(capability, set())
@@ -345,7 +343,7 @@ class AgentRegistry:
         else:
             return list(self.agents.values())
 
-    def get_agent(self, agent_id: str) -> [AgentInfo]:
+    def get_agent(self, agent_id: str) -> AgentInfo | None:
         """Get agent by ID"""
         return self.agents.get(agent_id)
 
@@ -380,7 +378,7 @@ class AgentRegistry:
             await self.unregister_agent(agent_id)
 
         if stale_agents:
-            logger.info(f"🧹 Cleaned up {len(stale_agents)} stale agents")
+            logger.info(f"Cleaned up {len(stale_agents)} stale agents")
 
 class A2AProtocolGateway:
     """Enhanced A2A protocol gateway with routing and fault tolerance"""
@@ -424,7 +422,7 @@ class A2AProtocolGateway:
             self.port
         )
 
-        logger.info(f"🚀 A2A Protocol Gateway started on ws://localhost:{self.port}")
+        logger.info(f"A2A Protocol Gateway started on ws://localhost:{self.port}")
 
         # Keep server running
         await server.wait_closed()
@@ -435,16 +433,16 @@ class A2AProtocolGateway:
         self.connections[connection_id] = websocket
         self.stats['connections_active'] += 1
 
-        logger.info(f"🔌 New A2A connection: {connection_id}")
+        logger.info(f"New A2A connection: {connection_id}")
 
         try:
             async for message in websocket:
                 await self._process_message(connection_id, message)
 
         except websockets.exceptions.ConnectionClosed:
-            logger.info(f"🔌 A2A connection closed: {connection_id}")
+            logger.info(f"A2A connection closed: {connection_id}")
         except Exception as e:
-            logger.error(f"❌ A2A connection error {connection_id}: {e}")
+            logger.error(f"A2A connection error {connection_id}: {e}")
             self.stats['errors'] += 1
         finally:
             if connection_id in self.connections:
@@ -467,7 +465,7 @@ class A2AProtocolGateway:
                 await self._send_error(connection_id, f"Unknown message type: {message.message_type}")
 
         except Exception as e:
-            logger.error(f"❌ Message processing error: {e}")
+            logger.error(f"Message processing error: {e}")
             await self._send_error(connection_id, f"Message processing error: {e}")
             self.stats['errors'] += 1
 
@@ -578,7 +576,7 @@ class A2AProtocolGateway:
                 await websocket.send(json.dumps(message.to_dict()))
                 self.stats['messages_sent'] += 1
             except Exception as e:
-                logger.error(f"❌ Failed to send message to {connection_id}: {e}")
+                logger.error(f"Failed to send message to {connection_id}: {e}")
 
     async def _broadcast_message(self, message: A2AMessage):
         """Broadcast message to all connections"""
@@ -589,7 +587,7 @@ class A2AProtocolGateway:
                 await websocket.send(message_json)
                 self.stats['messages_sent'] += 1
             except Exception as e:
-                logger.error(f"❌ Broadcast failed to {connection_id}: {e}")
+                logger.error(f"Broadcast failed to {connection_id}: {e}")
 
     async def _send_error(self, connection_id: str, error_message: str):
         """Send error message"""
@@ -610,7 +608,7 @@ class A2AProtocolGateway:
                 await asyncio.sleep(300)  # 5 minutes
                 await self.agent_registry.cleanup_stale_agents()
             except Exception as e:
-                logger.error(f"❌ Cleanup task error: {e}")
+                logger.error(f"Cleanup task error: {e}")
 
     def get_stats(self) -> dict[str, Any]:
         """Get gateway statistics"""
@@ -629,7 +627,7 @@ class A2AClient:
         self.agent_id = agent_id
         self.name = name
         self.capabilities = capabilities
-        self.websocket: Optional[websockets.WebSocketServerProtocol] = None
+        self.websocket: None | websockets.WebSocketServerProtocol] = None
         self.message_handlers: dict[MessageType, Callable] = {}
 
     async def connect(self, gateway_url: str = "ws://localhost:8001"):
@@ -655,7 +653,7 @@ class A2AClient:
 
         # Start message handler
         asyncio.create_task(self._message_handler())
-        logger.info(f"🔌 A2A client {self.name} connected and registered")
+        logger.info(f"A2A client {self.name} connected and registered")
 
     async def _message_handler(self):
         """Handle incoming messages"""
@@ -670,7 +668,7 @@ class A2AClient:
                     await handler(a2a_message)
 
             except Exception as e:
-                logger.error(f"❌ Client message handler error: {e}")
+                logger.error(f"Client message handler error: {e}")
 
     async def send_message(self, target_agent: str, payload: dict[str, Any],
                           message_type: MessageType = MessageType.REQUEST):
@@ -686,7 +684,7 @@ class A2AClient:
 
         await self.websocket.send(json.dumps(message.to_dict()))
 
-    async def discover_agents(self, capability: Optional[str] = None) -> list[AgentInfo]:
+    async def discover_agents(self, capability: None | str] = None) -> list[AgentInfo]:
         """Discover agents with specific capability"""
         discover_message = A2AMessage(
             message_id=str(uuid.uuid4()),
@@ -707,14 +705,14 @@ async def main():
     """Start the A2A Protocol Gateway"""
     gateway = A2AProtocolGateway(port=8001)
 
-    logger.info("🚀 Starting Enhanced A2A Communication System...")
+    logger.info("Starting Enhanced A2A Communication System...")
 
     try:
         await gateway.start_server()
     except KeyboardInterrupt:
-        logger.info("🛑 Shutting down A2A gateway...")
+        logger.info("Shutting down A2A gateway...")
     except Exception as e:
-        logger.error(f"❌ A2A gateway error: {e}")
+        logger.error(f"A2A gateway error: {e}")
 
 if __name__ == "__main__":
     asyncio.run(main())

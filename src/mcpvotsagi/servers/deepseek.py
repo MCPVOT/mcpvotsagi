@@ -1,8 +1,7 @@
-#!/usr/bin/env python3
 """
 DeepSeek Ollama MCP Server for MCPVotsAGI
 ========================================
-Advanced reasoning engine using local DeepSeek-R1-0528-Qwen3-8B-GGUF model
+Advanced reasoning engine using local LLM via Ollama
 Provides intelligent reasoning for trading, security, and ecosystem management
 """
 
@@ -16,22 +15,20 @@ import time
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Any
 import websockets
 import aiohttp
 from dataclasses import dataclass, asdict
 
 # Configure logging
-logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger("DeepSeekMCP")
 
 # DeepSeek Model Configuration
-DEEPSEEK_MODEL = "hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL"
+DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-r1:8b")
 OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
-MODEL_CONTEXT_SIZE = 8192  # Optimized for Q4_K_XL
+MODEL_CONTEXT_SIZE = 8192  # Default context window
 REASONING_TEMPERATURE = 0.7
 TRADING_TEMPERATURE = 0.3  # Lower temp for trading decisions
 
@@ -44,7 +41,7 @@ class ReasoningRequest:
     context: dict[str, Any]
     temperature: float
     max_tokens: int
-    system_prompt: Optional[str] = None
+    system_prompt: str | None = None
 
 @dataclass
 class ReasoningResponse:
@@ -322,9 +319,9 @@ class DeepSeekMCPServer:
         
         # Integration with other MCP servers
         self.mcp_connections = {
-            "memory": "ws://localhost:3002",
-            "trading": "ws://localhost:3005",
-            "security": "ws://localhost:3007"
+            "memory": "ws://{}:{}".format(os.environ.get("MCP_MEMORY_HOST", "localhost"), os.environ.get("MCP_MEMORY_PORT", "3002")),
+            "trading": "ws://{}:{}".format(os.environ.get("TRADING_HOST", "localhost"), os.environ.get("TRADING_PORT", "3005")),
+            "security": "ws://{}:{}".format(os.environ.get("SECURITY_HOST", "localhost"), os.environ.get("SECURITY_PORT", "3007"))
         }
         
     async def start(self):

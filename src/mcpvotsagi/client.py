@@ -26,7 +26,7 @@ from typing import TYPE_CHECKING, Any
 
 from mcpvotsagi.config import MCPVotsAGIConfig
 from mcpvotsagi.core.memory import EnhancedMCPMemoryServer
-from mcpvotsagi.exceptions import ConnectionError as AGIConnectionError
+from mcpvotsagi.exceptions import ServiceConnectionError
 
 if TYPE_CHECKING:
     from mcpvotsagi.core.a2a import A2AProtocolGateway, AgentRegistry
@@ -66,7 +66,9 @@ class MCPVotsAGI:
         if self._started:
             return
 
-        logging.basicConfig(level=getattr(logging, self.config.log_level.upper(), logging.INFO))
+        # Configure logging only if no handlers exist (avoid double-configuration)
+        if not logging.getLogger().handlers:
+            logging.basicConfig(level=getattr(logging, self.config.log_level.upper(), logging.INFO))
 
         # Start memory server
         self._memory = EnhancedMCPMemoryServer(
@@ -75,7 +77,7 @@ class MCPVotsAGI:
             redis_password=self.config.redis_password,
         )
         if not await self._memory.start():
-            raise AGIConnectionError("Failed to connect to Redis")
+            raise ServiceConnectionError("Failed to connect to Redis")
 
         logger.info("MCPVotsAGI SDK started")
         self._started = True

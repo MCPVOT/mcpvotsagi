@@ -12,7 +12,7 @@ frontend/
 │   │   ├── app/           # Next.js app routes
 │   │   ├── components/    # UI components
 │   │   │   ├── agents/    # Agent management UI
-│   │   │   ├── storage/   # F: drive monitoring
+│   │   │   ├── storage/   # System monitoring
 │   │   │   ├── chat/      # Chat interface
 │   │   │   └── models/    # Model orchestration
 │   │   └── lib/
@@ -53,7 +53,7 @@ The frontend connects to the Python backend via REST API and WebSocket:
 ## 🎯 Key Features
 
 - ✅ Real-time agent status monitoring
-- ✅ F: drive storage visualization (853GB)
+- ✅ Real-time system monitoring
 - ✅ Animated chat interface
 - ✅ Model orchestration dashboard
 - ✅ Command palette (Cmd+K)

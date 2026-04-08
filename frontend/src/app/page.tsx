@@ -249,7 +249,7 @@ export default function UltimateAGIDashboard() {
               <div className="space-y-2">
                 <button
                   onClick={async () => {
-                    const paths = ["/mnt/c/Workspace/MCPVotsAGI"];
+                    const paths = ["/app/data"];
                     const response = await fetch('http://localhost:8889/api/v3/analyze', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },

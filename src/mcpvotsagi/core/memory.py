@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Enhanced MCP Memory Server with Redis Integration.
 
 Unified memory service for MCPVotsAGI with Redis backend.
