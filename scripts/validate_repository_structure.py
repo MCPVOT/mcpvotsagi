@@ -15,7 +15,7 @@ import json
 import os
 import re
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Tuple
 import logging
 
 # Configure logging
@@ -76,7 +76,7 @@ class RepositoryStructureValidator:
             "summary": {}
         }
 
-    def validate_directory_structure(self) -> Dict[str, bool]:
+    def validate_directory_structure(self) -> dict[str, bool]:
         """Validate that expected directories exist"""
         logger.info("🔍 Validating directory structure...")
 
@@ -93,7 +93,7 @@ class RepositoryStructureValidator:
 
         return structure_results
 
-    def validate_file_existence(self) -> Dict[str, Dict[str, bool]]:
+    def validate_file_existence(self) -> dict[str, Dict[str, bool]]:
         """Validate that expected files exist in correct directories"""
         logger.info("🔍 Validating file existence...")
 
@@ -113,7 +113,7 @@ class RepositoryStructureValidator:
 
         return file_results
 
-    def validate_import_references(self) -> Dict[str, List[str]]:
+    def validate_import_references(self) -> dict[str, List[str]]:
         """Check for broken import references after reorganization"""
         logger.info("🔍 Validating import references...")
 
@@ -150,7 +150,7 @@ class RepositoryStructureValidator:
 
         return import_issues
 
-    def validate_port_configuration(self) -> Dict[str, Dict]:
+    def validate_port_configuration(self) -> dict[str, Dict]:
         """Validate port configurations are consistent"""
         logger.info("🔍 Validating port configurations...")
 
@@ -191,7 +191,7 @@ class RepositoryStructureValidator:
 
         return port_config
 
-    def check_critical_files(self) -> Dict[str, bool]:
+    def check_critical_files(self) -> dict[str, bool]:
         """Check that critical files are present and valid"""
         logger.info("🔍 Checking critical files...")
 
@@ -215,7 +215,7 @@ class RepositoryStructureValidator:
 
         return critical_results
 
-    def count_files_by_category(self) -> Dict[str, int]:
+    def count_files_by_category(self) -> dict[str, int]:
         """Count files in each organized directory"""
         logger.info("📊 Counting files by category...")
 
@@ -234,7 +234,7 @@ class RepositoryStructureValidator:
 
         return file_counts
 
-    def generate_validation_report(self) -> Dict:
+    def generate_validation_report(self) -> dict:
         """Generate comprehensive validation report"""
         logger.info("📊 Generating validation report...")
 

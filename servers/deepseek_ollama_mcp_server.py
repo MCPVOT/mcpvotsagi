@@ -7,6 +7,7 @@ Provides intelligent reasoning for trading, security, and ecosystem management
 """
 
 import asyncio
+import hashlib
 import json
 import logging
 import os
@@ -15,7 +16,7 @@ import time
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Optional, Tuple
 import websockets
 import aiohttp
 from dataclasses import dataclass, asdict
@@ -40,7 +41,7 @@ class ReasoningRequest:
     id: str
     task_type: str  # 'trading', 'security', 'ecosystem', 'general'
     prompt: str
-    context: Dict[str, Any]
+    context: dict[str, Any]
     temperature: float
     max_tokens: int
     system_prompt: Optional[str] = None
@@ -51,8 +52,8 @@ class ReasoningResponse:
     id: str
     result: str
     confidence: float
-    reasoning_steps: List[str]
-    metadata: Dict[str, Any]
+    reasoning_steps: list[str]
+    metadata: dict[str, Any]
     elapsed_time: float
 
 class DeepSeekReasoningEngine:
@@ -278,7 +279,7 @@ Step-by-step reasoning:
                 
         return min(confidence, 0.95)  # Cap at 95%
         
-    def _extract_trading_signals(self, response: str) -> Dict[str, Any]:
+    def _extract_trading_signals(self, response: str) -> dict[str, Any]:
         """Extract trading signals from response"""
         
         signals = {
@@ -506,7 +507,7 @@ class DeepSeekMCPServer:
             "id": msg_id
         }))
         
-    async def get_market_context(self) -> Dict[str, Any]:
+    async def get_market_context(self) -> dict[str, Any]:
         """Get current market context from trading MCP"""
         try:
             # Connect to trading MCP server
@@ -525,7 +526,7 @@ class DeepSeekMCPServer:
             logger.error(f"Failed to get market context: {e}")
             return {}
             
-    def parse_trading_recommendation(self, response: ReasoningResponse) -> Dict[str, Any]:
+    def parse_trading_recommendation(self, response: ReasoningResponse) -> dict[str, Any]:
         """Parse trading recommendation from reasoning response"""
         
         metadata = response.metadata.get("trading_signals", {})
@@ -584,7 +585,7 @@ class DeepSeekMCPServer:
                                 },
                                 "id": f"announce_{service}"
                             }))
-                    except:
+                    except Exception:
                         pass  # Service might not be running
                         
                 await asyncio.sleep(60)  # Every minute

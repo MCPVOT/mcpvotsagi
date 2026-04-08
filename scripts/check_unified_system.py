@@ -84,7 +84,7 @@ class UnifiedSystemChecker:
             else:
                 logger.error("❌ DASHBOARD: Main interface not accessible")
                 dashboard_online = False
-        except:
+        except Exception:
             logger.error("🔴 DASHBOARD: Not running or not accessible")
             dashboard_online = False
 

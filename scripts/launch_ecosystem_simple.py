@@ -187,7 +187,7 @@ class SimpleEcosystemLauncher:
                 logger.error(f"❌ Error stopping {service_info['name']}: {e}")
                 try:
                     service_info["process"].kill()
-                except:
+                except Exception:
                     pass
 
     def run(self):

@@ -10,7 +10,7 @@ import os
 import sys
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Any, Optional
+from typing import Optional
 import subprocess
 import ast
 
@@ -108,18 +108,18 @@ if RL_AVAILABLE:
 
 
 class AnalysisRequest(BaseModel):
-    paths: List[str]
+    paths: list[str]
     include_github: bool = True
     deep_analysis: bool = True
     use_rl: bool = True
 
 class MarketAnalysisRequest(BaseModel):
-    market_data: Dict[str, Any]
+    market_data: dict[str, Any]
     use_hierarchical: bool = True
     context: Optional[Dict[str, Any]] = None
 
 
-def analyze_python_file(file_path: Path) -> Dict[str, Any]:
+def analyze_python_file(file_path: Path) -> dict[str, Any]:
     """Analyze a Python file for structure and capabilities"""
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -166,7 +166,7 @@ def analyze_python_file(file_path: Path) -> Dict[str, Any]:
         return {"file": str(file_path), "error": str(e)}
 
 
-def analyze_javascript_file(file_path: Path) -> Dict[str, Any]:
+def analyze_javascript_file(file_path: Path) -> dict[str, Any]:
     """Analyze JavaScript/TypeScript file"""
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -187,7 +187,7 @@ def analyze_javascript_file(file_path: Path) -> Dict[str, Any]:
         return {"file": str(file_path), "error": str(e)}
 
 
-async def analyze_repository(repo_path: str) -> Dict[str, Any]:
+async def analyze_repository(repo_path: str) -> dict[str, Any]:
     """Analyze a complete repository"""
     path = Path(repo_path)
     if not path.exists():
@@ -240,7 +240,7 @@ async def analyze_repository(repo_path: str) -> Dict[str, Any]:
     return results
 
 
-def create_upgrade_plan(analysis_data: Dict[str, Any]) -> Dict[str, Any]:
+def create_upgrade_plan(analysis_data: dict[str, Any]) -> dict[str, Any]:
     """Create a comprehensive upgrade plan based on analysis"""
     plan = {
         "created_at": datetime.now().isoformat(),
@@ -359,7 +359,7 @@ async def get_dashboard():
     }
 
 
-async def analyze_github_repos() -> Dict[str, Any]:
+async def analyze_github_repos() -> dict[str, Any]:
     """Analyze GitHub repositories (simulated - would use browser MCP in production)"""
     # In production, this would use browser MCP to scrape GitHub
     github_repos = {
@@ -431,7 +431,7 @@ async def get_upgrade_plan():
 
 
 @app.post("/api/v3/chat")
-async def chat(message: Dict[str, str]):
+async def chat(message: dict[str, str]):
     """Enhanced chat endpoint with RL integration"""
     user_message = message.get("message", "")
     use_rl = message.get("use_rl", True)

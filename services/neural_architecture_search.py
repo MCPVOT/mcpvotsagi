@@ -23,7 +23,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
-from typing import Dict, List, Tuple, Optional, Any, Union
+from typing import Optional, Any, Union
 from dataclasses import dataclass, field
 from enum import Enum
 import json
@@ -77,9 +77,9 @@ class ArchitectureConfig:
     """Configuration for neural architecture"""
     num_cells: int = 8
     num_nodes_per_cell: int = 4
-    channels: List[int] = field(default_factory=lambda: [32, 64, 128, 256])
-    operations: List[OperationType] = field(default_factory=lambda: list(OperationType))
-    activations: List[ActivationType] = field(default_factory=lambda: list(ActivationType))
+    channels: list[int] = field(default_factory=lambda: [32, 64, 128, 256])
+    operations: list[OperationType] = field(default_factory=lambda: list(OperationType))
+    activations: list[ActivationType] = field(default_factory=lambda: list(ActivationType))
     max_depth: int = 20
     input_channels: int = 3
     num_classes: int = 10
@@ -87,12 +87,12 @@ class ArchitectureConfig:
 @dataclass
 class SearchSpace:
     """Defines the search space for NAS"""
-    operations: List[str]
-    activations: List[str]
-    channels: List[int]
-    kernel_sizes: List[int]
-    depths: List[int]
-    widths: List[int]
+    operations: list[str]
+    activations: list[str]
+    channels: list[int]
+    kernel_sizes: list[int]
+    depths: list[int]
+    widths: list[int]
 
 class MixedOperation(nn.Module):
     """Mixed operation for differentiable architecture search"""
@@ -228,7 +228,7 @@ class DARTSNetwork(nn.Module):
 
         return x
 
-    def get_architecture(self) -> Dict[str, Any]:
+    def get_architecture(self) -> dict[str, Any]:
         """Extract the discovered architecture"""
         architecture = {
             "cells": [],
@@ -273,7 +273,7 @@ class EvolutionaryNAS:
                 "id": self._generate_id()
             })
 
-    def _random_architecture(self) -> Dict[str, Any]:
+    def _random_architecture(self) -> dict[str, Any]:
         """Generate random architecture"""
         depth = random.choice(self.search_space.depths)
         width = random.choice(self.search_space.widths)
@@ -298,7 +298,7 @@ class EvolutionaryNAS:
         """Generate unique ID for architecture"""
         return f"arch_{time.time()}_{random.randint(1000, 9999)}"
 
-    async def evolve_generation(self) -> Dict[str, Any]:
+    async def evolve_generation(self) -> dict[str, Any]:
         """Evolve one generation"""
         logger.info(f"🧬 Evolving generation {self.generation}")
 
@@ -360,7 +360,7 @@ class EvolutionaryNAS:
                 individual["metrics"] = results[eval_idx]["metrics"]
             eval_idx += 1
 
-    async def _evaluate_architecture(self, architecture: Dict[str, Any]) -> Dict[str, Any]:
+    async def _evaluate_architecture(self, architecture: dict[str, Any]) -> dict[str, Any]:
         """Evaluate a single architecture"""
         # Simulate architecture evaluation
         await asyncio.sleep(0.1)  # Simulate training time
@@ -401,11 +401,11 @@ class EvolutionaryNAS:
             }
         }
 
-    async def _dummy_evaluation(self) -> Dict[str, Any]:
+    async def _dummy_evaluation(self) -> dict[str, Any]:
         """Dummy evaluation for already evaluated architectures"""
         return {"fitness": 0.0, "metrics": {}}
 
-    def _estimate_parameters(self, architecture: Dict[str, Any]) -> int:
+    def _estimate_parameters(self, architecture: dict[str, Any]) -> int:
         """Estimate number of parameters in architecture"""
         total_params = 0
 
@@ -422,18 +422,18 @@ class EvolutionaryNAS:
 
         return total_params
 
-    def _select_elite(self, elite_ratio: float = 0.2) -> List[Dict[str, Any]]:
+    def _select_elite(self, elite_ratio: float = 0.2) -> list[Dict[str, Any]]:
         """Select elite individuals"""
         elite_size = max(1, int(self.population_size * elite_ratio))
         sorted_pop = sorted(self.population, key=lambda x: x["fitness"], reverse=True)
         return sorted_pop[:elite_size]
 
-    def _tournament_selection(self, tournament_size: int = 3) -> Dict[str, Any]:
+    def _tournament_selection(self, tournament_size: int = 3) -> dict[str, Any]:
         """Tournament selection"""
         candidates = random.sample(self.population, min(tournament_size, len(self.population)))
         return max(candidates, key=lambda x: x["fitness"])
 
-    def _crossover(self, parent1: Dict[str, Any], parent2: Dict[str, Any]) -> Dict[str, Any]:
+    def _crossover(self, parent1: dict[str, Any], parent2: dict[str, Any]) -> dict[str, Any]:
         """Crossover two architectures"""
         arch1 = parent1["architecture"]
         arch2 = parent2["architecture"]
@@ -470,7 +470,7 @@ class EvolutionaryNAS:
             "id": self._generate_id()
         }
 
-    def _mutate(self, individual: Dict[str, Any], mutation_rate: float = 0.1) -> Dict[str, Any]:
+    def _mutate(self, individual: dict[str, Any], mutation_rate: float = 0.1) -> dict[str, Any]:
         """Mutate an individual"""
         architecture = individual["architecture"].copy()
 
@@ -540,7 +540,7 @@ class ProgressiveNAS:
                 "end_generation": end_gen
             })
 
-    def get_current_complexity_constraints(self, generation: int) -> Dict[str, Any]:
+    def get_current_complexity_constraints(self, generation: int) -> dict[str, Any]:
         """Get complexity constraints for current generation"""
         current_stage = None
 
@@ -560,7 +560,7 @@ class ProgressiveNAS:
             "allowed_operations": self._get_operations_by_complexity(complexity)
         }
 
-    def _get_operations_by_complexity(self, complexity: int) -> List[str]:
+    def _get_operations_by_complexity(self, complexity: int) -> list[str]:
         """Get allowed operations based on complexity level"""
         basic_ops = ["conv_3x3", "max_pool_3x3", "linear", "identity"]
 
@@ -608,7 +608,7 @@ class NASController:
         # Progressive NAS
         self.search_methods["progressive"] = ProgressiveNAS(max_complexity=10)
 
-    async def search_architecture(self, method: str = "evolutionary", generations: int = 10) -> Dict[str, Any]:
+    async def search_architecture(self, method: str = "evolutionary", generations: int = 10) -> dict[str, Any]:
         """Run architecture search"""
         logger.info(f"🔍 Starting NAS with method: {method}")
 
@@ -621,7 +621,7 @@ class NASController:
         else:
             raise ValueError(f"Unknown search method: {method}")
 
-    async def _run_evolutionary_search(self, generations: int) -> Dict[str, Any]:
+    async def _run_evolutionary_search(self, generations: int) -> dict[str, Any]:
         """Run evolutionary architecture search"""
         evo_nas = self.search_methods["evolutionary"]
         evo_nas.initialize_population()
@@ -643,7 +643,7 @@ class NASController:
             "fitness_history": evo_nas.fitness_history
         }
 
-    async def _run_darts_search(self, epochs: int) -> Dict[str, Any]:
+    async def _run_darts_search(self, epochs: int) -> dict[str, Any]:
         """Run DARTS architecture search"""
         darts_model = self.search_methods["darts"]
 
@@ -674,7 +674,7 @@ class NASController:
             "epochs": epochs
         }
 
-    async def _run_progressive_search(self, generations: int) -> Dict[str, Any]:
+    async def _run_progressive_search(self, generations: int) -> dict[str, Any]:
         """Run progressive architecture search"""
         progressive_nas = self.search_methods["progressive"]
         progressive_nas.create_complexity_schedule(generations)

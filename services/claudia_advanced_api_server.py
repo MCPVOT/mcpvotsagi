@@ -11,7 +11,7 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import Dict, List, Optional
+from typing import Optional
 import anthropic
 from claudia_usage_monitor import ClaudiaUsageMonitor
 

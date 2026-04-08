@@ -11,7 +11,7 @@ import logging
 import sys
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List
+# typing: use built-in list
 
 # Add project root to path
 project_root = Path(__file__).parent

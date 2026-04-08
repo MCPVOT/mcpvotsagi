@@ -12,7 +12,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Any
 import threading
 from concurrent.futures import ThreadPoolExecutor
 import psutil
@@ -22,7 +22,7 @@ class CyberpunkSystemLauncher:
 
     def __init__(self):
         self.logger = self._setup_logger()
-        self.processes: Dict[str, subprocess.Popen] = {}
+        self.processes: dict[str, subprocess.Popen] = {}
         self.running = False
         self.executor = ThreadPoolExecutor(max_workers=8)
 
@@ -153,7 +153,7 @@ class CyberpunkSystemLauncher:
 
         self.logger.info("📁 Created necessary directories")
 
-    def start_component(self, name: str, component: Dict[str, Any]) -> bool:
+    def start_component(self, name: str, component: dict[str, Any]) -> bool:
         """Start a single component"""
         try:
             script_path = Path(component["script"])
@@ -193,7 +193,7 @@ class CyberpunkSystemLauncher:
             self.logger.error(f"❌ Error starting {component['description']}: {e}")
             return False
 
-    def check_component_health(self, name: str, component: Dict[str, Any]) -> bool:
+    def check_component_health(self, name: str, component: dict[str, Any]) -> bool:
         """Check if a component is healthy"""
         try:
             if name not in self.processes:
@@ -248,7 +248,7 @@ class CyberpunkSystemLauncher:
                 self.logger.error(f"❌ Error monitoring components: {e}")
                 time.sleep(5)
 
-    def restart_component(self, name: str, component: Dict[str, Any]):
+    def restart_component(self, name: str, component: dict[str, Any]):
         """Restart a component"""
         self.logger.info(f"🔄 Restarting {component['description']}")
         self.stop_component(name)

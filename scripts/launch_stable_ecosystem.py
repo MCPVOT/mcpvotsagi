@@ -16,7 +16,7 @@ import signal
 from pathlib import Path
 import requests
 import json
-from typing import Dict, List, Optional
+from typing import Optional
 
 # Configure logging
 logging.basicConfig(
@@ -72,7 +72,7 @@ class StableEcosystemLauncher:
             logger.warning(f"⚠️ Claudia/Ollama not available: {e}")
         return False
 
-    def test_claudia_model(self, model: str, task: str) -> Optional[str]:
+    def test_claudia_model(self, model: str, task: str) -> [str]:
         """Test a specific Claudia model"""
         try:
             payload = {
@@ -135,7 +135,7 @@ class StableEcosystemLauncher:
             logger.error(f"❌ Failed to start {service['name']}: {e}")
             return False
 
-    def get_service_status(self) -> Dict:
+    def get_service_status(self) -> dict:
         """Get status of all services"""
         status = {
             "running": 0,

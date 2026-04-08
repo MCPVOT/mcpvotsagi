@@ -24,7 +24,7 @@ import logging
 from pathlib import Path
 from datetime import datetime
 import aiohttp
-from typing import List, Dict, Optional
+from typing import Dict, Optional
 
 # Setup logging
 logging.basicConfig(
@@ -153,7 +153,7 @@ class AdvancedDGMLauncher:
         self.services[service_name]['status'] = 'failed'
         return False
 
-    def launch_all_services(self) -> List[str]:
+    def launch_all_services(self) -> list[str]:
         """Launch all DGM services"""
         logger.info("🚀 Launching Advanced DGM System...")
 
@@ -172,7 +172,7 @@ class AdvancedDGMLauncher:
 
         return launched_services
 
-    async def validate_all_services(self, launched_services: List[str]) -> Dict[str, bool]:
+    async def validate_all_services(self, launched_services: list[str]) -> dict[str, bool]:
         """Validate all launched services"""
         logger.info("🔍 Validating service health...")
 
@@ -194,7 +194,7 @@ class AdvancedDGMLauncher:
 
         return validation_results
 
-    async def test_advanced_capabilities(self) -> Dict[str, bool]:
+    async def test_advanced_capabilities(self) -> dict[str, bool]:
         """Test advanced DGM capabilities"""
         logger.info("🧪 Testing Advanced DGM Capabilities...")
 
@@ -290,8 +290,8 @@ class AdvancedDGMLauncher:
             logger.error(f"❌ A2A communication test error: {e}")
             return False
 
-    def generate_status_report(self, validation_results: Dict[str, bool],
-                             capability_results: Dict[str, bool]) -> str:
+    def generate_status_report(self, validation_results: dict[str, bool],
+                             capability_results: dict[str, bool]) -> str:
         """Generate comprehensive status report"""
 
         report_path = PROJECT_ROOT / "reports" / "advanced_dgm_system_status.md"

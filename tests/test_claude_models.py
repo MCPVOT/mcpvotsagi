@@ -12,7 +12,7 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -57,7 +57,7 @@ class ClaudeModelTester:
 
         return self.test_results
 
-    async def test_single_model(self, model_name: str) -> Dict:
+    async def test_single_model(self, model_name: str) -> dict:
         """Test a single Claude model"""
         try:
             # Import anthropic here to avoid issues if not installed

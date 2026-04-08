@@ -18,7 +18,7 @@ import hashlib
 from datetime import datetime, timedelta
 from pathlib import Path
 from collections import deque, defaultdict
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Optional, Tuple
 import random
 import logging
 import requests
@@ -764,7 +764,7 @@ class UltimateAGISystem:
                     return 'active'
 
             return 'warning'
-        except:
+        except Exception:
             return 'error'
 
     async def check_mcp_status(self):
@@ -788,7 +788,7 @@ class UltimateAGISystem:
                 return 'warning'
             return 'error'
 
-        except:
+        except Exception:
             return 'error'
 
     async def check_ipfs_status(self):
@@ -798,7 +798,7 @@ class UltimateAGISystem:
                 self.ipfs_client.id()
                 return 'active'
             return 'warning'
-        except:
+        except Exception:
             return 'error'
 
     async def check_agents_status(self):
@@ -809,7 +809,7 @@ class UltimateAGISystem:
             elif len(self.agents) > 0:
                 return 'warning'
             return 'error'
-        except:
+        except Exception:
             return 'error'
 
     async def check_trading_status(self):
@@ -818,7 +818,7 @@ class UltimateAGISystem:
             if self.trading_engine:
                 return 'active'
             return 'warning'
-        except:
+        except Exception:
             return 'error'
 
     async def check_context7_status(self):
@@ -830,7 +830,7 @@ class UltimateAGISystem:
                 else:
                     return 'warning'
             return 'error'
-        except:
+        except Exception:
             return 'error'
 
     async def check_claudia_status(self):
@@ -843,7 +843,7 @@ class UltimateAGISystem:
                 else:
                     return 'warning'
             return 'error'
-        except:
+        except Exception:
             return 'error'
 
     async def handle_chat(self, request):
@@ -1048,7 +1048,7 @@ Please provide a response that takes into account the above context information,
             try:
                 import ipfshttpclient
                 self.ipfs_client = ipfshttpclient.connect()
-            except:
+            except Exception:
                 return {'error': 'IPFS not available - start IPFS daemon'}
 
         # Parse task
@@ -1259,7 +1259,7 @@ Please provide a response that takes into account the above context information,
             try:
                 self.ipfs_client = ipfshttpclient.connect()
                 print("[OK] IPFS client initialized")
-            except:
+            except Exception:
                 print("[WARNING] IPFS not available")
 
             # Initialize agents

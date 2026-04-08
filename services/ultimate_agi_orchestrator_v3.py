@@ -26,7 +26,7 @@ import logging
 import os
 import sys
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Callable
+from typing import Callable
 from dataclasses import dataclass, asdict
 from pathlib import Path
 import aiohttp
@@ -63,7 +63,7 @@ class ComponentStatus:
     pid: Optional[int] = None
     port: Optional[int] = None
     url: Optional[str] = None
-    metrics: Dict[str, Any] = None
+    metrics: dict[str, Any] = None
 
 @dataclass
 class SystemMetrics:
@@ -72,11 +72,11 @@ class SystemMetrics:
     cpu_usage: float
     memory_usage: float
     disk_usage: float
-    network_io: Dict[str, int]
+    network_io: dict[str, int]
     active_components: int
     total_components: int
     health_score: float
-    alerts: List[str]
+    alerts: list[str]
 
 class UltimateAGIOrchestrator:
     """Main orchestrator for the Ultimate AGI System V3"""
@@ -102,7 +102,7 @@ class UltimateAGIOrchestrator:
 
         logger.info("🚀 Ultimate AGI Orchestrator V3 initialized")
 
-    def load_config(self) -> Dict:
+    def load_config(self) -> dict:
         """Load orchestrator configuration"""
         default_config = {
             "components": {
@@ -567,7 +567,7 @@ class UltimateAGIOrchestrator:
                 [], 0.0, False
             )
 
-    async def collect_system_state(self) -> Dict:
+    async def collect_system_state(self) -> dict:
         """Collect current system state for analysis"""
         return {
             "components": {name: asdict(status) for name, status in self.components.items()},
@@ -576,7 +576,7 @@ class UltimateAGIOrchestrator:
             "timestamp": datetime.now().isoformat()
         }
 
-    async def analyze_system_performance(self, system_state: Dict) -> Dict:
+    async def analyze_system_performance(self, system_state: Dict) -> dict:
         """Analyze system performance using Claudia AI"""
         # This would integrate with Claudia AI for deep analysis
         # For now, return a mock analysis
@@ -595,7 +595,7 @@ class UltimateAGIOrchestrator:
             ]
         }
 
-    async def apply_optimizations(self, analysis_results: Dict) -> List[str]:
+    async def apply_optimizations(self, analysis_results: Dict) -> list[str]:
         """Apply optimizations based on analysis"""
         applied = []
 
@@ -621,7 +621,7 @@ class UltimateAGIOrchestrator:
 
     async def store_improvement_cycle(self, cycle_id: str, start_time: datetime,
                                     end_time: datetime, analysis_results: Dict,
-                                    optimizations_applied: List[str],
+                                    optimizations_applied: list[str],
                                     performance_improvement: float, success: bool):
         """Store improvement cycle results"""
         try:
@@ -664,7 +664,7 @@ class UltimateAGIOrchestrator:
                 logger.error(f"Error in alert processing loop: {e}")
                 await asyncio.sleep(5)
 
-    async def process_alerts(self, alerts: List[str]):
+    async def process_alerts(self, alerts: list[str]):
         """Process system alerts"""
         for alert in alerts:
             logger.warning(f"🚨 ALERT: {alert}")
@@ -680,7 +680,7 @@ class UltimateAGIOrchestrator:
         """Add an alert callback function"""
         self.alert_callbacks.append(callback)
 
-    async def get_system_status(self) -> Dict:
+    async def get_system_status(self) -> dict:
         """Get current system status"""
         return {
             "running": self.running,

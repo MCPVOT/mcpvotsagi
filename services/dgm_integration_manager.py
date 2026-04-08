@@ -10,7 +10,7 @@ import json
 import logging
 import sys
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
+from typing import List, Optional, Tuple
 from datetime import datetime
 import aiohttp
 import websockets
@@ -135,7 +135,7 @@ class DGMIntegrationManager:
         except Exception:
             return False
 
-    async def check_dependencies(self, dependencies: List[str]) -> List[str]:
+    async def check_dependencies(self, dependencies: list[str]) -> list[str]:
         """Check for missing dependencies"""
         missing = []
         for dep in dependencies:
@@ -172,7 +172,7 @@ import asyncio
 import json
 import logging
 import websockets
-from typing import Dict, Any, List
+# typing: use built-in list
 from datetime import datetime
 import redis.asyncio as redis
 
@@ -222,7 +222,7 @@ class UnifiedDGMServer:
         except Exception as e:
             logger.error(f"❌ DGM connection error: {e}")
 
-    async def process_message(self, message: str) -> Dict[str, Any]:
+    async def process_message(self, message: str) -> dict[str, Any]:
         """Process incoming messages"""
         try:
             data = json.loads(message)
@@ -243,7 +243,7 @@ class UnifiedDGMServer:
         except Exception as e:
             return {"error": str(e)}
 
-    async def evolve_program(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def evolve_program(self, params: dict[str, Any]) -> dict[str, Any]:
         """Evolve a program using DGM principles"""
         program_id = params.get("program_id", f"dgm_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
         task = params.get("task", "general_optimization")
@@ -266,7 +266,7 @@ class UnifiedDGMServer:
             "estimated_time": "30 seconds"
         }
 
-    async def create_trading_strategy(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def create_trading_strategy(self, params: dict[str, Any]) -> dict[str, Any]:
         """Create optimized trading strategy"""
         strategy_name = params.get("name", f"dgm_strategy_{int(datetime.now().timestamp())}")
         market_conditions = params.get("market_conditions", {})

@@ -10,7 +10,7 @@ import json
 import logging
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Any
 import aiohttp
 from aiohttp import web
 import aiohttp_jinja2
@@ -38,7 +38,7 @@ class WatchYourLANDashboardIntegration:
             "last_update": None
         }
 
-    async def fetch_network_data(self) -> Dict[str, Any]:
+    async def fetch_network_data(self) -> dict[str, Any]:
         """Fetch network data from WatchYourLAN API"""
         try:
             async with aiohttp.ClientSession() as session:
@@ -85,7 +85,7 @@ class WatchYourLANDashboardIntegration:
 
 
 
-    async def get_network_overview(self) -> Dict[str, Any]:
+    async def get_network_overview(self) -> dict[str, Any]:
         """Get network overview for dashboard"""
         data = await self.fetch_network_data()
 
@@ -107,7 +107,7 @@ class WatchYourLANDashboardIntegration:
 
         return overview
 
-    def calculate_network_health(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def calculate_network_health(self, data: dict[str, Any]) -> dict[str, Any]:
         """Calculate network health metrics"""
         stats = data["statistics"]
         total = stats.get("total_hosts", 0)
@@ -130,7 +130,7 @@ class WatchYourLANDashboardIntegration:
                     "#ff8000" if health_score >= 70 else "#ff0000"
         }
 
-    def get_device_breakdown(self, hosts: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def get_device_breakdown(self, hosts: list[Dict[str, Any]]) -> dict[str, Any]:
         """Get device breakdown by vendor/type"""
         vendors = {}
         status_counts = {"online": 0, "offline": 0}
@@ -148,7 +148,7 @@ class WatchYourLANDashboardIntegration:
             "by_status": status_counts
         }
 
-    def generate_network_topology(self, hosts: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def generate_network_topology(self, hosts: list[Dict[str, Any]]) -> dict[str, Any]:
         """Generate network topology data for visualization"""
         nodes = []
         edges = []
@@ -274,7 +274,7 @@ class WatchYourLANDashboardIntegration:
             logger.error(f"Error rendering network dashboard: {e}")
             return web.Response(text=f"Error: {e}", status=500)
 
-    def generate_dashboard_html(self, overview: Dict[str, Any]) -> str:
+    def generate_dashboard_html(self, overview: dict[str, Any]) -> str:
         """Generate HTML dashboard"""
         return f"""
 <!DOCTYPE html>
@@ -494,7 +494,7 @@ class WatchYourLANDashboardIntegration:
 </html>
         """
 
-    def render_alerts(self, alerts: List[Dict[str, Any]]) -> str:
+    def render_alerts(self, alerts: list[Dict[str, Any]]) -> str:
         """Render alerts HTML"""
         if not alerts:
             return "<p>No active alerts</p>"
@@ -512,7 +512,7 @@ class WatchYourLANDashboardIntegration:
             """
         return html
 
-    def render_devices(self, overview: Dict[str, Any]) -> str:
+    def render_devices(self, overview: dict[str, Any]) -> str:
         """Render devices HTML"""
         devices = overview.get('device_breakdown', {}).get('by_vendor', {})
         if not devices:
@@ -528,7 +528,7 @@ class WatchYourLANDashboardIntegration:
             """
         return html
 
-    def render_events(self, events: List[Dict[str, Any]]) -> str:
+    def render_events(self, events: list[Dict[str, Any]]) -> str:
         """Render events HTML"""
         if not events:
             return "<p>No recent events</p>"

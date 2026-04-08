@@ -38,7 +38,7 @@ class RealTimeMarketDataCollector:
             'cryptocompare': self._fetch_crypto_data
         }
         
-    async def _fetch_yahoo_data(self, symbol: str) -> Dict:
+    async def _fetch_yahoo_data(self, symbol: str) -> dict:
         """Fetch data from Yahoo Finance"""
         try:
             ticker = yf.Ticker(symbol)
@@ -73,7 +73,7 @@ class RealTimeMarketDataCollector:
             
         return None
         
-    async def _fetch_alphavantage_data(self, symbol: str) -> Dict:
+    async def _fetch_alphavantage_data(self, symbol: str) -> dict:
         """Fetch data from Alpha Vantage API"""
         # Requires API key - implement if available
         api_key = os.environ.get('ALPHAVANTAGE_API_KEY')
@@ -111,7 +111,7 @@ class RealTimeMarketDataCollector:
             
         return None
         
-    async def _fetch_crypto_data(self, symbol: str) -> Dict:
+    async def _fetch_crypto_data(self, symbol: str) -> dict:
         """Fetch cryptocurrency data"""
         if not symbol.endswith('-USD'):
             return None

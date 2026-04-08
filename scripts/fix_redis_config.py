@@ -78,7 +78,7 @@ def get_wsl_ip():
             ip = result.stdout.strip().split()[0]  # Get first IP
             return ip
         return None
-    except:
+    except Exception:
         return None
 
 def test_redis_connection(host="localhost", port=6379, password=None):

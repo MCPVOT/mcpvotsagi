@@ -23,7 +23,7 @@ def check_ollama_availability():
         if response.status_code == 200:
             models = response.json().get('models', [])
             return True, len(models)
-    except:
+    except Exception:
         pass
     return False, 0
 
@@ -34,7 +34,7 @@ def check_port_availability(port):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.bind(('localhost', port))
             return True
-    except:
+    except Exception:
         return False
 
 async def main():

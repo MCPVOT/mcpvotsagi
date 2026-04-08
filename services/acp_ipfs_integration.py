@@ -10,7 +10,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import List, Optional
 import logging
 import yaml
 import aiohttp
@@ -48,7 +48,7 @@ class ACPIntegrationManager:
             }
         }
         
-    async def analyze_acp_structure(self) -> Dict[str, Any]:
+    async def analyze_acp_structure(self) -> dict[str, Any]:
         """Analyze ACP repository structure and capabilities"""
         analysis = {
             "structure": {},
@@ -97,7 +97,7 @@ Bridges ACP functionality with MCP servers
 import asyncio
 import json
 import websockets
-from typing import Dict, Any, Optional
+from typing import Optional
 
 class ACPMCPBridge:
     """Bridge between ACP and MCP protocols"""
@@ -126,7 +126,7 @@ class ACPMCPBridge:
             print(f"Failed to connect to {name}: {e}")
             return False
     
-    async def bridge_acp_to_memory(self, acp_data: Dict[str, Any]):
+    async def bridge_acp_to_memory(self, acp_data: dict[str, Any]):
         """Bridge ACP data to Memory MCP"""
         if "memory" not in self.mcp_connections:
             return None
@@ -174,7 +174,7 @@ class ACPMCPBridge:
             
             await asyncio.sleep(60)  # Sync every minute
     
-    async def get_acp_updates(self) -> Optional[Dict[str, Any]]:
+    async def get_acp_updates(self) -> [Dict[str, Any]]:
         """Get updates from ACP system"""
         # Placeholder for ACP update detection
         return {
@@ -208,7 +208,7 @@ class IPFSKnowledgeSystem:
         self.knowledge_dag = {}
         self.pinned_hashes = []
         
-    async def create_knowledge_snapshot(self, knowledge_data: Dict[str, Any]) -> Optional[str]:
+    async def create_knowledge_snapshot(self, knowledge_data: dict[str, Any]) -> [str]:
         """Create IPFS snapshot of current knowledge state"""
         try:
             async with aiohttp.ClientSession() as session:
@@ -251,7 +251,7 @@ class IPFSKnowledgeSystem:
             logger.error(f"Failed to pin content: {e}")
         return False
     
-    async def create_ecosystem_dag(self) -> Dict[str, Any]:
+    async def create_ecosystem_dag(self) -> dict[str, Any]:
         """Create IPFS DAG of entire ecosystem"""
         dag = {
             "name": "MCPVotsAGI Ecosystem DAG",

@@ -7,10 +7,11 @@ Implements advanced A2A protocol with message queues, agent discovery, and fault
 import asyncio
 import json
 import logging
+import os
 import time
 import uuid
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Set, Any, Callable
+from typing import Callable
 from dataclasses import dataclass, asdict
 from enum import Enum
 import websockets
@@ -49,14 +50,14 @@ class AgentInfo:
     """Agent information structure"""
     agent_id: str
     name: str
-    capabilities: List[str]
+    capabilities: list[str]
     endpoint: str
     status: AgentStatus
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
     last_seen: datetime
     version: str = "1.0.0"
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         """Convert to dictionary"""
         data = asdict(self)
         data['status'] = self.status.value
@@ -70,13 +71,13 @@ class A2AMessage:
     source_agent: str
     target_agent: Optional[str]
     message_type: MessageType
-    payload: Dict[str, Any]
+    payload: dict[str, Any]
     timestamp: datetime
     expires_at: Optional[datetime] = None
     priority: int = 1
     correlation_id: Optional[str] = None
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         """Convert to dictionary"""
         data = asdict(self)
         data['message_type'] = self.message_type.value
@@ -103,10 +104,13 @@ class A2AMessage:
 class A2AMessageQueue:
     """Redis-based message queue for reliable A2A communication"""
 
-    def __init__(self, redis_url: str = "redis://:os.environ.get('REDIS_PASSWORD', '')@localhost:6379/0"):
+    def __init__(self, redis_url: str | None = None):
+        if redis_url is None:
+            password = os.environ.get("REDIS_PASSWORD", "")
+            redis_url = f"redis://:{password}@localhost:6379/0" if password else "redis://localhost:6379/0"
         self.redis_url = redis_url
         self.redis: Optional[redis.Redis] = None
-        self.subscribers: Dict[str, Set[Callable]] = {}
+        self.subscribers: dict[str, Set[Callable]] = {}
 
     async def connect(self):
         """Connect to Redis"""
@@ -178,7 +182,7 @@ class A2AMessageQueue:
                 except Exception as e:
                     logger.error(f"❌ Message processing error: {e}")
 
-    async def get_queued_messages(self, agent_id: str, limit: int = 10) -> List[A2AMessage]:
+    async def get_queued_messages(self, agent_id: str, limit: int = 10) -> list[A2AMessage]:
         """Get queued messages for agent"""
         if not self.redis:
             return []
@@ -210,8 +214,8 @@ class AgentRegistry:
 
     def __init__(self, db_path: str = "agents_registry.db"):
         self.db_path = Path(db_path)
-        self.agents: Dict[str, AgentInfo] = {}
-        self.capabilities_index: Dict[str, Set[str]] = {}
+        self.agents: dict[str, AgentInfo] = {}
+        self.capabilities_index: dict[str, Set[str]] = {}
         self.init_database()
 
     def init_database(self):
@@ -333,7 +337,7 @@ class AgentRegistry:
             logger.error(f"❌ Failed to unregister agent {agent_id}: {e}")
             return False
 
-    def discover_agents(self, capability: Optional[str] = None) -> List[AgentInfo]:
+    def discover_agents(self, capability: Optional[str] = None) -> list[AgentInfo]:
         """Discover agents by capability"""
         if capability:
             agent_ids = self.capabilities_index.get(capability, set())
@@ -341,7 +345,7 @@ class AgentRegistry:
         else:
             return list(self.agents.values())
 
-    def get_agent(self, agent_id: str) -> Optional[AgentInfo]:
+    def get_agent(self, agent_id: str) -> [AgentInfo]:
         """Get agent by ID"""
         return self.agents.get(agent_id)
 
@@ -385,8 +389,8 @@ class A2AProtocolGateway:
         self.port = port
         self.message_queue = A2AMessageQueue()
         self.agent_registry = AgentRegistry()
-        self.connections: Dict[str, websockets.WebSocketServerProtocol] = {}
-        self.message_handlers: Dict[MessageType, Callable] = {}
+        self.connections: dict[str, websockets.WebSocketServerProtocol] = {}
+        self.message_handlers: dict[MessageType, Callable] = {}
         self.stats = {
             'messages_sent': 0,
             'messages_received': 0,
@@ -608,7 +612,7 @@ class A2AProtocolGateway:
             except Exception as e:
                 logger.error(f"❌ Cleanup task error: {e}")
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get gateway statistics"""
         return {
             **self.stats,
@@ -621,12 +625,12 @@ class A2AProtocolGateway:
 class A2AClient:
     """Example A2A client implementation"""
 
-    def __init__(self, agent_id: str, name: str, capabilities: List[str]):
+    def __init__(self, agent_id: str, name: str, capabilities: list[str]):
         self.agent_id = agent_id
         self.name = name
         self.capabilities = capabilities
         self.websocket: Optional[websockets.WebSocketServerProtocol] = None
-        self.message_handlers: Dict[MessageType, Callable] = {}
+        self.message_handlers: dict[MessageType, Callable] = {}
 
     async def connect(self, gateway_url: str = "ws://localhost:8001"):
         """Connect to A2A gateway"""
@@ -668,7 +672,7 @@ class A2AClient:
             except Exception as e:
                 logger.error(f"❌ Client message handler error: {e}")
 
-    async def send_message(self, target_agent: str, payload: Dict[str, Any],
+    async def send_message(self, target_agent: str, payload: dict[str, Any],
                           message_type: MessageType = MessageType.REQUEST):
         """Send message to another agent"""
         message = A2AMessage(
@@ -682,7 +686,7 @@ class A2AClient:
 
         await self.websocket.send(json.dumps(message.to_dict()))
 
-    async def discover_agents(self, capability: Optional[str] = None) -> List[AgentInfo]:
+    async def discover_agents(self, capability: Optional[str] = None) -> list[AgentInfo]:
         """Discover agents with specific capability"""
         discover_message = A2AMessage(
             message_id=str(uuid.uuid4()),

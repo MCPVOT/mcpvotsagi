@@ -14,7 +14,7 @@ import time
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 # Configure Unicode-safe logging
 class UnicodeStreamHandler(logging.StreamHandler):
@@ -522,7 +522,7 @@ class FixedTradingSystemLauncher:
             logger.error(f"[ERROR] System shutdown failed: {e}")
             return False
 
-    def get_status(self) -> Dict:
+    def get_status(self) -> dict:
         """Get system status"""
         return {
             "system_started": self.status["system_started"],

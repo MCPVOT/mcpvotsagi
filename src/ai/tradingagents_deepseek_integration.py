@@ -11,7 +11,7 @@ import sys
 import json
 import asyncio
 import logging
-from typing import Dict, Any, Optional, List, Tuple
+from typing import Optional, List, Tuple
 from datetime import datetime
 from pathlib import Path
 
@@ -48,8 +48,8 @@ class DeepSeekTradingBrain:
         
     async def analyze_complex_decision(self, 
                                      ticker: str,
-                                     market_data: Dict[str, Any],
-                                     analyst_reports: Dict[str, Any]) -> Dict[str, Any]:
+                                     market_data: dict[str, Any],
+                                     analyst_reports: dict[str, Any]) -> dict[str, Any]:
         """Use DeepSeek-R1 for complex reasoning about trading decisions"""
         
         prompt = f"""You are DeepSeek-R1, specialized in making the hardest trading decisions.
@@ -110,8 +110,8 @@ class ClaudeCodeTradingAdvisor:
         
     async def get_strategic_advice(self,
                                  ticker: str,
-                                 market_context: Dict[str, Any],
-                                 deepseek_analysis: Dict[str, Any]) -> Dict[str, Any]:
+                                 market_context: dict[str, Any],
+                                 deepseek_analysis: dict[str, Any]) -> dict[str, Any]:
         """Get strategic trading advice from Claude Code"""
         
         # In real implementation, this would connect to Claude via MCP
@@ -167,7 +167,7 @@ class TradingDecisionEngine:
     async def analyze_and_decide(self,
                                ticker: str,
                                date: str,
-                               risk_tolerance: str = "moderate") -> Dict[str, Any]:
+                               risk_tolerance: str = "moderate") -> dict[str, Any]:
         """Main decision-making pipeline"""
         
         logger.info(f"Analyzing {ticker} for {date} with {risk_tolerance} risk tolerance")
@@ -236,10 +236,10 @@ class TradingDecisionEngine:
         return final_decision
         
     def _combine_decisions(self,
-                          ta_decision: Dict[str, Any],
-                          deepseek_analysis: Dict[str, Any],
-                          claude_advice: Dict[str, Any],
-                          risk_tolerance: str) -> Dict[str, Any]:
+                          ta_decision: dict[str, Any],
+                          deepseek_analysis: dict[str, Any],
+                          claude_advice: dict[str, Any],
+                          risk_tolerance: str) -> dict[str, Any]:
         """Combine all AI decisions into final trading decision"""
         
         # Extract decisions
@@ -286,7 +286,7 @@ class TradingDecisionEngine:
             }
         }
         
-    def _save_decision_log(self, decision: Dict[str, Any]):
+    def _save_decision_log(self, decision: dict[str, Any]):
         """Save decision to audit log"""
         log_dir = Path("trading_decisions")
         log_dir.mkdir(exist_ok=True)

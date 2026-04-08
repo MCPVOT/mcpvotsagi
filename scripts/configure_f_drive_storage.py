@@ -503,7 +503,7 @@ if __name__ == "__main__":
         # Try to create symbolic links
         try:
             self.setup_symbolic_links()
-        except:
+        except Exception:
             logger.warning("Symbolic links creation failed. Run as Administrator for symlinks.")
             
         print()

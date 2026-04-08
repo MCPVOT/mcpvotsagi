@@ -27,7 +27,7 @@ def check_prerequisites():
     try:
         result = subprocess.run(["npx", "--version"], capture_output=True, text=True)
         logger.info(f"  ✅ npx version: {result.stdout.strip()}")
-    except:
+    except Exception:
         logger.error("  ❌ npx not found - please install Node.js")
         return False
         
@@ -39,7 +39,7 @@ def check_prerequisites():
             text=True
         )
         logger.info(f"  ✅ Context7 MCP version: {result.stdout.strip()}")
-    except:
+    except Exception:
         logger.warning("  ⚠️ Cannot check Context7 version")
         
     return True

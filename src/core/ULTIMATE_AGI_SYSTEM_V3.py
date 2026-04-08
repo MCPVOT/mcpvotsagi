@@ -18,7 +18,7 @@ import subprocess
 import sqlite3
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Optional
 import logging
 
 # Configure logging first
@@ -877,7 +877,7 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
                 libraries = self.context7.detect_libraries(message)
                 for lib in libraries:
                     self.library_usage_stats[lib] = self.library_usage_stats.get(lib, 0) + 1
-            except:
+            except Exception:
                 # Fallback: simple keyword detection
                 common_libs = ['react', 'python', 'javascript', 'typescript', 'node', 'express', 'fastapi', 'django']
                 message_lower = message.lower()
@@ -1357,7 +1357,7 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
             for ws in self.websocket_connections.copy():
                 try:
                     await ws.send_str(message_str)
-                except:
+                except Exception:
                     self.websocket_connections.discard(ws)
 
     async def get_ui_components(self, request):
@@ -1585,7 +1585,7 @@ class UltimateAGISystemV3(UltimateAGISystemV2 if HAS_V2 else object):
         for ws in self.websocket_connections.copy():
             try:
                 await ws.close()
-            except:
+            except Exception:
                 pass
 
         # Stop Claudia integration

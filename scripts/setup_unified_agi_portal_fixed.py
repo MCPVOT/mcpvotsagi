@@ -216,7 +216,7 @@ def main():
             try:
                 proc.terminate()
                 print(f"   Stopped {name}")
-            except:
+            except Exception:
                 pass
         print("All servers stopped.")
 

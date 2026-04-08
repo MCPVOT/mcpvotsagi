@@ -11,7 +11,7 @@ import subprocess
 import sys
 import os
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Optional
 import logging
 import aiohttp
 import requests
@@ -22,7 +22,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 try:
     from memory.ultimate_memory_system import UltimateMemorySystem, MemoryType
-except:
+except Exception:
     print("Memory system not available")
     UltimateMemorySystem = None
 
@@ -124,7 +124,7 @@ class UltimateAGIMCPBridge:
 
         logger.info("Ultimate AGI MCP Bridge initialized")
 
-    async def process_with_deepseek(self, prompt: str, use_tools: List[str] = None) -> Dict:
+    async def process_with_deepseek(self, prompt: str, use_tools: list[str] = None) -> dict:
         """Process prompt with DeepSeek-R1 and optionally use MCP tools"""
 
         # 1. Enhance prompt with memory context
@@ -238,7 +238,7 @@ Please provide a final response integrating these tool results.
             logger.error(f"Error querying DeepSeek: {e}")
             return f"Error: {str(e)}"
 
-    def _parse_tool_calls(self, response: str) -> List[Dict]:
+    def _parse_tool_calls(self, response: str) -> list[Dict]:
         """Parse response for MCP tool calls"""
         tool_calls = []
 
@@ -254,7 +254,7 @@ Please provide a final response integrating these tool results.
             tool, method, params_str = match
             try:
                 params = json.loads(params_str) if params_str else {}
-            except:
+            except Exception:
                 params = {}
 
             tool_calls.append({

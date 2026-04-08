@@ -19,7 +19,7 @@ import hashlib
 from datetime import datetime, timedelta
 from pathlib import Path
 from collections import deque, defaultdict
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Optional, Tuple
 import random
 import logging
 import requests
@@ -1298,7 +1298,7 @@ Please provide a response that takes into account the above context information,
             try:
                 self.ipfs_client = ipfshttpclient.connect()
                 print("[OK] IPFS client initialized")
-            except:
+            except Exception:
                 print("[WARNING] IPFS not available")
 
             # Initialize integrations

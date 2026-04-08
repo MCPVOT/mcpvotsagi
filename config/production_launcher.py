@@ -14,7 +14,7 @@ import sys
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+from typing import Set
 
 class ProductionLauncher:
     """Streamlined production launcher for MCPVotsAGI"""
@@ -22,7 +22,7 @@ class ProductionLauncher:
     def __init__(self):
         self.workspace = Path.cwd()
         self.services = {}
-        self.running_processes: Set[int] = set()
+        self.running_processes: set[int] = set()
 
         # Core service definitions - no duplicates
         self.service_config = {
@@ -76,7 +76,7 @@ class ProductionLauncher:
             r.ping()
             r.close()
             return True
-        except:
+        except Exception:
             return False
 
     async def check_http_health(self, port: int) -> bool:
@@ -86,7 +86,7 @@ class ProductionLauncher:
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"http://localhost:{port}/health", timeout=3) as response:
                     return response.status == 200
-        except:
+        except Exception:
             return False
 
     async def check_websocket_health(self, port: int) -> bool:
@@ -97,7 +97,7 @@ class ProductionLauncher:
                 await ws.send(json.dumps({"type": "ping"}))
                 response = await asyncio.wait_for(ws.recv(), timeout=2)
                 return True
-        except:
+        except Exception:
             return False
 
     def kill_duplicate_processes(self):

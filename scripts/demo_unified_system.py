@@ -58,7 +58,7 @@ class UnifiedSystemDemo:
                 print("\n❌ System is not accessible. Please start it first:")
                 print("   python unified_agi_dashboard.py")
                 return False
-        except:
+        except Exception:
             print("\n🔴 System is not running. Please start it first:")
             print("   python unified_agi_dashboard.py")
             return False

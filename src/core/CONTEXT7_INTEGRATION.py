@@ -12,7 +12,7 @@ import re
 import socket
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Tuple
 import aiohttp
 from datetime import datetime, timedelta
 import requests
@@ -167,7 +167,7 @@ class Context7Integration:
                                 logger.debug(f"Server stdout: {stdout.decode()}")
                             if stderr:
                                 logger.debug(f"Server stderr: {stderr.decode()}")
-                        except:
+                        except Exception:
                             pass
 
                 except Exception as e:
@@ -175,7 +175,7 @@ class Context7Integration:
                     if self.mcp_process:
                         try:
                             self.mcp_process.terminate()
-                        except:
+                        except Exception:
                             pass
                         self.mcp_process = None
                     continue
@@ -258,7 +258,7 @@ class Context7Integration:
 
         return detected
 
-    async def enrich_context(self, user_query: str, max_tokens: int = 10000) -> Dict:
+    async def enrich_context(self, user_query: str, max_tokens: int = 10000) -> dict:
         """Enrich context with relevant library documentation"""
         if not self.connected:
             if not await self.start_server():
@@ -315,7 +315,7 @@ class Context7Integration:
         enriched_context['enriched'] = len(enriched_context['documentation']) > 0
         return enriched_context
 
-    async def _get_library_docs(self, params: Dict) -> Dict:
+    async def _get_library_docs(self, params: Dict) -> dict:
         """Get documentation for a specific library"""
         library = params.get('library')
         max_tokens = params.get('maxTokens', 10000)
@@ -356,7 +356,7 @@ class Context7Integration:
         except Exception as e:
             return {'success': False, 'error': str(e)}
 
-    async def _search_libraries(self, params: Dict) -> Dict:
+    async def _search_libraries(self, params: Dict) -> dict:
         """Search for libraries matching a query"""
         query = params.get('query', '')
 
@@ -383,7 +383,7 @@ class Context7Integration:
         except Exception as e:
             return {'error': str(e)}
 
-    async def _resolve_library(self, params: Dict) -> Dict:
+    async def _resolve_library(self, params: Dict) -> dict:
         """Resolve a library identifier to its full details"""
         library = params.get('library')
 
@@ -410,7 +410,7 @@ class Context7Integration:
         except Exception as e:
             return {'error': str(e)}
 
-    async def get_library_examples(self, library: str, topic: Optional[str] = None) -> Dict:
+    async def get_library_examples(self, library: str, topic: Optional[str] = None) -> dict:
         """Get code examples for a library"""
         params = {
             'library': library,
@@ -434,7 +434,7 @@ class Context7Integration:
 
         return {'error': 'Failed to fetch examples'}
 
-    def _extract_code_examples(self, docs_data: Dict) -> List[Dict]:
+    def _extract_code_examples(self, docs_data: Dict) -> list[Dict]:
         """Extract code examples from documentation"""
         examples = []
 
@@ -487,7 +487,7 @@ class Context7Integration:
 
         return '\n'.join(output)
 
-    async def deploy_agent_mission(self, mission_name: str, targets: List[str]) -> Dict:
+    async def deploy_agent_mission(self, mission_name: str, targets: list[str]) -> dict:
         """Deploy an intelligent agent on a documentation gathering mission"""
         mission_id = f"CTX7_MISSION_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
@@ -537,7 +537,7 @@ class Context7Integration:
 
         return mission_results
 
-    async def launch_stealth_reconnaissance(self, tech_keywords: List[str]) -> Dict:
+    async def launch_stealth_reconnaissance(self, tech_keywords: list[str]) -> dict:
         """Launch a stealth reconnaissance mission to detect emerging technologies"""
         recon_id = f"STEALTH_RECON_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
@@ -570,7 +570,7 @@ class Context7Integration:
         logger.info(f"🎯 STEALTH RECON COMPLETE: {len(emerging_tech)} technologies identified")
         return recon_report
 
-    async def deepseek_analyze_codebase(self, code_files: List[str], analysis_type: str = "comprehensive") -> Dict:
+    async def deepseek_analyze_codebase(self, code_files: list[str], analysis_type: str = "comprehensive") -> dict:
         """Use DeepSeek-R1 agent to analyze codebase with advanced reasoning"""
         logger.info(f"🧠 DEPLOYING DEEPSEEK-R1 AGENT FOR CODEBASE ANALYSIS")
 
@@ -585,7 +585,7 @@ class Context7Integration:
 
         return analysis_results
 
-    async def deepseek_ecosystem_analysis(self, ecosystem_components: List[str]) -> Dict:
+    async def deepseek_ecosystem_analysis(self, ecosystem_components: list[str]) -> dict:
         """Use DeepSeek-R1 agent to analyze ecosystem integration"""
         logger.info(f"🌐 DEPLOYING DEEPSEEK-R1 AGENT FOR ECOSYSTEM ANALYSIS")
 
@@ -600,7 +600,7 @@ class Context7Integration:
 
         return ecosystem_analysis
 
-    async def deploy_deepseek_mission(self, mission_type: str, targets: List[str]) -> Dict:
+    async def deploy_deepseek_mission(self, mission_type: str, targets: list[str]) -> dict:
         """Deploy DeepSeek-R1 agent on a specialized mission"""
         mission_id = f"DEEPSEEK_MISSION_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
@@ -647,7 +647,7 @@ class Context7Integration:
 
         return mission_results
 
-    def get_deepseek_agent_status(self) -> Dict:
+    def get_deepseek_agent_status(self) -> dict:
         """Get current status of DeepSeek-R1 agent"""
         return self.deepseek_agent.generate_agent_report()
 
@@ -661,7 +661,7 @@ class Context7Integration:
         """Release port when instance is destroyed"""
         try:
             self._release_port()
-        except:
+        except Exception:
             pass  # Ignore errors during cleanup
 
 # Utility class for Context7-enhanced code generation
@@ -671,7 +671,7 @@ class Context7CodeAssistant:
     def __init__(self, context7: Context7Integration):
         self.context7 = context7
 
-    async def generate_code_with_docs(self, request: str) -> Dict:
+    async def generate_code_with_docs(self, request: str) -> dict:
         """Generate code with accurate, up-to-date documentation"""
         # Enrich context first
         enriched = await self.context7.enrich_context(request)
@@ -866,7 +866,7 @@ class DeepSeekR1Agent:
         ]
         self.active_missions = []
 
-    async def analyze_codebase(self, code_files: List[str], analysis_type: str = "comprehensive") -> Dict:
+    async def analyze_codebase(self, code_files: list[str], analysis_type: str = "comprehensive") -> dict:
         """Analyze codebase using DeepSeek-R1 reasoning capabilities"""
         mission_id = f"DEEPSEEK_ANALYSIS_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
@@ -913,7 +913,7 @@ class DeepSeekR1Agent:
 
         return analysis_results
 
-    async def _analyze_single_file(self, file_path: str, analysis_type: str) -> Dict:
+    async def _analyze_single_file(self, file_path: str, analysis_type: str) -> dict:
         """Analyze a single file using DeepSeek-R1 reasoning"""
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
@@ -953,7 +953,7 @@ class DeepSeekR1Agent:
                 'status': 'FAILED'
             }
 
-    async def _analyze_python_file(self, content: str) -> Dict:
+    async def _analyze_python_file(self, content: str) -> dict:
         """Analyze Python file with DeepSeek-R1 reasoning"""
         analysis = {
             'language': 'python',
@@ -985,7 +985,7 @@ class DeepSeekR1Agent:
 
         return analysis
 
-    async def _analyze_javascript_file(self, content: str) -> Dict:
+    async def _analyze_javascript_file(self, content: str) -> dict:
         """Analyze JavaScript/TypeScript file with DeepSeek-R1 reasoning"""
         analysis = {
             'language': 'javascript',
@@ -1033,7 +1033,7 @@ class DeepSeekR1Agent:
 
         return analysis
 
-    async def _analyze_documentation_file(self, content: str) -> Dict:
+    async def _analyze_documentation_file(self, content: str) -> dict:
         """Analyze documentation file with DeepSeek-R1 reasoning"""
         analysis = {
             'language': 'markdown',
@@ -1075,7 +1075,7 @@ class DeepSeekR1Agent:
 
         return analysis
 
-    async def _perform_reasoning_analysis(self, content: str, file_path: str) -> List[str]:
+    async def _perform_reasoning_analysis(self, content: str, file_path: str) -> list[str]:
         """Perform advanced reasoning analysis using DeepSeek-R1 capabilities"""
         reasoning_insights = []
 
@@ -1092,7 +1092,7 @@ class DeepSeekR1Agent:
             reasoning_insights.append("🌐 API integration patterns identified")
 
         # Error handling
-        if 'try:' in content and 'except:' in content:
+        if 'try:' in content and 'except Exception:' in content:
             reasoning_insights.append("🛡️ Error handling patterns implemented")
 
         return reasoning_insights
@@ -1119,7 +1119,7 @@ class DeepSeekR1Agent:
 
         return max(0, min(100, base_score))
 
-    async def ecosystem_integration_analysis(self, ecosystem_components: List[str]) -> Dict:
+    async def ecosystem_integration_analysis(self, ecosystem_components: list[str]) -> dict:
         """Analyze how components integrate within the ecosystem"""
         mission_id = f"ECOSYSTEM_ANALYSIS_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
@@ -1159,7 +1159,7 @@ class DeepSeekR1Agent:
 
         return integration_analysis
 
-    async def _analyze_component_integration(self, component: str) -> Dict:
+    async def _analyze_component_integration(self, component: str) -> dict:
         """Analyze how a single component integrates with the ecosystem"""
         component_analysis = {
             'component': component,
@@ -1183,7 +1183,7 @@ class DeepSeekR1Agent:
 
         return component_analysis
 
-    async def _generate_architecture_recommendations(self, analysis: Dict) -> List[str]:
+    async def _generate_architecture_recommendations(self, analysis: Dict) -> list[str]:
         """Generate architecture recommendations using DeepSeek-R1 reasoning"""
         recommendations = []
 
@@ -1203,7 +1203,7 @@ class DeepSeekR1Agent:
 
         return recommendations
 
-    def generate_agent_report(self) -> Dict:
+    def generate_agent_report(self) -> dict:
         """Generate comprehensive agent activity report"""
         return {
             'agent_id': self.agent_id,

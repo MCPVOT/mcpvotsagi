@@ -12,7 +12,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Any
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -65,7 +65,7 @@ class MCPVotsAGIMasterOrchestrator:
         # Start monitoring loop
         await self.monitoring_loop()
 
-    async def start_component(self, name: str, config: Dict[str, Any]):
+    async def start_component(self, name: str, config: dict[str, Any]):
         """Start a system component"""
         component_path = self.base_path / config["path"]
 
@@ -116,7 +116,7 @@ class MCPVotsAGIMasterOrchestrator:
                 logger.error(f"Monitoring error: {e}")
                 await asyncio.sleep(60)
 
-    async def check_component_health(self, name: str, process_info: Dict[str, Any]):
+    async def check_component_health(self, name: str, process_info: dict[str, Any]):
         """Check health of a component"""
         process = process_info["process"]
         config = process_info["config"]

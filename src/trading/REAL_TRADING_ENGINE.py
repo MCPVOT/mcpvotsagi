@@ -9,7 +9,7 @@ import asyncio
 import json
 import logging
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple
+from typing import Tuple
 import aiohttp
 import pandas as pd
 import numpy as np
@@ -69,7 +69,7 @@ class RealTradingEngine:
         self.stop_loss = 0.02  # 2% stop loss
         self.take_profit = 0.05  # 5% take profit
         
-    async def get_real_market_data(self, symbol: str) -> Dict:
+    async def get_real_market_data(self, symbol: str) -> dict:
         """Get REAL market data from exchanges"""
         try:
             # Try multiple sources for redundancy
@@ -139,7 +139,7 @@ class RealTradingEngine:
             'error': 'Failed to fetch market data'
         })
     
-    async def execute_real_trade(self, symbol: str, side: str, amount: float, order_type: str = 'market') -> Dict:
+    async def execute_real_trade(self, symbol: str, side: str, amount: float, order_type: str = 'market') -> dict:
         """Execute a REAL trade on the exchange"""
         try:
             # Get current market data
@@ -249,7 +249,7 @@ class RealTradingEngine:
             logger.error(f"Trade execution error: {e}")
             return {'error': str(e)}
     
-    async def get_real_positions(self) -> Dict:
+    async def get_real_positions(self) -> dict:
         """Get REAL current positions with live P&L"""
         positions_with_pnl = {}
         
@@ -276,7 +276,7 @@ class RealTradingEngine:
         
         return positions_with_pnl
     
-    async def get_real_balance(self) -> Dict:
+    async def get_real_balance(self) -> dict:
         """Get REAL account balance with current valuations"""
         total_value = self.balance['USD']
         
@@ -294,7 +294,7 @@ class RealTradingEngine:
             'pnl_percentage': (self.pnl / 10000) * 100  # Assuming $10k starting balance
         }
     
-    async def apply_trading_strategy(self, strategy: str = 'momentum') -> List[Dict]:
+    async def apply_trading_strategy(self, strategy: str = 'momentum') -> list[Dict]:
         """Apply REAL trading strategies"""
         signals = []
         
@@ -338,7 +338,7 @@ class RealTradingEngine:
         
         return signals
     
-    async def risk_management_check(self) -> Dict:
+    async def risk_management_check(self) -> dict:
         """REAL risk management with position limits and stop losses"""
         warnings = []
         actions = []

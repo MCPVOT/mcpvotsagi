@@ -26,7 +26,7 @@ import logging
 import os
 import sys
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Callable, Tuple
+from typing import Callable, Tuple
 from dataclasses import dataclass, asdict
 import aiohttp
 import psutil
@@ -93,7 +93,7 @@ class PredictiveAnalyzer:
         self.training_data = []
         self.anomaly_detectors = {}
 
-    def collect_training_data(self, metrics: List[HealthMetric]):
+    def collect_training_data(self, metrics: list[HealthMetric]):
         """Collect training data for ML models"""
         for metric in metrics:
             self.training_data.append({
@@ -357,7 +357,7 @@ class AlertManager:
         except Exception as e:
             logger.error(f"Error preparing email alert: {e}")
 
-    def get_active_alerts(self) -> List[AlertData]:
+    def get_active_alerts(self) -> list[AlertData]:
         """Get currently active alerts"""
         return [alert for alert in self.alerts if not alert.resolved]
 
@@ -396,7 +396,7 @@ class HealthMonitorV3:
 
         logger.info("🏥 Health Monitor V3 initialized")
 
-    def load_config(self, config_path: str) -> Dict:
+    def load_config(self, config_path: str) -> dict:
         """Load configuration from file"""
         try:
             with open(config_path, 'r') as f:
@@ -489,7 +489,7 @@ class HealthMonitorV3:
                 logger.error(f"Error in metric collection: {e}")
                 await asyncio.sleep(1)
 
-    async def collect_all_metrics(self) -> List[HealthMetric]:
+    async def collect_all_metrics(self) -> list[HealthMetric]:
         """Collect metrics from all system components"""
         metrics = []
 
@@ -503,7 +503,7 @@ class HealthMonitorV3:
 
         return metrics
 
-    async def collect_system_metrics(self) -> List[HealthMetric]:
+    async def collect_system_metrics(self) -> list[HealthMetric]:
         """Collect system-level metrics"""
         metrics = []
         timestamp = datetime.now()
@@ -560,7 +560,7 @@ class HealthMonitorV3:
 
         return metrics
 
-    async def collect_component_metrics(self) -> List[HealthMetric]:
+    async def collect_component_metrics(self) -> list[HealthMetric]:
         """Collect metrics from individual components"""
         metrics = []
         timestamp = datetime.now()
@@ -764,7 +764,7 @@ class HealthMonitorV3:
         except Exception as e:
             logger.error(f"Error storing metric: {e}")
 
-    async def get_health_dashboard_data(self) -> Dict:
+    async def get_health_dashboard_data(self) -> dict:
         """Get health dashboard data"""
         try:
             # Recent metrics
@@ -793,7 +793,7 @@ class HealthMonitorV3:
             logger.error(f"Error getting dashboard data: {e}")
             return {}
 
-    async def get_performance_trends(self) -> Dict:
+    async def get_performance_trends(self) -> dict:
         """Get performance trends for dashboard"""
         try:
             # This would analyze historical data for trends

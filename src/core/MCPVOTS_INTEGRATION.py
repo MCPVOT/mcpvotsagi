@@ -11,7 +11,7 @@ import logging
 import os
 import sys
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Optional
 from datetime import datetime
 import aiohttp
 import numpy as np
@@ -98,7 +98,7 @@ class MCPVotsIntegration:
             logger.warning(f"Could not initialize MCP Chrome: {e}")
             self.services['mcp_chrome'] = False
     
-    async def orchestrate_services(self, task: Dict) -> Dict:
+    async def orchestrate_services(self, task: Dict) -> dict:
         """Orchestrate services using MCPVots patterns"""
         if self.orchestrator:
             return await self.orchestrator.execute_task(task)
@@ -106,7 +106,7 @@ class MCPVotsIntegration:
             # Fallback orchestration
             return await self._simple_orchestration(task)
     
-    async def _simple_orchestration(self, task: Dict) -> Dict:
+    async def _simple_orchestration(self, task: Dict) -> dict:
         """Simple orchestration fallback"""
         task_type = task.get('type', 'unknown')
         
@@ -119,7 +119,7 @@ class MCPVotsIntegration:
         else:
             return {'error': f'Unknown task type: {task_type}'}
     
-    async def web_research(self, task: Dict) -> Dict:
+    async def web_research(self, task: Dict) -> dict:
         """Perform web research using MCP Chrome"""
         if not self.services.get('mcp_chrome'):
             return {'error': 'MCP Chrome not available'}
@@ -141,7 +141,7 @@ class MCPVotsIntegration:
             'stored_in_knowledge': self.services.get('knowledge', False)
         }
     
-    async def query_knowledge(self, task: Dict) -> Dict:
+    async def query_knowledge(self, task: Dict) -> dict:
         """Query the knowledge graph"""
         if not self.services.get('knowledge'):
             return {'error': 'Knowledge system not available'}
@@ -154,7 +154,7 @@ class MCPVotsIntegration:
             'results': results
         }
     
-    async def evolve_algorithm(self, task: Dict) -> Dict:
+    async def evolve_algorithm(self, task: Dict) -> dict:
         """Use Darwin Gödel Machine for self-improvement"""
         if not self.services.get('darwin'):
             return {'error': 'Darwin engine not available'}
@@ -171,14 +171,14 @@ class MCPVotsIntegration:
             'improvement_rate': improved.get('improvement_rate', 0)
         }
     
-    async def heal_error(self, error: Dict) -> Dict:
+    async def heal_error(self, error: Dict) -> dict:
         """Attempt to heal system errors"""
         if not self.services.get('self_healing'):
             return {'error': 'Self-healing not available'}
         
         return await self.self_healing.heal(error)
     
-    def get_status(self) -> Dict:
+    def get_status(self) -> dict:
         """Get integration status"""
         return {
             'services': self.services,
@@ -212,7 +212,7 @@ class SelfHealingSystem:
             'performance_degradation': self._heal_performance
         }
     
-    async def heal(self, error: Dict) -> Dict:
+    async def heal(self, error: Dict) -> dict:
         """Attempt to heal an error"""
         error_type = self._classify_error(error)
         
@@ -253,7 +253,7 @@ class SelfHealingSystem:
         
         return 'unknown'
     
-    async def _heal_connection(self, error: Dict) -> Dict:
+    async def _heal_connection(self, error: Dict) -> dict:
         """Heal connection errors"""
         # Implement retry logic, fallback servers, etc.
         await asyncio.sleep(1)  # Simulated healing
@@ -262,7 +262,7 @@ class SelfHealingSystem:
             'action': 'Reconnected with exponential backoff'
         }
     
-    async def _heal_memory(self, error: Dict) -> Dict:
+    async def _heal_memory(self, error: Dict) -> dict:
         """Heal memory errors"""
         # Implement garbage collection, cache clearing, etc.
         import gc
@@ -272,7 +272,7 @@ class SelfHealingSystem:
             'action': 'Cleared memory and optimized cache'
         }
     
-    async def _heal_service(self, error: Dict) -> Dict:
+    async def _heal_service(self, error: Dict) -> dict:
         """Heal service crashes"""
         # Implement service restart, failover, etc.
         service_name = error.get('service', 'unknown')
@@ -281,7 +281,7 @@ class SelfHealingSystem:
             'action': f'Restarted service: {service_name}'
         }
     
-    async def _heal_performance(self, error: Dict) -> Dict:
+    async def _heal_performance(self, error: Dict) -> dict:
         """Heal performance issues"""
         # Implement load balancing, resource optimization, etc.
         return {
@@ -302,7 +302,7 @@ class DarwinGodelMachine:
         """Initialize evolutionary engine"""
         self.population = self._create_initial_population()
     
-    async def evolve(self, algorithm: str, metrics: Dict) -> Dict:
+    async def evolve(self, algorithm: str, metrics: Dict) -> dict:
         """Evolve an algorithm based on performance metrics"""
         self.generation += 1
         
@@ -323,7 +323,7 @@ class DarwinGodelMachine:
             'best_fitness': self.best_fitness
         }
     
-    def _create_initial_population(self) -> List:
+    def _create_initial_population(self) -> list:
         """Create initial population of algorithms"""
         return [{'id': i, 'genome': np.random.rand(100)} for i in range(10)]
     
@@ -356,7 +356,7 @@ class MCPChromeClient:
             logger.warning(f"Could not connect to MCP Chrome: {e}")
             self.connected = False
     
-    async def search_and_extract(self, query: str) -> Dict:
+    async def search_and_extract(self, query: str) -> dict:
         """Search web and extract information"""
         if not self.connected:
             return {'error': 'Not connected to MCP Chrome'}

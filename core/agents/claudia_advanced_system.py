@@ -10,7 +10,7 @@ import json
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Any
 import aiohttp
 
 # Configure logging
@@ -30,7 +30,7 @@ class ClaudiaAdvancedSystem:
         }
         self.improvement_history = []
 
-    async def analyze_system_performance(self, metrics: Dict[str, Any]) -> Dict[str, Any]:
+    async def analyze_system_performance(self, metrics: dict[str, Any]) -> dict[str, Any]:
         """Analyze system performance and suggest improvements"""
         prompt = f"""
         As Claudia, the most advanced AI system, analyze the following performance metrics
@@ -62,7 +62,7 @@ class ClaudiaAdvancedSystem:
 
         return await self._query_ollama(prompt, "reasoning")
 
-    async def generate_trading_strategies(self, market_conditions: Dict[str, Any]) -> List[Dict[str, Any]]:
+    async def generate_trading_strategies(self, market_conditions: dict[str, Any]) -> list[Dict[str, Any]]:
         """Generate new trading strategies based on market conditions"""
         prompt = f"""
         As Claudia, design advanced trading strategies for Jupiter perpetuals based on:
@@ -87,7 +87,7 @@ class ClaudiaAdvancedSystem:
 
         return await self._query_ollama(prompt, "code_gen")
 
-    async def optimize_ml_algorithms(self, current_performance: Dict[str, Any]) -> Dict[str, Any]:
+    async def optimize_ml_algorithms(self, current_performance: dict[str, Any]) -> dict[str, Any]:
         """Optimize ML algorithms for better performance"""
         prompt = f"""
         As Claudia, optimize the ML algorithms with current performance:
@@ -111,7 +111,7 @@ class ClaudiaAdvancedSystem:
 
         return await self._query_ollama(prompt, "analysis")
 
-    async def self_improve_system(self) -> Dict[str, Any]:
+    async def self_improve_system(self) -> dict[str, Any]:
         """Perform continuous self-improvement"""
         logger.info("🔄 Starting self-improvement cycle...")
 
@@ -148,7 +148,7 @@ class ClaudiaAdvancedSystem:
         logger.info("✅ Self-improvement cycle completed")
         return improvement_plan
 
-    async def _query_ollama(self, prompt: str, task_type: str) -> Dict[str, Any]:
+    async def _query_ollama(self, prompt: str, task_type: str) -> dict[str, Any]:
         """Query Ollama with appropriate model"""
         model = self.model_config.get(task_type, self.model_config["primary"])
 
@@ -175,7 +175,7 @@ class ClaudiaAdvancedSystem:
             logger.error(f"Ollama query error: {e}")
             return {"error": str(e)}
 
-    async def _gather_system_metrics(self) -> Dict[str, Any]:
+    async def _gather_system_metrics(self) -> dict[str, Any]:
         """Gather current system performance metrics"""
         # Simulate metrics gathering - replace with real data
         return {
@@ -189,7 +189,7 @@ class ClaudiaAdvancedSystem:
             "error_rate": 0.2
         }
 
-    async def _get_market_conditions(self) -> Dict[str, Any]:
+    async def _get_market_conditions(self) -> dict[str, Any]:
         """Get current market conditions"""
         # Simulate market data - replace with real Jupiter API
         return {
@@ -201,7 +201,7 @@ class ClaudiaAdvancedSystem:
             "resistance": 250.0
         }
 
-    def _prioritize_improvements(self, analysis: Dict, strategies: Dict, optimizations: Dict) -> List[Dict[str, Any]]:
+    def _prioritize_improvements(self, analysis: Dict, strategies: Dict, optimizations: Dict) -> list[Dict[str, Any]]:
         """Prioritize improvements based on impact and effort"""
         improvements = []
 
@@ -230,7 +230,7 @@ class ClaudiaAdvancedSystem:
 
         return improvements
 
-    async def _implement_improvements(self, improvement_plan: Dict[str, Any]):
+    async def _implement_improvements(self, improvement_plan: dict[str, Any]):
         """Implement the highest priority improvements"""
         for improvement in improvement_plan.get("implementation_priority", [])[:2]:
             if improvement["priority"] == "high":

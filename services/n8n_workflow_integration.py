@@ -8,7 +8,7 @@ Integrates n8n automation workflows with the trading system
 import asyncio
 import json
 import logging
-from typing import Dict, Any, List, Optional
+from typing import List, Optional
 from datetime import datetime, timedelta
 import aiohttp
 from aiohttp import web
@@ -25,7 +25,7 @@ class WorkflowTrigger:
     """Workflow trigger configuration"""
     name: str
     type: str  # webhook, schedule, event
-    conditions: Dict[str, Any]
+    conditions: dict[str, Any]
     workflow_id: str
     enabled: bool = True
 
@@ -48,7 +48,7 @@ class N8NIntegrationServer:
         self.app = web.Application()
         self._setup_routes()
         
-    def _load_config(self, config_path: str) -> Dict[str, Any]:
+    def _load_config(self, config_path: str) -> dict[str, Any]:
         """Load n8n configuration"""
         path = Path(config_path)
         if path.exists():
@@ -69,7 +69,7 @@ class N8NIntegrationServer:
             }
         }
         
-    def _init_triggers(self) -> List[WorkflowTrigger]:
+    def _init_triggers(self) -> list[WorkflowTrigger]:
         """Initialize workflow triggers"""
         return [
             WorkflowTrigger(
@@ -135,8 +135,8 @@ class N8NIntegrationServer:
         
     async def trigger_workflow(self, 
                              workflow_id: str,
-                             data: Dict[str, Any],
-                             webhook_suffix: str = "webhook") -> Dict[str, Any]:
+                             data: dict[str, Any],
+                             webhook_suffix: str = "webhook") -> dict[str, Any]:
         """Trigger an n8n workflow"""
         
         url = f"{self.n8n_url}/webhook/{webhook_suffix}/{workflow_id}"
@@ -165,7 +165,7 @@ class N8NIntegrationServer:
             logger.error(f"Failed to trigger workflow: {e}")
             return {"success": False, "error": str(e)}
             
-    async def process_trading_event(self, event: Dict[str, Any]):
+    async def process_trading_event(self, event: dict[str, Any]):
         """Process trading events and trigger appropriate workflows"""
         
         # Check all triggers
@@ -182,7 +182,7 @@ class N8NIntegrationServer:
                         }
                     )
                     
-    def _check_conditions(self, data: Dict[str, Any], conditions: Dict[str, Any]) -> bool:
+    def _check_conditions(self, data: dict[str, Any], conditions: dict[str, Any]) -> bool:
         """Check if data meets trigger conditions"""
         
         for field, condition in conditions.items():
@@ -338,7 +338,7 @@ class N8NWorkflowBuilder:
     """Helper to build n8n workflow configurations"""
     
     @staticmethod
-    def create_trading_workflow() -> Dict[str, Any]:
+    def create_trading_workflow() -> dict[str, Any]:
         """Create a trading signal workflow"""
         return {
             "name": "Trading Signal Processor",
@@ -397,7 +397,7 @@ class N8NWorkflowBuilder:
         }
         
     @staticmethod
-    def create_risk_alert_workflow() -> Dict[str, Any]:
+    def create_risk_alert_workflow() -> dict[str, Any]:
         """Create a risk alert workflow"""
         return {
             "name": "Risk Alert Handler",
@@ -445,7 +445,7 @@ class N8NWorkflowBuilder:
         }
         
     @staticmethod 
-    def export_workflow(workflow: Dict[str, Any], filename: str):
+    def export_workflow(workflow: dict[str, Any], filename: str):
         """Export workflow to file"""
         with open(filename, 'w') as f:
             json.dump(workflow, f, indent=2)
@@ -460,7 +460,7 @@ class TradingSystemN8NAdapter:
     def __init__(self, n8n_server: N8NIntegrationServer):
         self.n8n = n8n_server
         
-    async def on_trading_signal(self, signal: Dict[str, Any]):
+    async def on_trading_signal(self, signal: dict[str, Any]):
         """Handle trading signal from main system"""
         
         # Add to n8n event queue
@@ -470,7 +470,7 @@ class TradingSystemN8NAdapter:
             "timestamp": datetime.now().isoformat()
         })
         
-    async def on_risk_alert(self, alert: Dict[str, Any]):
+    async def on_risk_alert(self, alert: dict[str, Any]):
         """Handle risk alert"""
         
         # Trigger risk workflow immediately
@@ -479,7 +479,7 @@ class TradingSystemN8NAdapter:
             alert
         )
         
-    async def on_portfolio_update(self, portfolio: Dict[str, Any]):
+    async def on_portfolio_update(self, portfolio: dict[str, Any]):
         """Handle portfolio updates"""
         
         # Check if rebalancing needed
@@ -489,7 +489,7 @@ class TradingSystemN8NAdapter:
                 portfolio
             )
             
-    def _needs_rebalancing(self, portfolio: Dict[str, Any]) -> bool:
+    def _needs_rebalancing(self, portfolio: dict[str, Any]) -> bool:
         """Check if portfolio needs rebalancing"""
         
         # Simple check - if any position > 20% of portfolio

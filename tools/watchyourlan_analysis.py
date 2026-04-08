@@ -14,7 +14,7 @@ import psutil
 import aiohttp
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Any
 from dataclasses import dataclass, asdict
 
 # Configure dark cyberpunk logging
@@ -37,16 +37,16 @@ class CyberNetworkNode:
     status: str
     last_seen: datetime
     threat_level: str
-    ports_open: List[int]
+    ports_open: list[int]
     device_type: str
     security_score: float
 
 @dataclass
 class NetworkThreatIntel:
     """Network threat intelligence data"""
-    suspicious_ips: List[str]
-    anomalous_traffic: Dict[str, Any]
-    security_alerts: List[str]
+    suspicious_ips: list[str]
+    anomalous_traffic: dict[str, Any]
+    security_alerts: list[str]
     risk_assessment: str
 
 class WatchYourLANCyberAnalyzer:
@@ -56,10 +56,10 @@ class WatchYourLANCyberAnalyzer:
         self.base_path = Path(__file__).parent
         self.wyl_path = self.base_path / "WatchYourLAN"
         self.analysis_results = {}
-        self.network_nodes: List[CyberNetworkNode] = []
+        self.network_nodes: list[CyberNetworkNode] = []
         self.threat_intel = NetworkThreatIntel([], {}, [], "")
 
-    async def scan_local_network(self) -> List[CyberNetworkNode]:
+    async def scan_local_network(self) -> list[CyberNetworkNode]:
         """Scan local network for active nodes"""
         logger.info("⚡ Initiating dark network scan...")
 
@@ -77,7 +77,7 @@ class WatchYourLANCyberAnalyzer:
             for ip in active_ips:
                 try:
                     hostname = socket.gethostbyaddr(ip)[0]
-                except:
+                except Exception:
                     hostname = "unknown"
 
                 node = CyberNetworkNode(

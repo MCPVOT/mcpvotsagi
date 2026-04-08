@@ -9,7 +9,7 @@ import asyncio
 import json
 import numpy as np
 import pandas as pd
-from typing import Dict, Any, List, Optional, Tuple, Callable, Protocol
+from typing import List, Optional, Tuple, Callable, Protocol
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field, asdict
 import logging
@@ -154,7 +154,7 @@ class ProofProtocol(Protocol):
     def confidence(self) -> float: ...
 
     @property
-    def reasoning(self) -> List[str]: ...
+    def reasoning(self) -> list[str]: ...
 
 
 @dataclass
@@ -163,7 +163,7 @@ class ProofV2:
     is_valid: bool
     expected_improvement: float
     confidence: float
-    reasoning: List[str]
+    reasoning: list[str]
     statistical_significance: float = 0.0
     sample_size: int = 0
 
@@ -285,7 +285,7 @@ class ImprovedTheoremProver:
 
     def _analyze_results(self,
                         old_results: np.ndarray,
-                        new_results: np.ndarray) -> Dict[str, Any]:
+                        new_results: np.ndarray) -> dict[str, Any]:
         """Analyze simulation results statistically"""
 
         # Calculate improvements
@@ -413,8 +413,8 @@ class AdvancedMetaLearner(nn.Module):
 
     async def suggest_improvements(self,
                                  current_strategy: TradingStrategyV2,
-                                 market_conditions: Dict[str, float],
-                                 top_k: int = 5) -> List[TradingStrategyV2]:
+                                 market_conditions: dict[str, float],
+                                 top_k: int = 5) -> list[TradingStrategyV2]:
         """Suggest top-k strategy improvements"""
 
         # Prepare inputs
@@ -446,7 +446,7 @@ class AdvancedMetaLearner(nn.Module):
 
         return [strategy for strategy, _ in candidates[:top_k]]
 
-    def _prepare_market_tensor(self, market_conditions: Dict[str, float]) -> torch.Tensor:
+    def _prepare_market_tensor(self, market_conditions: dict[str, float]) -> torch.Tensor:
         """Prepare market conditions as tensor"""
         # Standard market features
         features = [
@@ -485,7 +485,7 @@ class AdvancedMetaLearner(nn.Module):
         # Convert back to strategy
         return TradingStrategyV2.from_tensor(improved_tensor)
 
-    def train_on_experience(self, experiences: List[Dict[str, Any]]):
+    def train_on_experience(self, experiences: list[Dict[str, Any]]):
         """Train on collected experiences"""
 
         if len(self.memory_buffer) < 1000:
@@ -557,7 +557,7 @@ class EnhancedDynamicGodelMachine:
 
     async def search_for_improvement(self,
                                    market_conditions: pd.DataFrame,
-                                   recent_returns: np.ndarray) -> Optional[TradingStrategyV2]:
+                                   recent_returns: np.ndarray) -> [TradingStrategyV2]:
         """Enhanced proof search with parallel evaluation"""
 
         if not self.proof_search_active:
@@ -603,7 +603,7 @@ class EnhancedDynamicGodelMachine:
         return None
 
     async def _generate_diverse_candidates(self,
-                                         market_conditions: pd.DataFrame) -> List[TradingStrategyV2]:
+                                         market_conditions: pd.DataFrame) -> list[TradingStrategyV2]:
         """Generate diverse candidate strategies"""
 
         candidates = []

@@ -9,7 +9,7 @@ import asyncio
 import json
 import logging
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Optional
 import subprocess
 import sys
 
@@ -23,7 +23,7 @@ class DeepSeekMCPOrchestrator:
         self.active_servers = {}
         self.tool_capabilities = self._parse_capabilities()
         
-    def _load_mcp_configs(self) -> Dict:
+    def _load_mcp_configs(self) -> dict:
         """Load MCP configurations"""
         configs = {}
         
@@ -43,7 +43,7 @@ class DeepSeekMCPOrchestrator:
         
         return configs
     
-    def _parse_capabilities(self) -> Dict:
+    def _parse_capabilities(self) -> dict:
         """Parse all available MCP tool capabilities"""
         capabilities = {}
         
@@ -215,7 +215,7 @@ Please provide a final response integrating these results.
         except Exception as e:
             return f"Error querying DeepSeek: {e}"
     
-    async def _execute_tool_calls(self, response: str) -> Dict:
+    async def _execute_tool_calls(self, response: str) -> dict:
         """Parse and execute MCP tool calls from response"""
         import re
         

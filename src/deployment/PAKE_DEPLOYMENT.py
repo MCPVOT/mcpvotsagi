@@ -11,7 +11,7 @@ import json
 import subprocess
 import platform
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 import logging
 
 logger = logging.getLogger(__name__)
@@ -88,7 +88,7 @@ class PakeDeployment:
         logger.warning("⚠️ Pake not found. Install with: npm install -g pake-cli")
         return False
     
-    def create_app_config(self, app_name: str, custom_config: Dict = None) -> Dict:
+    def create_app_config(self, app_name: str, custom_config: Dict = None) -> dict:
         """Create Pake configuration for an app"""
         base_config = self.app_configs.get(app_name, {})
         
@@ -108,7 +108,7 @@ class PakeDeployment:
         
         return base_config
     
-    def build_desktop_app(self, app_name: str, config: Dict = None) -> Dict:
+    def build_desktop_app(self, app_name: str, config: Dict = None) -> dict:
         """Build a desktop app using Pake"""
         if not self.check_pake_installation():
             return {'error': 'Pake not installed'}
@@ -197,7 +197,7 @@ class PakeDeployment:
             # Add text
             try:
                 font = ImageFont.truetype("arial.ttf", 120)
-            except:
+            except Exception:
                 font = None
             
             draw.text((256, 256), "AGI", fill=(255, 255, 255, 255), 
@@ -238,7 +238,7 @@ cd "{self.apps_dir / app_name}"
         
         return launcher_path
     
-    def build_all_apps(self) -> List[Dict]:
+    def build_all_apps(self) -> list[Dict]:
         """Build all configured desktop apps"""
         results = []
         
@@ -253,7 +253,7 @@ cd "{self.apps_dir / app_name}"
         
         return results
     
-    def create_web_wrapper(self, name: str, url: str, **kwargs) -> Dict:
+    def create_web_wrapper(self, name: str, url: str, **kwargs) -> dict:
         """Create a custom web wrapper app"""
         custom_config = {
             'name': name,
@@ -308,7 +308,7 @@ class DesktopAppManager:
             logger.error(f"Failed to launch {app_name}: {e}")
             return False
     
-    def list_apps(self) -> List[Dict]:
+    def list_apps(self) -> list[Dict]:
         """List all installed desktop apps"""
         return [
             {
@@ -325,7 +325,7 @@ class DeploymentPresets:
     """Pre-configured deployment templates"""
     
     @staticmethod
-    def create_ai_chat_app(base_url: str) -> Dict:
+    def create_ai_chat_app(base_url: str) -> dict:
         """Create an AI chat interface app"""
         return {
             'name': 'AIChat',
@@ -337,7 +337,7 @@ class DeploymentPresets:
         }
     
     @staticmethod
-    def create_dashboard_app(base_url: str) -> Dict:
+    def create_dashboard_app(base_url: str) -> dict:
         """Create a monitoring dashboard app"""
         return {
             'name': 'AGIDashboard',
@@ -349,7 +349,7 @@ class DeploymentPresets:
         }
     
     @staticmethod
-    def create_code_assistant_app(base_url: str) -> Dict:
+    def create_code_assistant_app(base_url: str) -> dict:
         """Create a code assistant app"""
         return {
             'name': 'CodeAssistant',

@@ -11,7 +11,7 @@ import os
 import logging
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Optional
 import aiohttp
 import hashlib
 from dataclasses import dataclass, asdict
@@ -29,7 +29,7 @@ class ThreatIndicator:
     first_seen: datetime
     last_seen: datetime
     description: str
-    mitre_techniques: List[str]
+    mitre_techniques: list[str]
     
 @dataclass
 class SecurityEvent:
@@ -40,8 +40,8 @@ class SecurityEvent:
     event_type: str  # 'threat_detected', 'anomaly', 'vulnerability', 'incident'
     severity: str
     description: str
-    ioc_matches: List[str]
-    recommended_actions: List[str]
+    ioc_matches: list[str]
+    recommended_actions: list[str]
 
 class OpenCTIConnector:
     """OpenCTI connector for threat intelligence"""
@@ -83,7 +83,7 @@ class OpenCTIConnector:
             logger.error(f"OpenCTI connection error: {e}")
             return False
     
-    async def get_threat_indicators(self, limit: int = 100) -> List[ThreatIndicator]:
+    async def get_threat_indicators(self, limit: int = 100) -> list[ThreatIndicator]:
         """Get latest threat indicators from OpenCTI"""
         query = """
         query GetIndicators($limit: Int!) {
@@ -176,7 +176,7 @@ class OpenCTIConnector:
         else:
             return "low"
     
-    def _extract_mitre_techniques(self, node: Dict) -> List[str]:
+    def _extract_mitre_techniques(self, node: Dict) -> list[str]:
         """Extract MITRE ATT&CK techniques"""
         techniques = []
         for edge in node.get("killChainPhases", {}).get("edges", []):
@@ -185,7 +185,7 @@ class OpenCTIConnector:
                 techniques.append(phase["phase_name"])
         return techniques
     
-    async def check_ioc(self, value: str) -> Optional[ThreatIndicator]:
+    async def check_ioc(self, value: str) -> [ThreatIndicator]:
         """Check if a value matches any IOC"""
         # Check cache first
         for indicator in self.threat_cache.values():
@@ -246,7 +246,7 @@ class OpenCTIMCPServer:
     def __init__(self, port: int = 3007):
         self.port = port
         self.opencti = OpenCTIConnector()
-        self.security_events: List[SecurityEvent] = []
+        self.security_events: list[SecurityEvent] = []
         self.monitored_services = {}
         
     async def handle_message(self, websocket, message: str):
@@ -280,7 +280,7 @@ class OpenCTIMCPServer:
         except Exception as e:
             logger.error(f"Error handling message: {e}")
     
-    async def initialize(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def initialize(self, params: dict[str, Any]) -> dict[str, Any]:
         """Initialize OpenCTI MCP server"""
         # Connect to OpenCTI
         connected = await self.opencti.connect()
@@ -301,7 +301,7 @@ class OpenCTIMCPServer:
             }
         }
     
-    async def get_threats(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def get_threats(self, params: dict[str, Any]) -> dict[str, Any]:
         """Get latest threat indicators"""
         limit = params.get("limit", 100)
         severity_filter = params.get("severity", None)
@@ -321,7 +321,7 @@ class OpenCTIMCPServer:
             }
         }
     
-    async def check_ioc(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def check_ioc(self, params: dict[str, Any]) -> dict[str, Any]:
         """Check if a value is a known IOC"""
         value = params.get("value")
         if not value:
@@ -337,7 +337,7 @@ class OpenCTIMCPServer:
             }
         }
     
-    async def monitor_service(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def monitor_service(self, params: dict[str, Any]) -> dict[str, Any]:
         """Monitor a service for security threats"""
         service_id = params.get("service_id")
         monitoring_config = params.get("config", {})
@@ -357,7 +357,7 @@ class OpenCTIMCPServer:
             }
         }
     
-    async def get_security_events(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def get_security_events(self, params: dict[str, Any]) -> dict[str, Any]:
         """Get security events"""
         since = params.get("since")
         service_filter = params.get("service_id")
@@ -381,7 +381,7 @@ class OpenCTIMCPServer:
             }
         }
     
-    async def threat_hunt(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def threat_hunt(self, params: dict[str, Any]) -> dict[str, Any]:
         """Perform threat hunting"""
         hunt_type = params.get("type", "general")
         target = params.get("target", "all")
@@ -448,7 +448,7 @@ class OpenCTIDashboardIntegration:
         self.security_score = max(0, 100 - threat_impact)
         self.active_threats = len(self.threat_indicators)
     
-    async def get_dashboard_data(self) -> Dict[str, Any]:
+    async def get_dashboard_data(self) -> dict[str, Any]:
         """Get security data for dashboard display"""
         # Update threats if needed
         if (datetime.now() - self.last_threat_check).seconds > 300:  # 5 minutes
@@ -501,7 +501,7 @@ class OpenCTIDashboardIntegration:
             "last_update": self.last_threat_check.isoformat()
         }
     
-    async def check_service_security(self, service_id: str, service_data: Dict) -> Dict[str, Any]:
+    async def check_service_security(self, service_id: str, service_data: Dict) -> dict[str, Any]:
         """Check security status of a specific service"""
         security_status = {
             "service_id": service_id,

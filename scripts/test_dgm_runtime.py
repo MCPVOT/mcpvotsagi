@@ -16,7 +16,7 @@ import asyncio
 import time
 import json
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 import logging
 
 # Configure logging
@@ -33,7 +33,7 @@ class DGMServicesRuntimeTest:
         self.project_root = Path(__file__).parent.parent
         self.test_results = {}
 
-    def test_dgm_service_imports(self) -> Dict[str, bool]:
+    def test_dgm_service_imports(self) -> dict[str, bool]:
         """Test that DGM services can be imported correctly"""
         logger.info("🔍 Testing DGM service imports...")
 
@@ -79,7 +79,7 @@ class DGMServicesRuntimeTest:
 
         return import_results
 
-    def test_service_syntax(self) -> Dict[str, bool]:
+    def test_service_syntax(self) -> dict[str, bool]:
         """Test that service files have valid Python syntax"""
         logger.info("🔍 Testing service file syntax...")
 
@@ -121,7 +121,7 @@ class DGMServicesRuntimeTest:
 
         return syntax_results
 
-    def test_service_startup(self) -> Dict[str, bool]:
+    def test_service_startup(self) -> dict[str, bool]:
         """Test that services can start without immediate errors"""
         logger.info("🔍 Testing service startup...")
 
@@ -184,7 +184,7 @@ class DGMServicesRuntimeTest:
 
         return startup_results
 
-    def test_configuration_files(self) -> Dict[str, bool]:
+    def test_configuration_files(self) -> dict[str, bool]:
         """Test that configuration files are valid"""
         logger.info("🔍 Testing configuration files...")
 
@@ -215,7 +215,7 @@ class DGMServicesRuntimeTest:
 
         return config_results
 
-    def test_utility_imports(self) -> Dict[str, bool]:
+    def test_utility_imports(self) -> dict[str, bool]:
         """Test that utility imports work"""
         logger.info("🔍 Testing utility imports...")
 
@@ -233,7 +233,7 @@ class DGMServicesRuntimeTest:
 
         return utility_results
 
-    def run_comprehensive_test(self) -> Dict:
+    def run_comprehensive_test(self) -> dict:
         """Run all DGM runtime tests"""
         logger.info("🚀 Starting DGM Services Runtime Test")
         logger.info("=" * 60)

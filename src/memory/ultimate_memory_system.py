@@ -12,7 +12,7 @@ import hashlib
 import numpy as np
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Optional, Tuple
 from collections import defaultdict, deque
 import pickle
 import logging
@@ -170,7 +170,7 @@ class UltimateMemorySystem:
                           memory_type: str = MemoryType.SHORT_TERM,
                           metadata: Dict = None,
                           importance: float = 0.5,
-                          tags: List[str] = None) -> str:
+                          tags: list[str] = None) -> str:
         """Store a new memory"""
         memory_id = hashlib.md5(f"{content}{datetime.now()}".encode()).hexdigest()
         
@@ -219,7 +219,7 @@ class UltimateMemorySystem:
         logger.info(f"💾 Stored {memory_type} memory: {memory_id[:8]}...")
         return memory_id
     
-    async def recall_memory(self, query: str, top_k: int = 5) -> List[Dict]:
+    async def recall_memory(self, query: str, top_k: int = 5) -> list[Dict]:
         """Recall memories based on query"""
         results = []
         
@@ -322,7 +322,7 @@ class UltimateMemorySystem:
         
         logger.info(f"📊 Added knowledge: {subject} --{predicate}--> {object}")
     
-    async def query_knowledge(self, query: str) -> List[Dict]:
+    async def query_knowledge(self, query: str) -> list[Dict]:
         """Query the knowledge graph"""
         results = []
         
@@ -418,7 +418,7 @@ class UltimateMemorySystem:
                 **properties
             )
     
-    async def get_memory_stats(self) -> Dict:
+    async def get_memory_stats(self) -> dict:
         """Get memory system statistics"""
         stats = {}
         
@@ -475,7 +475,7 @@ class UltimateMemorySystem:
         self.conn.commit()
         return conv_id
     
-    async def get_conversation_history(self, session_id: str, limit: int = 50) -> List[Dict]:
+    async def get_conversation_history(self, session_id: str, limit: int = 50) -> list[Dict]:
         """Get conversation history"""
         cursor = self.conn.execute("""
             SELECT * FROM conversations 

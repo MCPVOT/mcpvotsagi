@@ -11,7 +11,7 @@ import os
 import sys
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Any, Optional
+from typing import Optional
 
 # Configure logging first
 logging.basicConfig(level=logging.INFO)
@@ -75,7 +75,7 @@ orchestrator: Optional[ClaudiaOrchestrator] = None
 deepseek_agent: Optional[DeepSeekR1Agent] = None
 mcp_specialist: Optional[MCPSpecialistAgent] = None
 project_intel: Optional[ProjectIntelligence] = None
-connected_clients: List[WebSocket] = []
+connected_clients: list[WebSocket] = []
 
 # System state
 system_state = {
@@ -101,11 +101,11 @@ system_state = {
 class TaskRequest(BaseModel):
     task_type: str
     description: str
-    parameters: Dict[str, Any] = {}
+    parameters: dict[str, Any] = {}
 
 
 class AnalysisRequest(BaseModel):
-    paths: List[str]
+    paths: list[str]
     analysis_type: str = "comprehensive"
     include_github: bool = True
 
@@ -238,7 +238,7 @@ async def analyze_codebase(request: AnalysisRequest):
 
 
 @app.post("/api/v3/chat")
-async def chat(message: Dict[str, str]):
+async def chat(message: dict[str, str]):
     """Real chat endpoint using Claudia orchestrator"""
     if not orchestrator:
         raise HTTPException(status_code=503, detail="System not initialized")
@@ -302,12 +302,12 @@ async def websocket_endpoint(websocket: WebSocket):
         system_state["metrics"]["active_sessions"] = len(connected_clients)
 
 
-async def broadcast_to_clients(data: Dict[str, Any]):
+async def broadcast_to_clients(data: dict[str, Any]):
     """Broadcast data to all connected WebSocket clients"""
     for client in connected_clients[:]:
         try:
             await client.send_json(data)
-        except:
+        except Exception:
             connected_clients.remove(client)
 
 

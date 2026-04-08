@@ -10,7 +10,7 @@ import logging
 import sqlite3
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Any
 import aiohttp
 import psutil
 import subprocess
@@ -72,12 +72,12 @@ class CyberDevice:
     device_type: DeviceType
     threat_level: ThreatLevel
     is_active: bool
-    ports_open: List[int]
-    services: List[str]
+    ports_open: list[int]
+    services: list[str]
     fingerprint: str
     crypto_activity: bool = False
     trading_activity: bool = False
-    network_usage: Dict[str, float] = None
+    network_usage: dict[str, float] = None
     security_score: float = 0.0
 
     def __post_init__(self):
@@ -93,7 +93,7 @@ class NetworkEvent:
     device_ip: str
     description: str
     threat_level: ThreatLevel
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 
 class WatchYourLANCyberpunkIntegration:
     """Ultimate WatchYourLAN Integration with Cyberpunk Theme"""
@@ -102,8 +102,8 @@ class WatchYourLANCyberpunkIntegration:
         self.config_path = Path(config_path)
         self.config = self._load_config()
         self.db_path = Path(self.config.get("database_path", "data/watchyourlan_cyber.db"))
-        self.devices: Dict[str, CyberDevice] = {}
-        self.events: List[NetworkEvent] = []
+        self.devices: dict[str, CyberDevice] = {}
+        self.events: list[NetworkEvent] = []
         self.executor = ThreadPoolExecutor(max_workers=4)
         self.running = False
         self.lock = threading.Lock()
@@ -147,7 +147,7 @@ class WatchYourLANCyberpunkIntegration:
 
         return logger
 
-    def _load_config(self) -> Dict[str, Any]:
+    def _load_config(self) -> dict[str, Any]:
         """Load configuration file"""
         default_config = {
             "watchyourlan_host": "localhost",
@@ -240,7 +240,7 @@ class WatchYourLANCyberpunkIntegration:
 
             conn.commit()
 
-    async def fetch_watchyourlan_data(self) -> Dict[str, Any]:
+    async def fetch_watchyourlan_data(self) -> dict[str, Any]:
         """Fetch data from WatchYourLAN API"""
         try:
             url = f"http://{self.config['watchyourlan_host']}:{self.config['watchyourlan_port']}/api/all"
@@ -258,7 +258,7 @@ class WatchYourLANCyberpunkIntegration:
             self.logger.error(f"❌ Error fetching WatchYourLAN data: {e}")
             return {}
 
-    def _analyze_device_security(self, device_data: Dict[str, Any]) -> float:
+    def _analyze_device_security(self, device_data: dict[str, Any]) -> float:
         """Analyze device security and assign security score"""
         score = 100.0
 
@@ -283,7 +283,7 @@ class WatchYourLANCyberpunkIntegration:
 
         return max(0.0, min(100.0, score))
 
-    def _detect_crypto_activity(self, device_data: Dict[str, Any]) -> bool:
+    def _detect_crypto_activity(self, device_data: dict[str, Any]) -> bool:
         """Detect potential cryptocurrency mining or trading activity"""
         # Check for crypto-related hostnames
         hostname = device_data.get("hostname", "").lower()
@@ -306,7 +306,7 @@ class WatchYourLANCyberpunkIntegration:
 
         return False
 
-    def _detect_trading_activity(self, device_data: Dict[str, Any]) -> bool:
+    def _detect_trading_activity(self, device_data: dict[str, Any]) -> bool:
         """Detect potential trading bot activity"""
         # Check for trading-related hostnames
         hostname = device_data.get("hostname", "").lower()
@@ -334,7 +334,7 @@ class WatchYourLANCyberpunkIntegration:
         else:
             return ThreatLevel.LOW
 
-    def _determine_device_type(self, device_data: Dict[str, Any]) -> DeviceType:
+    def _determine_device_type(self, device_data: dict[str, Any]) -> DeviceType:
         """Determine device type based on characteristics"""
         vendor = device_data.get("vendor", "").lower()
         hostname = device_data.get("hostname", "").lower()
@@ -354,7 +354,7 @@ class WatchYourLANCyberpunkIntegration:
         else:
             return DeviceType.COMPUTER
 
-    def _create_device_fingerprint(self, device_data: Dict[str, Any]) -> str:
+    def _create_device_fingerprint(self, device_data: dict[str, Any]) -> str:
         """Create unique device fingerprint"""
         fingerprint_data = {
             "mac": device_data.get("mac", ""),
@@ -367,7 +367,7 @@ class WatchYourLANCyberpunkIntegration:
         fingerprint_str = json.dumps(fingerprint_data, sort_keys=True)
         return hashlib.sha256(fingerprint_str.encode()).hexdigest()[:16]
 
-    async def process_devices(self, devices_data: List[Dict[str, Any]]):
+    async def process_devices(self, devices_data: list[Dict[str, Any]]):
         """Process and analyze devices data"""
         current_time = datetime.now()
 
@@ -540,7 +540,7 @@ class WatchYourLANCyberpunkIntegration:
         except Exception as e:
             self.logger.error(f"❌ Error saving to database: {e}")
 
-    def generate_cyberpunk_report(self) -> Dict[str, Any]:
+    def generate_cyberpunk_report(self) -> dict[str, Any]:
         """Generate comprehensive cyberpunk-themed report"""
         current_time = datetime.now()
 

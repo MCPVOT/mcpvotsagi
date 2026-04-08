@@ -16,7 +16,7 @@ import sqlite3
 import redis
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Set, Optional, Tuple
+from typing import Optional, Tuple
 import logging
 
 # Configure logging
@@ -101,7 +101,7 @@ class ServiceDeduplicator:
             }
         }
 
-    def scan_running_processes(self) -> Dict:
+    def scan_running_processes(self) -> dict:
         """Scan for running Python processes that might be duplicates"""
         running_services = {}
 
@@ -134,7 +134,7 @@ class ServiceDeduplicator:
 
         return running_services
 
-    def categorize_service(self, script_name: str) -> Optional[str]:
+    def categorize_service(self, script_name: str) -> [str]:
         """Categorize a service script"""
         for category, info in self.service_categories.items():
             if script_name == info['primary']:
@@ -143,7 +143,7 @@ class ServiceDeduplicator:
                 return f"{category}_duplicate"
         return None
 
-    def identify_duplicates(self) -> List[Dict]:
+    def identify_duplicates(self) -> list[Dict]:
         """Identify duplicate services and consolidation opportunities"""
         running_services = self.scan_running_processes()
         duplicates = []
@@ -198,7 +198,7 @@ import json
 import logging
 import redis.asyncio as redis
 from datetime import datetime
-from typing import Dict, List, Any, Optional
+from typing import Optional
 import uuid
 
 class EnhancedMCPMemoryServer:
@@ -257,7 +257,7 @@ class EnhancedMCPMemoryServer:
         logging.info(f"📝 Stored memory: {key} -> {memory_id}")
         return memory_id
 
-    async def retrieve_memory(self, key: str) -> Optional[Dict]:
+    async def retrieve_memory(self, key: str) -> [Dict]:
         """Retrieve memory by key"""
         # Get memory ID from key index
         memory_id = await self.redis_client.get(f"{self.memory_namespace}:keys:{key}")
@@ -283,7 +283,7 @@ class EnhancedMCPMemoryServer:
 
         return None
 
-    async def search_memories(self, category: str = None, limit: int = 100) -> List[Dict]:
+    async def search_memories(self, category: str = None, limit: int = 100) -> list[Dict]:
         """Search memories by category"""
         if category:
             memory_ids = await self.redis_client.smembers(f"{self.memory_namespace}:categories:{category}")
@@ -332,7 +332,7 @@ class EnhancedMCPMemoryServer:
 
         return False
 
-    async def get_stats(self) -> Dict:
+    async def get_stats(self) -> dict:
         """Get memory statistics"""
         total_memories = len(await self.redis_client.keys(f"{self.memory_namespace}:*"))
         categories = await self.redis_client.keys(f"{self.memory_namespace}:categories:*")
@@ -560,7 +560,7 @@ if __name__ == "__main__":
 
         print(f"✅ Created consolidated MCP servers: {mcp_servers_path}")
 
-    def terminate_duplicate_services(self, duplicates: List[Dict]) -> int:
+    def terminate_duplicate_services(self, duplicates: list[Dict]) -> int:
         """Terminate identified duplicate services"""
         terminated_count = 0
 

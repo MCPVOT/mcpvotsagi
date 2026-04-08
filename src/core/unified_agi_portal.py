@@ -16,7 +16,7 @@ import hashlib
 from datetime import datetime, timedelta
 from pathlib import Path
 from collections import deque, defaultdict
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Optional, Tuple
 import random
 import logging
 import requests
@@ -134,7 +134,7 @@ class IPFSIntegration:
         except Exception as e:
             logger.error(f"Failed to start IPFS daemon: {e}")
 
-    def add_to_ipfs(self, data: str, name: str = "data.json") -> Optional[str]:
+    def add_to_ipfs(self, data: str, name: str = "data.json") -> [str]:
         """Add data to IPFS"""
         if not self.available:
             return None
@@ -156,7 +156,7 @@ class IPFSIntegration:
             logger.error(f"Error adding to IPFS: {e}")
             return None
 
-    def get_from_ipfs(self, hash_value: str) -> Optional[str]:
+    def get_from_ipfs(self, hash_value: str) -> [str]:
         """Get data from IPFS"""
         if not self.available:
             return None

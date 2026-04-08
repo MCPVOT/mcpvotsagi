@@ -9,7 +9,7 @@ import json
 import sqlite3
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Any
 import aiohttp
 from aiohttp import web
 import aiohttp_jinja2

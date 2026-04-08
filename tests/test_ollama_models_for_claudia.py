@@ -12,7 +12,7 @@ import time
 import requests
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Any
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -119,7 +119,7 @@ class OllamaModelTester:
                 "response_time": timeout
             }
 
-    def score_response(self, response: str, expected_keywords: List[str]) -> float:
+    def score_response(self, response: str, expected_keywords: list[str]) -> float:
         """Score a response based on keyword presence and quality"""
         if not response:
             return 0.0
@@ -144,7 +144,7 @@ class OllamaModelTester:
         final_score = (keyword_percentage * 0.6) + (length_score * 0.2) + (min(structure_score, 0.3))
         return min(final_score, 1.0)
 
-    async def test_all_models(self, models_to_test: List[str] = None):
+    async def test_all_models(self, models_to_test: list[str] = None):
         """Test all available models across all test cases"""
         if models_to_test is None:
             models_to_test = await self.get_available_models()

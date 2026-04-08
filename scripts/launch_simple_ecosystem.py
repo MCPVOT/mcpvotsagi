@@ -161,7 +161,7 @@ class SimpleServiceLauncher:
                 models = response.json().get('models', [])[:3]  # Top 3
                 for model in models:
                     print(f"   - {model.get('name', 'Unknown')}")
-            except:
+            except Exception:
                 pass
 
         print("\n" + "=" * 80)

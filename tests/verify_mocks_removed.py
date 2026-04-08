@@ -41,7 +41,7 @@ def check_for_mocks():
             print(result.stdout)
         else:
             print("  ✓ No mock references found in src/ Python files")
-    except:
+    except Exception:
         print("  ℹ️ grep not available, skipping Python file check")
 
     # Check for mock references in TypeScript/TSX files
@@ -55,7 +55,7 @@ def check_for_mocks():
             print(result.stdout)
         else:
             print("  ✓ No mock-api references found in frontend/src/ files")
-    except:
+    except Exception:
         print("  ℹ️ grep not available, skipping frontend file check")
 
     print("\n✅ Checking environment configuration:")

@@ -74,7 +74,7 @@ else:
                 import psutil
                 disk = psutil.disk_usage(str(F_DRIVE_ROOT))
                 logger.info(f"F:\\\\ Drive Storage: {disk.free / (1024**3):.2f} GB free of {disk.total / (1024**3):.2f} GB")
-            except:
+            except Exception:
                 pass
 '''
         
@@ -146,7 +146,7 @@ MEMORY_PATH = F_DRIVE_ROOT / "memory" if F_DRIVE_ENABLED else Path(".")
                         shell=True,
                         check=True
                     )
-                except:
+                except Exception:
                     # Fallback to copy
                     shutil.copy(enhanced_agent, original_agent)
             else:
@@ -220,7 +220,7 @@ MEMORY_PATH = F_DRIVE_ROOT / "memory" if F_DRIVE_ENABLED else Path(".")
                 disk = psutil.disk_usage(str(f_drive))
                 self.console.print(f"[green]✓[/green] F:\\\\ Drive: {disk.free / (1024**3):.2f} GB free")
                 return True
-            except:
+            except Exception:
                 pass
         self.console.print("[yellow]![/yellow] F:\\\\ Drive not available (optional)")
         return False
@@ -319,7 +319,7 @@ class PerformanceMonitor:
                     pynvml.nvmlInit()
                     handle = pynvml.nvmlDeviceGetHandleByIndex(0)
                     gpu_usage = pynvml.nvmlDeviceGetUtilizationRates(handle).gpu
-                except:
+                except Exception:
                     pass
                     
                 # Network metrics

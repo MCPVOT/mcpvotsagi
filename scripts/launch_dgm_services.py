@@ -12,7 +12,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 import aiohttp
 import psutil
 
@@ -27,7 +27,7 @@ class DGMServiceLauncher:
         self.running_processes = {}
         self.config = self.load_config()
 
-    def load_config(self) -> Dict:
+    def load_config(self) -> dict:
         """Load DGM configuration"""
         try:
             with open(self.config_path, 'r') as f:
@@ -64,7 +64,7 @@ class DGMServiceLauncher:
         if killed:
             time.sleep(2)  # Wait for cleanup
 
-    def start_service(self, component: Dict) -> Optional[subprocess.Popen]:
+    def start_service(self, component: Dict) -> [subprocess.Popen]:
         """Start a DGM service component"""
         name = component['name']
         file_path = component.get('file_path', f"{name}.py")
@@ -118,7 +118,7 @@ class DGMServiceLauncher:
             async with aiohttp.ClientSession() as session:
                 async with session.get(health_url, timeout=aiohttp.ClientTimeout(total=5)) as response:
                     return response.status == 200
-        except:
+        except Exception:
             return False
 
     async def wait_for_service_ready(self, component: Dict, timeout: int = 30) -> bool:
@@ -161,7 +161,7 @@ class DGMServiceLauncher:
             else:
                 logger.error(f"❌ Failed to start {name}")
 
-    def get_service_status(self) -> Dict:
+    def get_service_status(self) -> dict:
         """Get status of all running services"""
         status = {}
 

@@ -12,7 +12,7 @@ import aiohttp
 import json
 import logging
 from datetime import datetime
-from typing import Dict, Any, List, Optional
+from typing import List, Optional
 import base58
 import hashlib
 from dataclasses import dataclass
@@ -44,7 +44,7 @@ class SolanaMCPConnector:
         
         self.session = None
         self.current_slot = 0
-        self.zk_proofs: List[ZKProof] = []
+        self.zk_proofs: list[ZKProof] = []
         
     async def connect(self):
         """Initialize connections"""
@@ -56,7 +56,7 @@ class SolanaMCPConnector:
         if self.session:
             await self.session.close()
             
-    async def get_latest_blockhash(self) -> Dict[str, Any]:
+    async def get_latest_blockhash(self) -> dict[str, Any]:
         """Get latest blockhash from Solana"""
         endpoint = self.devnet_endpoint if self.use_devnet else self.rpc_endpoint
         
@@ -145,7 +145,7 @@ RESPONSE: <proof>"""
         h = hashlib.sha256(f"{data}_response".encode()).digest()
         return base58.b58encode(h).decode()
         
-    def _extract_value(self, text: str, key: str) -> Optional[str]:
+    def _extract_value(self, text: str, key: str) -> [str]:
         """Extract value from DeepSeek response"""
         lines = text.split('\n')
         for line in lines:
@@ -165,7 +165,7 @@ RESPONSE: <proof>"""
             verified=True
         )
         
-    async def create_ai_transaction(self, instruction: str) -> Dict[str, Any]:
+    async def create_ai_transaction(self, instruction: str) -> dict[str, Any]:
         """Create Solana transaction using AI"""
         try:
             # Use DeepSeek to understand and create transaction
@@ -240,7 +240,7 @@ Is this a valid ZK proof? Explain the verification process."""
             
         return proof.verified
         
-    async def get_ai_defi_opportunities(self) -> List[Dict[str, Any]]:
+    async def get_ai_defi_opportunities(self) -> list[Dict[str, Any]]:
         """Use AI to find DeFi opportunities on Solana"""
         try:
             prompt = """Analyze current Solana DeFi landscape and identify opportunities:

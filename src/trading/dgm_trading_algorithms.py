@@ -10,7 +10,7 @@ import asyncio
 import json
 import numpy as np
 import pandas as pd
-from typing import Dict, Any, List, Optional, Tuple, Callable
+from typing import List, Optional, Tuple, Callable
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field
 import logging
@@ -87,7 +87,7 @@ class TradeSignal:
     token: str
     confidence: float
     size: float
-    reasoning: List[str]
+    reasoning: list[str]
     strategy_used: str
     expected_return: float
     risk_score: float
@@ -117,7 +117,7 @@ class DynamicGodelMachine:
 
     async def search_for_improvement(self,
                                    market_state: MarketState,
-                                   recent_performance: List[float]) -> Optional[TradingStrategy]:
+                                   recent_performance: list[float]) -> [TradingStrategy]:
         """
         Main proof search loop - looks for provable improvements
         """
@@ -168,7 +168,7 @@ class DynamicGodelMachine:
 
         return best_improvement
 
-    async def _generate_candidates(self, market_state: MarketState) -> List[TradingStrategy]:
+    async def _generate_candidates(self, market_state: MarketState) -> list[TradingStrategy]:
         """Generate candidate strategy improvements"""
         candidates = []
 
@@ -231,7 +231,7 @@ class TheoremProver:
                               old_strategy: TradingStrategy,
                               new_strategy: TradingStrategy,
                               market_state: MarketState,
-                              performance_history: List[float]) -> Optional['Proof']:
+                              performance_history: list[float]) -> ['Proof']:
         """
         Attempt to prove that new_strategy improves upon old_strategy
         """
@@ -269,7 +269,7 @@ class TheoremProver:
     async def _estimate_utility(self,
                               strategy: TradingStrategy,
                               market_state: MarketState,
-                              performance_history: List[float]) -> float:
+                              performance_history: list[float]) -> float:
         """Estimate expected utility of a strategy"""
         # Sharpe ratio based utility
         if not performance_history:
@@ -323,7 +323,7 @@ class Proof:
     is_valid: bool
     expected_utility: float
     confidence: float
-    reasoning: List[str]
+    reasoning: list[str]
 
 
 class StrategyEvaluator:
@@ -334,8 +334,8 @@ class StrategyEvaluator:
 
     async def evaluate(self,
                       strategy: TradingStrategy,
-                      market_conditions: List[MarketState],
-                      historical_data: pd.DataFrame) -> Dict[str, float]:
+                      market_conditions: list[MarketState],
+                      historical_data: pd.DataFrame) -> dict[str, float]:
         """Comprehensive strategy evaluation"""
 
         metrics = {
@@ -372,7 +372,7 @@ class StrategyEvaluator:
 
     async def _backtest(self,
                        strategy: TradingStrategy,
-                       historical_data: pd.DataFrame) -> Dict[str, Any]:
+                       historical_data: pd.DataFrame) -> dict[str, Any]:
         """Run backtest simulation"""
         # Simplified backtest
         returns = []
@@ -425,7 +425,7 @@ class StrategyEvaluator:
 
         return np.clip(signal, -1.0, 1.0)
 
-    def _calculate_sharpe(self, returns: List[float], risk_free_rate: float = 0.02) -> float:
+    def _calculate_sharpe(self, returns: list[float], risk_free_rate: float = 0.02) -> float:
         """Calculate Sharpe ratio"""
         if not returns:
             return 0.0
@@ -438,7 +438,7 @@ class StrategyEvaluator:
             return mean_excess / std_returns * np.sqrt(252)  # Annualized
         return 0.0
 
-    def _calculate_max_drawdown(self, returns: List[float]) -> float:
+    def _calculate_max_drawdown(self, returns: list[float]) -> float:
         """Calculate maximum drawdown"""
         if not returns:
             return 0.0
@@ -472,7 +472,7 @@ class MetaLearner(nn.Module):
 
     async def suggest_improvements(self,
                                  current_strategy: TradingStrategy,
-                                 market_state: MarketState) -> List[TradingStrategy]:
+                                 market_state: MarketState) -> list[TradingStrategy]:
         """Suggest strategy improvements using learned patterns"""
 
         # Prepare input
@@ -521,7 +521,7 @@ class MetaLearner(nn.Module):
 
         return suggestions
 
-    def learn_from_experience(self, experience: Dict[str, Any]):
+    def learn_from_experience(self, experience: dict[str, Any]):
         """Learn from trading experience"""
         self.memory_buffer.append(experience)
 
@@ -530,7 +530,7 @@ class MetaLearner(nn.Module):
             batch = random.sample(self.memory_buffer, 32)
             self._train_on_batch(batch)
 
-    def _train_on_batch(self, batch: List[Dict[str, Any]]):
+    def _train_on_batch(self, batch: list[Dict[str, Any]]):
         """Train on a batch of experiences"""
         # Extract data
         inputs = []
@@ -728,7 +728,7 @@ class UnifiedTradingAlgorithmEngine:
         }
 
     async def generate_trading_signal(self,
-                                    market_data: Dict[str, Any],
+                                    market_data: dict[str, Any],
                                     token: str = "SOL") -> TradeSignal:
         """Generate unified trading signal combining all algorithms"""
 
@@ -762,7 +762,7 @@ class UnifiedTradingAlgorithmEngine:
 
         return combined_signal
 
-    def _prepare_state_tensor(self, market_data: Dict[str, Any]) -> torch.Tensor:
+    def _prepare_state_tensor(self, market_data: dict[str, Any]) -> torch.Tensor:
         """Prepare state tensor for RL"""
         features = []
 

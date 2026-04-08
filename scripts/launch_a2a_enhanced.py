@@ -58,7 +58,7 @@ class A2ASystemLauncher:
             r.ping()
             logger.info("✅ Redis is already running")
             return True
-        except:
+        except Exception:
             logger.info("🚀 Starting Redis server...")
             try:
                 # Try to start Redis (Windows)
@@ -124,7 +124,7 @@ class A2ASystemLauncher:
             if response.status_code == 200:
                 logger.info("✅ Ollama is already running")
                 return True
-        except:
+        except Exception:
             pass
 
         try:

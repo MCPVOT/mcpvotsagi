@@ -23,7 +23,7 @@ import time
 import json
 import aiohttp
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Tuple
 import logging
 
 # Configure logging
@@ -61,7 +61,7 @@ class DGMValidationSuite:
         }
         self.validation_results = {}
 
-    async def validate_file_paths(self) -> Dict[str, bool]:
+    async def validate_file_paths(self) -> dict[str, bool]:
         """Validate that all DGM service files exist in correct locations"""
         logger.info("🔍 Validating DGM service file paths...")
 
@@ -78,7 +78,7 @@ class DGMValidationSuite:
 
         return path_results
 
-    async def validate_imports(self) -> Dict[str, bool]:
+    async def validate_imports(self) -> dict[str, bool]:
         """Test that DGM services can be imported correctly"""
         logger.info("🔍 Validating DGM service imports...")
 
@@ -117,7 +117,7 @@ class DGMValidationSuite:
 
         return import_results
 
-    async def start_dgm_services(self) -> Dict[str, bool]:
+    async def start_dgm_services(self) -> dict[str, bool]:
         """Start DGM services and validate they're running"""
         logger.info("🚀 Starting DGM services...")
 
@@ -158,7 +158,7 @@ class DGMValidationSuite:
         self.processes = processes
         return startup_results
 
-    async def validate_health_endpoints(self) -> Dict[str, bool]:
+    async def validate_health_endpoints(self) -> dict[str, bool]:
         """Test health check endpoints for all DGM services"""
         logger.info("🏥 Validating DGM service health endpoints...")
 
@@ -185,7 +185,7 @@ class DGMValidationSuite:
 
         return health_results
 
-    async def validate_a2a_communication(self) -> Dict[str, bool]:
+    async def validate_a2a_communication(self) -> dict[str, bool]:
         """Test A2A communication between DGM services"""
         logger.info("🔗 Validating A2A communication...")
 
@@ -226,7 +226,7 @@ class DGMValidationSuite:
 
         return a2a_results
 
-    async def validate_dependencies(self) -> Dict[str, bool]:
+    async def validate_dependencies(self) -> dict[str, bool]:
         """Check that all required dependencies are available"""
         logger.info("📦 Validating DGM service dependencies...")
 
@@ -262,7 +262,7 @@ class DGMValidationSuite:
                     logger.error(f"❌ Error stopping {service_name}: {e}")
                     try:
                         process.kill()
-                    except:
+                    except Exception:
                         pass
 
     async def generate_validation_report(self):

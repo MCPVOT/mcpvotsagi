@@ -10,7 +10,7 @@ import asyncio
 import aiohttp
 import json
 import logging
-from typing import Dict, Any, List, Optional
+from typing import List, Optional
 from datetime import datetime, timedelta
 from dataclasses import dataclass
 import pandas as pd
@@ -80,7 +80,7 @@ class FinnhubClient:
                 
         self.request_times.append(now)
         
-    async def _make_request(self, endpoint: str, params: Dict[str, Any] = None) -> Dict[str, Any]:
+    async def _make_request(self, endpoint: str, params: dict[str, Any] = None) -> dict[str, Any]:
         """Make API request with rate limiting and caching"""
         
         # Check cache
@@ -118,7 +118,7 @@ class FinnhubClient:
             logger.error(f"Request failed: {e}")
             return {}
             
-    async def get_quote(self, symbol: str) -> Optional[MarketQuote]:
+    async def get_quote(self, symbol: str) -> [MarketQuote]:
         """Get real-time quote for symbol"""
         
         data = await self._make_request("/quote", {"symbol": symbol})
@@ -139,7 +139,7 @@ class FinnhubClient:
     async def get_company_news(self, 
                              symbol: str,
                              from_date: Optional[str] = None,
-                             to_date: Optional[str] = None) -> List[CompanyNews]:
+                             to_date: Optional[str] = None) -> list[CompanyNews]:
         """Get company news"""
         
         if not from_date:
@@ -168,7 +168,7 @@ class FinnhubClient:
             
         return news_items
         
-    async def get_financials(self, symbol: str, statement: str = "bs") -> Dict[str, Any]:
+    async def get_financials(self, symbol: str, statement: str = "bs") -> dict[str, Any]:
         """Get financial statements
         
         Args:
@@ -189,7 +189,7 @@ class FinnhubClient:
     async def get_technical_indicators(self, 
                                      symbol: str,
                                      resolution: str = "D",
-                                     indicator: str = "sma") -> Dict[str, Any]:
+                                     indicator: str = "sma") -> dict[str, Any]:
         """Get technical indicators"""
         
         # Get candle data first
@@ -221,7 +221,7 @@ class FinnhubClient:
         
         return indicators
         
-    async def get_insider_transactions(self, symbol: str) -> List[Dict[str, Any]]:
+    async def get_insider_transactions(self, symbol: str) -> list[Dict[str, Any]]:
         """Get insider transactions"""
         
         data = await self._make_request(
@@ -233,7 +233,7 @@ class FinnhubClient:
         
     async def get_earnings_calendar(self, 
                                   from_date: Optional[str] = None,
-                                  to_date: Optional[str] = None) -> List[Dict[str, Any]]:
+                                  to_date: Optional[str] = None) -> list[Dict[str, Any]]:
         """Get earnings calendar"""
         
         if not from_date:
@@ -251,7 +251,7 @@ class FinnhubClient:
         
         return data.get("earningsCalendar", [])
         
-    async def get_market_sentiment(self, symbol: str) -> Dict[str, Any]:
+    async def get_market_sentiment(self, symbol: str) -> dict[str, Any]:
         """Get market sentiment data"""
         
         # Social sentiment
@@ -278,7 +278,7 @@ class FinnhubClient:
             "price_target": price_target
         }
         
-    async def search_symbols(self, query: str) -> List[Dict[str, Any]]:
+    async def search_symbols(self, query: str) -> list[Dict[str, Any]]:
         """Search for symbols"""
         
         data = await self._make_request(
@@ -288,14 +288,14 @@ class FinnhubClient:
         
         return data.get("result", [])
         
-    def _calculate_sma(self, prices: List[float], period: int) -> Optional[float]:
+    def _calculate_sma(self, prices: list[float], period: int) -> [float]:
         """Calculate Simple Moving Average"""
         if len(prices) < period:
             return None
             
         return sum(prices[-period:]) / period
         
-    def _calculate_rsi(self, prices: List[float], period: int = 14) -> Optional[float]:
+    def _calculate_rsi(self, prices: list[float], period: int = 14) -> [float]:
         """Calculate RSI"""
         if len(prices) < period + 1:
             return None
@@ -316,7 +316,7 @@ class FinnhubClient:
         
         return rsi
         
-    def _calculate_macd(self, prices: List[float]) -> Dict[str, Optional[float]]:
+    def _calculate_macd(self, prices: list[float]) -> dict[str, Optional[float]]:
         """Calculate MACD"""
         if len(prices) < 26:
             return {"macd": None, "signal": None, "histogram": None}
@@ -342,7 +342,7 @@ class FinnhubClient:
             "histogram": histogram
         }
         
-    def _calculate_ema(self, prices: List[float], period: int) -> Optional[float]:
+    def _calculate_ema(self, prices: list[float], period: int) -> [float]:
         """Calculate Exponential Moving Average"""
         if len(prices) < period:
             return None
@@ -417,7 +417,7 @@ class FinnhubTradingAgentsAdapter:
     def __init__(self, finnhub_client: FinnhubClient):
         self.finnhub = finnhub_client
         
-    async def get_data_for_trading_agents(self, ticker: str, date: str) -> Dict[str, Any]:
+    async def get_data_for_trading_agents(self, ticker: str, date: str) -> dict[str, Any]:
         """Get data formatted for TradingAgents"""
         
         # Get all relevant data

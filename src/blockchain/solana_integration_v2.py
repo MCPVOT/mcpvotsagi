@@ -9,7 +9,7 @@ import asyncio
 import json
 import base64
 import logging
-from typing import Dict, Any, List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field
 from enum import Enum
@@ -191,7 +191,7 @@ class EnhancedSolanaClient:
         max_tries=3,
         max_time=30
     )
-    async def _make_request(self, method: str, params: List[Any]) -> Dict[str, Any]:
+    async def _make_request(self, method: str, params: list[Any]) -> dict[str, Any]:
         """Make RPC request with retry logic"""
         await self.rate_limiter.acquire()
 
@@ -216,7 +216,7 @@ class EnhancedSolanaClient:
 
                 return data.get("result", {})
 
-    async def get_latest_blockhash(self) -> Dict[str, Any]:
+    async def get_latest_blockhash(self) -> dict[str, Any]:
         """Get latest blockhash with caching"""
         # Use SDK if available
         if self.sdk_client:
@@ -265,7 +265,7 @@ class EnhancedSolanaClient:
         result = await self._make_request("sendTransaction", params)
         return result
 
-    async def get_transaction(self, signature: str) -> Optional[Dict[str, Any]]:
+    async def get_transaction(self, signature: str) -> [Dict[str, Any]]:
         """Get transaction details"""
         try:
             result = await self._make_request(
@@ -329,7 +329,7 @@ class ZKProofGenerator:
 
     async def generate_proof(self,
                            data: str,
-                           proof_type: str = "commitment") -> Dict[str, Any]:
+                           proof_type: str = "commitment") -> dict[str, Any]:
         """Generate zero-knowledge proof with caching"""
 
         # Check cache
@@ -352,7 +352,7 @@ class ZKProofGenerator:
 
         return proof
 
-    async def _generate_commitment_proof(self, data: str) -> Dict[str, Any]:
+    async def _generate_commitment_proof(self, data: str) -> dict[str, Any]:
         """Generate Pedersen commitment"""
         # Simplified implementation
         import hashlib
@@ -377,7 +377,7 @@ class ZKProofGenerator:
             "timestamp": datetime.now().isoformat()
         }
 
-    async def _generate_range_proof(self, data: str) -> Dict[str, Any]:
+    async def _generate_range_proof(self, data: str) -> dict[str, Any]:
         """Generate range proof (simplified)"""
         # In production, would use bulletproofs or similar
         value = int(hashlib.sha256(data.encode()).hexdigest()[:8], 16)
@@ -390,7 +390,7 @@ class ZKProofGenerator:
             "timestamp": datetime.now().isoformat()
         }
 
-    async def _generate_membership_proof(self, data: str) -> Dict[str, Any]:
+    async def _generate_membership_proof(self, data: str) -> dict[str, Any]:
         """Generate set membership proof (simplified)"""
         # In production, would use Merkle proofs
         member_hash = hashlib.sha256(data.encode()).digest()
@@ -402,7 +402,7 @@ class ZKProofGenerator:
             "timestamp": datetime.now().isoformat()
         }
 
-    async def verify_proof(self, proof: Dict[str, Any]) -> bool:
+    async def verify_proof(self, proof: dict[str, Any]) -> bool:
         """Verify zero-knowledge proof"""
         proof_type = proof.get("type")
 
@@ -415,7 +415,7 @@ class ZKProofGenerator:
 
         return False
 
-    async def _verify_commitment_proof(self, proof: Dict[str, Any]) -> bool:
+    async def _verify_commitment_proof(self, proof: dict[str, Any]) -> bool:
         """Verify commitment proof"""
         # Simplified verification
         try:
@@ -437,10 +437,10 @@ class PhantomWalletIntegration:
     """Enhanced Phantom wallet integration"""
 
     def __init__(self):
-        self.connected_wallets: Dict[str, Dict[str, Any]] = {}
-        self.pending_signatures: Dict[str, Dict[str, Any]] = {}
+        self.connected_wallets: dict[str, Dict[str, Any]] = {}
+        self.pending_signatures: dict[str, Dict[str, Any]] = {}
 
-    async def create_connection_request(self) -> Dict[str, Any]:
+    async def create_connection_request(self) -> dict[str, Any]:
         """Create wallet connection request"""
         nonce = base64.b64encode(
             struct.pack('<Q', int(datetime.now().timestamp() * 1000))
@@ -485,7 +485,7 @@ class PhantomWalletIntegration:
                                 from_pubkey: str,
                                 to_pubkey: str,
                                 amount: int,
-                                recent_blockhash: str) -> Dict[str, Any]:
+                                recent_blockhash: str) -> dict[str, Any]:
         """Prepare transaction for Phantom signing"""
 
         if SOLANA_SDK_AVAILABLE:
@@ -513,7 +513,7 @@ class PhantomWalletIntegration:
             # Solana SDK not available - cannot create real transactions
             raise RuntimeError("Solana SDK required for transaction creation. Install with: pip install solana spl-token")
 
-    async def register_wallet(self, public_key: str, connection_data: Dict[str, Any]):
+    async def register_wallet(self, public_key: str, connection_data: dict[str, Any]):
         """Register connected wallet"""
         self.connected_wallets[public_key] = {
             "connected_at": datetime.now(),
@@ -534,7 +534,7 @@ class JupiterAggregatorClient:
         self.rate_limiter = RateLimiter(rate=5)  # 5 requests per second
 
     @lru_cache(maxsize=100)
-    async def get_token_list(self) -> List[Dict[str, Any]]:
+    async def get_token_list(self) -> list[Dict[str, Any]]:
         """Get Jupiter token list with caching"""
         async with aiohttp.ClientSession() as session:
             async with session.get(f"{self.base_url}/tokens") as resp:
@@ -547,7 +547,7 @@ class JupiterAggregatorClient:
                        input_mint: str,
                        output_mint: str,
                        amount: int,
-                       slippage_bps: int = 50) -> Optional[Dict[str, Any]]:
+                       slippage_bps: int = 50) -> [Dict[str, Any]]:
         """Get swap quote from Jupiter"""
 
         await self.rate_limiter.acquire()
@@ -577,9 +577,9 @@ class JupiterAggregatorClient:
         return None
 
     async def get_swap_transaction(self,
-                                 quote: Dict[str, Any],
+                                 quote: dict[str, Any],
                                  user_public_key: str,
-                                 wrap_unwrap_sol: bool = True) -> Optional[str]:
+                                 wrap_unwrap_sol: bool = True) -> [str]:
         """Get swap transaction from Jupiter"""
 
         payload = {
@@ -628,7 +628,7 @@ class SolanaAITradingSystem:
     async def analyze_token_pair(self,
                                input_token: str,
                                output_token: str,
-                               amount: float) -> Dict[str, Any]:
+                               amount: float) -> dict[str, Any]:
         """Analyze token pair for trading opportunity"""
 
         # Get token information
@@ -675,7 +675,7 @@ class SolanaAITradingSystem:
 
     async def execute_swap(self,
                          wallet_pubkey: str,
-                         quote: Dict[str, Any],
+                         quote: dict[str, Any],
                          auto_approve: bool = False) -> TransactionResult:
         """Execute token swap via Jupiter"""
 
@@ -726,7 +726,7 @@ class SolanaAITradingSystem:
                 error="Awaiting wallet signature"
             )
 
-    async def get_wallet_portfolio(self, wallet_pubkey: str) -> Dict[str, Any]:
+    async def get_wallet_portfolio(self, wallet_pubkey: str) -> dict[str, Any]:
         """Get wallet token portfolio"""
 
         # Get SOL balance

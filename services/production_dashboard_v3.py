@@ -27,7 +27,7 @@ import logging
 import os
 import sys
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any
+from typing import Any
 import sqlite3
 import psutil
 import aiohttp
@@ -64,9 +64,9 @@ class DashboardMetrics:
     cpu_usage: float
     memory_usage: float
     disk_usage: float
-    network_io: Dict[str, float]
-    trading_performance: Dict[str, float]
-    alerts: List[str]
+    network_io: dict[str, float]
+    trading_performance: dict[str, float]
+    alerts: list[str]
     uptime: str
 
 class ProductionDashboard:
@@ -924,7 +924,7 @@ class ProductionDashboard:
             logger.error(f"Error in start handler: {e}")
             return web.json_response({"error": str(e)}, status=500)
 
-    async def collect_current_metrics(self) -> Dict:
+    async def collect_current_metrics(self) -> dict:
         """Collect current system metrics"""
         try:
             # System metrics
@@ -951,7 +951,7 @@ class ProductionDashboard:
             logger.error(f"Error collecting metrics: {e}")
             return {}
 
-    async def get_component_status(self) -> List[Dict]:
+    async def get_component_status(self) -> list[Dict]:
         """Get status of all components"""
         # Mock component data
         components = [
@@ -994,7 +994,7 @@ class ProductionDashboard:
 
         return components
 
-    async def get_recent_alerts(self) -> List[Dict]:
+    async def get_recent_alerts(self) -> list[Dict]:
         """Get recent system alerts"""
         # Mock alert data
         alerts = [
@@ -1014,7 +1014,7 @@ class ProductionDashboard:
 
         return alerts
 
-    async def get_trading_metrics(self) -> Dict:
+    async def get_trading_metrics(self) -> dict:
         """Get trading system metrics"""
         # Mock trading data
         return {
@@ -1026,7 +1026,7 @@ class ProductionDashboard:
             "win_rate": 68.1
         }
 
-    async def get_historical_data(self) -> Dict:
+    async def get_historical_data(self) -> dict:
         """Get historical data"""
         # Mock historical data
         return {

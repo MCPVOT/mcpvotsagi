@@ -12,7 +12,7 @@ import logging
 import platform
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, Optional, Union
+from typing import Union
 import psutil
 
 logger = logging.getLogger(__name__)
@@ -206,7 +206,7 @@ This directory is managed by the ULTIMATE AGI SYSTEM.
         path.mkdir(parents=True, exist_ok=True)
         return path
         
-    def get_storage_stats(self) -> Dict:
+    def get_storage_stats(self) -> dict:
         """Get current storage usage statistics"""
         stats = {
             "base_path": str(self.base_path),
@@ -223,7 +223,7 @@ This directory is managed by the ULTIMATE AGI SYSTEM.
                 "free_gb": round(disk.free / (1024**3), 2),
                 "percent": disk.percent
             }
-        except:
+        except Exception:
             stats["disk_usage"] = {"error": "Unable to get disk usage"}
             
         # Per-category stats
@@ -307,7 +307,7 @@ This directory is managed by the ULTIMATE AGI SYSTEM.
                     try:
                         file_path.unlink()
                         deleted_count += 1
-                    except:
+                    except Exception:
                         pass
                         
         logger.info(f"Cleaned up {deleted_count} old files from {category}")
@@ -326,7 +326,7 @@ def ensure_storage_path(category: str, subdir: Optional[str] = None) -> Path:
     """Ensure storage path exists"""
     return storage_manager.ensure_path_exists(category, subdir)
 
-def get_storage_stats() -> Dict:
+def get_storage_stats() -> dict:
     """Get storage statistics"""
     return storage_manager.get_storage_stats()
 

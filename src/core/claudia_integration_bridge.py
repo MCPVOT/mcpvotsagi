@@ -19,7 +19,7 @@ import time
 import requests
 import threading
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Callable
+from typing import Optional, Callable
 from datetime import datetime
 
 # Add aiohttp import for web routes
@@ -115,7 +115,7 @@ class ClaudiaCompleteIntegration:
                 s.settimeout(1)
                 result = s.connect_ex(('localhost', port))
                 return result != 0
-        except:
+        except Exception:
             return True
 
     def check_claudia_health(self) -> bool:
@@ -123,7 +123,7 @@ class ClaudiaCompleteIntegration:
         try:
             response = requests.get(f'http://localhost:{self.server_port}/health', timeout=2)
             return response.status_code == 200
-        except:
+        except Exception:
             return False
 
     async def install_claudia_dependencies(self) -> bool:
@@ -311,7 +311,7 @@ class ClaudiaCompleteIntegration:
         await asyncio.sleep(2)
         return await self.start_claudia()
 
-    async def get_agents(self) -> List[Dict]:
+    async def get_agents(self) -> list[Dict]:
         """Get list of available Claudia agents with enhanced info"""
         try:
             agents = []
@@ -403,7 +403,7 @@ class ClaudiaCompleteIntegration:
             logger.error(f"❌ Error deleting agent {name}: {e}")
             return False
 
-    async def get_projects(self) -> List[Dict]:
+    async def get_projects(self) -> list[Dict]:
         """Get list of Claudia projects"""
         try:
             projects = []
@@ -425,7 +425,7 @@ class ClaudiaCompleteIntegration:
             logger.error(f"❌ Error getting projects: {e}")
             return []
 
-    async def execute_agent_task(self, agent_name: str, task: str, context: Dict = None) -> Dict:
+    async def execute_agent_task(self, agent_name: str, task: str, context: Dict = None) -> dict:
         """Execute a task with a specific Claudia agent"""
         try:
             if not self.connected:
@@ -454,7 +454,7 @@ class ClaudiaCompleteIntegration:
             logger.error(f"❌ Error executing agent task: {e}")
             return {"error": str(e)}
 
-    async def get_claudia_status(self) -> Dict:
+    async def get_claudia_status(self) -> dict:
         """Get comprehensive Claudia system status"""
         agents = await self.get_agents()
         projects = await self.get_projects()

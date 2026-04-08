@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Tuple
 import aiohttp
 import requests
 from dataclasses import dataclass, asdict
@@ -38,7 +38,7 @@ class TradingState:
     bollinger_position: float
     portfolio_value: float
     position_size: float
-    time_features: List[float]
+    time_features: list[float]
 
     def to_tensor(self) -> torch.Tensor:
         """Convert to PyTorch tensor"""
@@ -56,7 +56,7 @@ class TradingAction:
     quantity: float
     confidence: float
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 class DQNNetwork(nn.Module):
@@ -86,7 +86,7 @@ class OllamaLLMEnhancer:
         self.base_url = "http://localhost:11434"
         self.model_name = model_name
 
-    async def analyze_market_conditions(self, market_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def analyze_market_conditions(self, market_data: dict[str, Any]) -> dict[str, Any]:
         """Use Ollama to analyze market conditions"""
         prompt = f"""
         Analyze the following market data and provide trading insights:
@@ -294,7 +294,7 @@ class Enhanced24x7RLTradingSystem:
                 logger.error(f"Model persistence error: {e}")
                 await asyncio.sleep(300)
 
-    async def fetch_market_data(self) -> Dict[str, Any]:
+    async def fetch_market_data(self) -> dict[str, Any]:
         """Fetch real-time market data"""
         # Simulate market data - replace with real Jupiter API calls
         import random
@@ -322,7 +322,7 @@ class Enhanced24x7RLTradingSystem:
             "timestamp": now.isoformat()
         }
 
-    async def process_market_data(self, market_data: Dict[str, Any]) -> TradingState:
+    async def process_market_data(self, market_data: dict[str, Any]) -> TradingState:
         """Process market data into trading state"""
         now = datetime.now()
 
@@ -358,7 +358,7 @@ class Enhanced24x7RLTradingSystem:
         q_values = self.q_network(state_tensor)
         return q_values.argmax().item()
 
-    async def combine_decisions(self, rl_action: int, llm_analysis: Dict[str, Any]) -> TradingAction:
+    async def combine_decisions(self, rl_action: int, llm_analysis: dict[str, Any]) -> TradingAction:
         """Combine RL and LLM decisions"""
         action_map = {
             0: "buy_small",

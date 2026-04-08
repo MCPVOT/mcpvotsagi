@@ -28,7 +28,7 @@ import sys
 import signal
 import time
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Set
+from typing import Set
 from dataclasses import dataclass, asdict
 from pathlib import Path
 import subprocess
@@ -86,8 +86,8 @@ class ComponentInfo:
     auto_restart: bool = True
     max_restarts: int = 3
     restart_count: int = 0
-    dependencies: List[str] = None
-    environment: Dict[str, str] = None
+    dependencies: list[str] = None
+    environment: dict[str, str] = None
     process: Optional[subprocess.Popen] = None
     status: str = "STOPPED"  # STOPPED, STARTING, RUNNING, ERROR, CRASHED
     last_health_check: Optional[datetime] = None
@@ -106,8 +106,8 @@ class SystemStatus:
     running_components: int
     failed_components: int
     overall_health: float
-    resource_usage: Dict[str, float]
-    alerts: List[str]
+    resource_usage: dict[str, float]
+    alerts: list[str]
     version: str = "3.0.0"
 
 class UltimateAGILauncher:
@@ -116,7 +116,7 @@ class UltimateAGILauncher:
     def __init__(self, config_path: str = "orchestrator_config.json"):
         self.config_path = config_path
         self.config = self.load_config()
-        self.components: Dict[str, ComponentInfo] = {}
+        self.components: dict[str, ComponentInfo] = {}
         self.system_running = False
         self.start_time = datetime.now()
         self.executor = ThreadPoolExecutor(max_workers=10)
@@ -134,7 +134,7 @@ class UltimateAGILauncher:
 
         logger.info("🚀 Ultimate AGI System V3 Launcher initialized")
 
-    def load_config(self) -> Dict:
+    def load_config(self) -> dict:
         """Load configuration from file"""
         try:
             if os.path.exists(self.config_path):
@@ -149,7 +149,7 @@ class UltimateAGILauncher:
             logger.error(f"Error loading configuration: {e}")
             return self.get_default_config()
 
-    def get_default_config(self) -> Dict:
+    def get_default_config(self) -> dict:
         """Get default configuration"""
         return {
             "components": {
@@ -309,7 +309,7 @@ class UltimateAGILauncher:
                 # Wait between component starts
                 await asyncio.sleep(2)
 
-    def calculate_startup_order(self) -> List[str]:
+    def calculate_startup_order(self) -> list[str]:
         """Calculate component startup order based on dependencies"""
         # Topological sort of dependencies
         visited = set()
@@ -491,7 +491,7 @@ class UltimateAGILauncher:
                         try:
                             data = await response.json()
                             return data.get("health_score", 100.0)
-                        except:
+                        except Exception:
                             return 100.0
                     else:
                         return 50.0

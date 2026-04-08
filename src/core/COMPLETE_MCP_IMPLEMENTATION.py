@@ -12,7 +12,7 @@ import sys
 import os
 import socket
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Optional
 import logging
 import aiohttp
 import requests
@@ -58,7 +58,7 @@ class RealMCPClient:
             logger.error(f"Failed to start MCP server {self.server_name}: {e}")
             return False
     
-    async def send_request(self, method: str, params: Dict = None) -> Dict:
+    async def send_request(self, method: str, params: Dict = None) -> dict:
         """Send a real JSON-RPC request to the MCP server"""
         self.request_id += 1
         
@@ -156,7 +156,7 @@ class RealMCPToolExecutor:
     
     # Real implementations for each tool
     
-    async def _filesystem_read(self, client: RealMCPClient, params: Dict) -> Dict:
+    async def _filesystem_read(self, client: RealMCPClient, params: Dict) -> dict:
         """Actually read a file"""
         file_path = params.get('path', '')
         
@@ -169,7 +169,7 @@ class RealMCPToolExecutor:
             "encoding": result.get("encoding", "utf-8")
         }
     
-    async def _filesystem_write(self, client: RealMCPClient, params: Dict) -> Dict:
+    async def _filesystem_write(self, client: RealMCPClient, params: Dict) -> dict:
         """Actually write to a file"""
         file_path = params.get('path', '')
         content = params.get('content', '')
@@ -184,7 +184,7 @@ class RealMCPToolExecutor:
             "path": file_path
         }
     
-    async def _filesystem_list(self, client: RealMCPClient, params: Dict) -> Dict:
+    async def _filesystem_list(self, client: RealMCPClient, params: Dict) -> dict:
         """Actually list directory contents"""
         directory = params.get('path', '.')
         
@@ -197,7 +197,7 @@ class RealMCPToolExecutor:
             "total": len(result.get("entries", []))
         }
     
-    async def _filesystem_search(self, client: RealMCPClient, params: Dict) -> Dict:
+    async def _filesystem_search(self, client: RealMCPClient, params: Dict) -> dict:
         """Actually search for files"""
         pattern = params.get('pattern', '')
         path = params.get('path', '.')
@@ -212,7 +212,7 @@ class RealMCPToolExecutor:
             "count": len(result.get("matches", []))
         }
     
-    async def _github_create_issue(self, client: RealMCPClient, params: Dict) -> Dict:
+    async def _github_create_issue(self, client: RealMCPClient, params: Dict) -> dict:
         """Actually create a GitHub issue"""
         result = await client.send_request("tools/create_issue", {
             "repository": params.get('repository'),
@@ -227,7 +227,7 @@ class RealMCPToolExecutor:
             "id": result.get("id")
         }
     
-    async def _github_list_issues(self, client: RealMCPClient, params: Dict) -> Dict:
+    async def _github_list_issues(self, client: RealMCPClient, params: Dict) -> dict:
         """Actually list GitHub issues"""
         result = await client.send_request("tools/list_issues", {
             "repository": params.get('repository'),
@@ -240,7 +240,7 @@ class RealMCPToolExecutor:
             "total": len(result.get("issues", []))
         }
     
-    async def _github_create_pr(self, client: RealMCPClient, params: Dict) -> Dict:
+    async def _github_create_pr(self, client: RealMCPClient, params: Dict) -> dict:
         """Actually create a pull request"""
         result = await client.send_request("tools/create_pull_request", {
             "repository": params.get('repository'),
@@ -256,7 +256,7 @@ class RealMCPToolExecutor:
             "id": result.get("id")
         }
     
-    async def _memory_store(self, client: RealMCPClient, params: Dict) -> Dict:
+    async def _memory_store(self, client: RealMCPClient, params: Dict) -> dict:
         """Actually store in memory"""
         result = await client.send_request("tools/store", {
             "key": params.get('key'),
@@ -269,7 +269,7 @@ class RealMCPToolExecutor:
             "key": params.get('key')
         }
     
-    async def _memory_recall(self, client: RealMCPClient, params: Dict) -> Dict:
+    async def _memory_recall(self, client: RealMCPClient, params: Dict) -> dict:
         """Actually recall from memory"""
         result = await client.send_request("tools/recall", {
             "key": params.get('key')
@@ -281,7 +281,7 @@ class RealMCPToolExecutor:
             "found": result.get("found", False)
         }
     
-    async def _memory_search(self, client: RealMCPClient, params: Dict) -> Dict:
+    async def _memory_search(self, client: RealMCPClient, params: Dict) -> dict:
         """Actually search memory"""
         result = await client.send_request("tools/search", {
             "query": params.get('query'),

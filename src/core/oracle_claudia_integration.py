@@ -14,7 +14,7 @@ import sys
 import os
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Optional, Any
+from typing import Any
 from aiohttp import web
 import aiohttp
 
@@ -249,7 +249,7 @@ class OracleClaudiaIntegration:
                         agent_data = json.load(f)
                         agent_data['id'] = agent_file.stem.replace('.claudia', '')
                         agents.append(agent_data)
-                except:
+                except Exception:
                     pass
 
         return web.json_response({
@@ -684,7 +684,7 @@ class OracleClaudiaIntegration:
                 async with session.get('http://localhost:3002/api/status', timeout=5) as resp:
                     if resp.status == 200:
                         return await resp.json()
-        except:
+        except Exception:
             pass
 
         return {
@@ -702,7 +702,7 @@ class OracleClaudiaIntegration:
                 process.terminate()
                 try:
                     process.wait(timeout=5)
-                except:
+                except Exception:
                     process.kill()
 
         logger.info("Integration stopped")

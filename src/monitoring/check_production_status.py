@@ -58,7 +58,7 @@ class ProductionStatusChecker:
             async with aiohttp.ClientSession() as session:
                 async with session.get(url, timeout=5) as resp:
                     return resp.status == 200
-        except:
+        except Exception:
             return False
             
     async def check_all_services(self):
@@ -120,7 +120,7 @@ class ProductionStatusChecker:
                     cmdline = ' '.join(proc.info['cmdline'] or [])
                     if any(x in cmdline for x in ['oracle', 'trilogy', 'dgm', 'mcp', 'claudia']):
                         python_processes.append(f"  PID {proc.info['pid']}: {cmdline[:80]}...")
-            except:
+            except Exception:
                 pass
                 
         if python_processes:

@@ -10,7 +10,7 @@ import aiohttp
 import json
 import logging
 from datetime import datetime
-from typing import Dict, List, Optional, Any
+from typing import Any
 from dataclasses import dataclass, asdict
 
 # Configure logging
@@ -28,10 +28,10 @@ class NetworkHost:
     first_seen: str
     last_seen: str
     online: bool
-    ports: List[int]
+    ports: list[int]
     os_info: Optional[str] = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         return asdict(self)
 
@@ -45,7 +45,7 @@ class NetworkStats:
     scan_duration: float
     last_scan: str
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         return asdict(self)
 
@@ -68,7 +68,7 @@ class WatchYourLANAPI:
         if self.session:
             await self.session.close()
 
-    async def _request(self, method: str, endpoint: str, **kwargs) -> Dict[str, Any]:
+    async def _request(self, method: str, endpoint: str, **kwargs) -> dict[str, Any]:
         """Make HTTP request to WatchYourLAN API"""
         if not self.session:
             self.session = aiohttp.ClientSession()
@@ -86,7 +86,7 @@ class WatchYourLANAPI:
             logger.error(f"API request error: {e}")
             return {}
 
-    async def get_hosts(self) -> List[NetworkHost]:
+    async def get_hosts(self) -> list[NetworkHost]:
         """Get all discovered network hosts"""
         logger.info("🔍 Getting network hosts...")
 
@@ -130,7 +130,7 @@ class WatchYourLANAPI:
             logger.error(f"Error getting hosts: {e}")
             return []
 
-    async def get_host_by_id(self, host_id: str) -> Optional[NetworkHost]:
+    async def get_host_by_id(self, host_id: str) -> [NetworkHost]:
         """Get specific host by ID"""
         logger.info(f"🔍 Getting host {host_id}...")
 
@@ -196,7 +196,7 @@ class WatchYourLANAPI:
                 last_scan='Never'
             )
 
-    async def trigger_scan(self) -> Dict[str, Any]:
+    async def trigger_scan(self) -> dict[str, Any]:
         """Trigger manual network scan"""
         logger.info("🔍 Triggering network scan...")
 
@@ -207,7 +207,7 @@ class WatchYourLANAPI:
             logger.error(f"Error triggering scan: {e}")
             return {"success": False, "error": str(e)}
 
-    async def get_host_history(self, host_id: str = None) -> List[Dict[str, Any]]:
+    async def get_host_history(self, host_id: str = None) -> list[Dict[str, Any]]:
         """Get host history"""
         logger.info(f"📈 Getting host history for {host_id or 'all hosts'}...")
 
@@ -221,7 +221,7 @@ class WatchYourLANAPI:
 
 
 
-    async def health_check(self) -> Dict[str, Any]:
+    async def health_check(self) -> dict[str, Any]:
         """Check if WatchYourLAN is running"""
         try:
             response = await self._request('GET', '/health')

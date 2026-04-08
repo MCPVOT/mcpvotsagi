@@ -12,7 +12,7 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -255,7 +255,7 @@ import requests
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
+# typing: use built-in list
 
 logger = logging.getLogger("ClaudiaPerformanceMonitor")
 

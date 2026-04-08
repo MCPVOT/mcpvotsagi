@@ -17,7 +17,7 @@ import yaml
 from pathlib import Path
 from datetime import datetime
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from typing import Optional
 
 # Configure logging
 logging.basicConfig(
@@ -30,7 +30,7 @@ logger = logging.getLogger("ClaudiaEcosystemLauncher")
 class ServiceConfig:
     """Configuration for a service"""
     name: str
-    command: List[str]
+    command: list[str]
     port: Optional[int] = None
     health_url: Optional[str] = None
     working_directory: str = "."
@@ -236,7 +236,7 @@ class ClaudiaEcosystemLauncher:
         try:
             response = requests.get(f"http://localhost:{port}/health", timeout=2)
             return response.status_code == 200
-        except:
+        except Exception:
             return False
 
     async def _wait_for_health_check(self, service: ServiceConfig):

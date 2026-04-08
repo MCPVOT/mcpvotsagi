@@ -7,6 +7,7 @@ Prevents duplicates and ensures proper A2A + MCP integration.
 """
 
 import asyncio
+import os
 import subprocess
 import sys
 import time
@@ -16,7 +17,7 @@ import psutil
 import signal
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Optional
 import logging
 
 # Configure logging
@@ -119,7 +120,7 @@ class MasterServiceLauncher:
         """Check Redis health"""
         try:
             import redis
-            r = redis.Redis(host='localhost', port=6379, password='os.environ.get('REDIS_PASSWORD', '')')
+            r = redis.Redis(host='localhost', port=6379, password=os.environ.get('REDIS_PASSWORD'))
             r.ping()
             return True
         except Exception:
@@ -280,7 +281,7 @@ class MasterServiceLauncher:
 
             print(f"\n🔧 REDIS ACCESS:")
             print(f"   Host: localhost:6379")
-            print(f"   Password: os.environ.get('REDIS_PASSWORD', '')")
+            print(f"   Password: {'***' if os.environ.get('REDIS_PASSWORD') else '(none)'}")
             print(f"   Databases: 0=A2A, 1=MCP Memory, 2=Cache")
 
             return True

@@ -98,7 +98,7 @@ class SystemVerifier:
                     print("    💡 Pull with: ollama pull hf.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF:Q4_K_XL")
             else:
                 self.failed("Ollama service error")
-        except:
+        except Exception:
             self.failed("Ollama service not running")
             print("  💡 Start with: ollama serve")
     

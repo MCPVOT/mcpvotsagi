@@ -10,7 +10,7 @@ import json
 import asyncio
 import time
 from pathlib import Path
-from typing import List, Dict, Optional
+from typing import Dict, Optional
 import requests
 import websockets
 
@@ -118,7 +118,7 @@ class CodespaceLeverager:
         
         print(f"✅ Agent swarm active in {cs_name}")
     
-    async def process_large_data(self, data_chunks: List[str]):
+    async def process_large_data(self, data_chunks: list[str]):
         """Process large datasets in parallel using multiple Codespaces"""
         print(f"📊 Processing {len(data_chunks)} data chunks in cloud...")
         
@@ -163,14 +163,14 @@ class CodespaceLeverager:
         
         return f"result_{index}.pkl"
     
-    def _combine_results(self, results: List[str]) -> str:
+    def _combine_results(self, results: list[str]) -> str:
         """Combine processed results"""
         # Implementation depends on your data type
         combined_path = "./results/combined_result.pkl"
         print(f"📁 Combined results saved to {combined_path}")
         return combined_path
     
-    async def run_blockchain_ops(self, operations: List[Dict]):
+    async def run_blockchain_ops(self, operations: list[Dict]):
         """Run blockchain operations in cloud for better latency"""
         print("⛓️ Running blockchain operations in cloud...")
         
@@ -216,7 +216,7 @@ class HybridOrchestrator:
         self.leverager = CodespaceLeverager()
         self.local_api = "http://localhost:8888/api"
         
-    async def distribute_workload(self, tasks: List[Dict]):
+    async def distribute_workload(self, tasks: list[Dict]):
         """Intelligently distribute tasks between local and cloud"""
         
         local_tasks = []
@@ -241,7 +241,7 @@ class HybridOrchestrator:
             'cloud': cloud_results
         }
     
-    async def _run_local_tasks(self, tasks: List[Dict]):
+    async def _run_local_tasks(self, tasks: list[Dict]):
         """Run tasks on local machine"""
         results = []
         for task in tasks:
@@ -253,7 +253,7 @@ class HybridOrchestrator:
             results.append(response.json())
         return results
     
-    async def _run_cloud_tasks(self, tasks: List[Dict]):
+    async def _run_cloud_tasks(self, tasks: list[Dict]):
         """Run tasks in Codespaces"""
         results = []
         

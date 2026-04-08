@@ -13,7 +13,7 @@ import os
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Optional, Tuple
 import aiohttp
 import numpy as np
 import pandas as pd
@@ -232,7 +232,7 @@ class SolanaPreciousMetalsTrader:
         conn.commit()
         conn.close()
         
-    async def fetch_market_data(self) -> Dict[str, MarketData]:
+    async def fetch_market_data(self) -> dict[str, MarketData]:
         """Fetch real-time market data from multiple DEXes"""
         market_data = {}
         
@@ -276,7 +276,7 @@ class SolanaPreciousMetalsTrader:
             
         return market_data
     
-    async def store_market_data(self, market_data: Dict[str, MarketData]):
+    async def store_market_data(self, market_data: dict[str, MarketData]):
         """Store market data in database"""
         conn = sqlite3.connect(self.trading_db)
         cursor = conn.cursor()
@@ -299,7 +299,7 @@ class SolanaPreciousMetalsTrader:
         conn.commit()
         conn.close()
     
-    async def calculate_technical_indicators(self, symbol: str) -> Dict[str, float]:
+    async def calculate_technical_indicators(self, symbol: str) -> dict[str, float]:
         """Calculate technical indicators for trading decisions"""
         # Get historical data
         conn = sqlite3.connect(self.trading_db)
@@ -344,7 +344,7 @@ class SolanaPreciousMetalsTrader:
         
         return indicators
     
-    async def generate_rl_trading_signal(self, symbol: str, market_data: MarketData) -> Optional[TradingSignal]:
+    async def generate_rl_trading_signal(self, symbol: str, market_data: MarketData) -> [TradingSignal]:
         """Generate trading signal using RL/DL model"""
         # Get technical indicators
         indicators = await self.calculate_technical_indicators(symbol)
@@ -426,7 +426,7 @@ class SolanaPreciousMetalsTrader:
         
         return None
     
-    async def execute_trade_on_jupiter(self, signal: TradingSignal) -> Dict[str, Any]:
+    async def execute_trade_on_jupiter(self, signal: TradingSignal) -> dict[str, Any]:
         """Execute trade on Jupiter aggregator for best price"""
         try:
             # Get token info
@@ -478,7 +478,7 @@ class SolanaPreciousMetalsTrader:
             logger.error(f"Trade execution failed: {e}")
             return {"success": False, "error": str(e)}
     
-    async def record_trade(self, signal: TradingSignal, execution_result: Dict[str, Any]):
+    async def record_trade(self, signal: TradingSignal, execution_result: dict[str, Any]):
         """Record trade in database"""
         conn = sqlite3.connect(self.trading_db)
         cursor = conn.cursor()
@@ -780,7 +780,7 @@ class SolanaPreciousMetalsTrader:
         
         return (wins / total * 100) if total > 0 else 0
     
-    def get_dashboard_data(self) -> Dict[str, Any]:
+    def get_dashboard_data(self) -> dict[str, Any]:
         """Get trading data for dashboard display"""
         return {
             "portfolio": {
@@ -820,14 +820,14 @@ class SolanaTradingIntegration:
             self.trading_task = None
             logger.info("Trading stopped")
             
-    def get_trading_status(self) -> Dict[str, Any]:
+    def get_trading_status(self) -> dict[str, Any]:
         """Get current trading status for dashboard"""
         return {
             "active": self.trading_task is not None,
             "data": self.trader.get_dashboard_data()
         }
     
-    async def manual_trade(self, asset: str, action: str, amount: float) -> Dict[str, Any]:
+    async def manual_trade(self, asset: str, action: str, amount: float) -> dict[str, Any]:
         """Execute manual trade"""
         # Get current market data
         market_data = await self.trader.fetch_market_data()

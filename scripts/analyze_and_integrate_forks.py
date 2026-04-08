@@ -5,9 +5,9 @@ import json
 import subprocess
 import os
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Any
 
-def get_github_repos(username: str = 'kabrony') -> List[Dict[str, Any]]:
+def get_github_repos(username: str = 'kabrony') -> list[Dict[str, Any]]:
     """Get all repositories for a GitHub user using git CLI"""
     print(f"Analyzing GitHub repositories for {username}...")
 
@@ -38,7 +38,7 @@ def get_github_repos(username: str = 'kabrony') -> List[Dict[str, Any]]:
 
     return repos
 
-def analyze_forked_repos(repos: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
+def analyze_forked_repos(repos: list[Dict[str, Any]]) -> dict[str, List[Dict[str, Any]]]:
     """Analyze and categorize forked repositories"""
 
     categorized = {
@@ -88,7 +88,7 @@ def analyze_forked_repos(repos: List[Dict[str, Any]]) -> Dict[str, List[Dict[str
 
     return categorized
 
-def create_integration_recommendations(categorized: Dict[str, List[Dict[str, Any]]]) -> str:
+def create_integration_recommendations(categorized: dict[str, List[Dict[str, Any]]]) -> str:
     """Create specific integration recommendations for MCPVotsAgi"""
 
     recommendations = []
@@ -137,7 +137,7 @@ def create_integration_recommendations(categorized: Dict[str, List[Dict[str, Any
 
     return '\n'.join(recommendations)
 
-def create_integration_script(repo: Dict[str, Any], category: str) -> str:
+def create_integration_script(repo: dict[str, Any], category: str) -> str:
     """Create an integration script for a specific repository"""
 
     repo_name = repo['name']

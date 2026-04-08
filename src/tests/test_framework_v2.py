@@ -10,7 +10,7 @@ import json
 import time
 import psutil
 import logging
-from typing import Dict, Any, List, Optional, Callable, Tuple
+from typing import List, Optional, Callable, Tuple
 from datetime import datetime
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -44,7 +44,7 @@ class TestMetrics:
     passed: bool = False
     error: Optional[str] = None
     assertions: int = 0
-    warnings: List[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
     
     def complete(self, passed: bool, error: Optional[str] = None):
         """Complete test metrics"""
@@ -61,8 +61,8 @@ class TestSuite(ABC):
     
     def __init__(self, name: str):
         self.name = name
-        self.tests: List[Callable] = []
-        self.metrics: List[TestMetrics] = []
+        self.tests: list[Callable] = []
+        self.metrics: list[TestMetrics] = []
         self.setup_called = False
         self.teardown_called = False
         
@@ -83,7 +83,7 @@ class TestSuite(ABC):
         """Add test to suite"""
         self.tests.append(test_func)
         
-    async def run(self) -> Dict[str, Any]:
+    async def run(self) -> dict[str, Any]:
         """Run all tests in suite"""
         logger.info(f"\n{'='*60}")
         logger.info(f"Running Test Suite: {self.name}")
@@ -129,7 +129,7 @@ class TestSuite(ABC):
         # Summary
         return self._generate_summary()
         
-    def _generate_summary(self) -> Dict[str, Any]:
+    def _generate_summary(self) -> dict[str, Any]:
         """Generate test suite summary"""
         total_tests = len(self.metrics)
         passed_tests = sum(1 for m in self.metrics if m.passed)
@@ -591,14 +591,14 @@ class TestRunner:
     """Main test runner"""
     
     def __init__(self):
-        self.suites: List[TestSuite] = []
-        self.results: Dict[str, Any] = {}
+        self.suites: list[TestSuite] = []
+        self.results: dict[str, Any] = {}
         
     def add_suite(self, suite: TestSuite):
         """Add test suite"""
         self.suites.append(suite)
         
-    async def run_all(self) -> Dict[str, Any]:
+    async def run_all(self) -> dict[str, Any]:
         """Run all test suites"""
         logger.info("\n" + "="*60)
         logger.info("COMPREHENSIVE TEST EXECUTION")
@@ -629,7 +629,7 @@ class TestRunner:
         
         return report
         
-    def _generate_report(self, total_duration: float) -> Dict[str, Any]:
+    def _generate_report(self, total_duration: float) -> dict[str, Any]:
         """Generate comprehensive test report"""
         total_tests = sum(r.get("total_tests", 0) for r in self.results.values())
         total_passed = sum(r.get("passed", 0) for r in self.results.values())
@@ -655,7 +655,7 @@ class TestRunner:
         
         return report
         
-    def _save_report(self, report: Dict[str, Any]):
+    def _save_report(self, report: dict[str, Any]):
         """Save test report"""
         report_path = Path(f"test_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
         

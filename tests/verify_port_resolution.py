@@ -7,7 +7,7 @@ Verifies all port assignments and resolves conflicts for A2A communication
 import asyncio
 import socket
 import logging
-from typing import Dict, List, Tuple, Optional
+from typing import Optional
 import json
 import aiohttp
 import websockets
@@ -72,7 +72,7 @@ class PortManager:
         except Exception:
             return True
 
-    def verify_all_ports(self) -> Dict:
+    def verify_all_ports(self) -> dict:
         """Verify all registered ports"""
         results = {}
 
@@ -91,7 +91,7 @@ class PortManager:
 
         return results
 
-    def suggest_alternatives(self) -> Dict:
+    def suggest_alternatives(self) -> dict:
         """Suggest alternative ports for conflicts"""
         alternatives = {}
         start_port = 9000
@@ -120,7 +120,7 @@ class A2ASystemVerifier:
             'deepseek_mcp': 'ws://localhost:8003',
         }
 
-    async def check_http_endpoint(self, name: str, url: str) -> Dict:
+    async def check_http_endpoint(self, name: str, url: str) -> dict:
         """Check HTTP endpoint health"""
         try:
             async with aiohttp.ClientSession() as session:
@@ -140,7 +140,7 @@ class A2ASystemVerifier:
                 'error': str(e)
             }
 
-    async def check_websocket_endpoint(self, name: str, url: str) -> Dict:
+    async def check_websocket_endpoint(self, name: str, url: str) -> dict:
         """Check WebSocket endpoint health"""
         try:
             async with websockets.connect(url, timeout=5) as ws:
@@ -160,7 +160,7 @@ class A2ASystemVerifier:
                 'error': str(e)
             }
 
-    async def verify_a2a_system(self) -> Dict:
+    async def verify_a2a_system(self) -> dict:
         """Verify complete A2A system"""
         results = {
             'timestamp': datetime.now().isoformat(),

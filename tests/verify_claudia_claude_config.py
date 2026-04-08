@@ -8,7 +8,7 @@ Verify that Claudia is properly configured to use Claude Opus 4 and Sonnet 4
 import json
 import logging
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -22,7 +22,7 @@ class ClaudiaModelVerification:
         self.config_file = self.base_path / "claudia_config.json"
         self.usage_monitor_file = self.base_path / "claudia_usage_monitor.py"
 
-    def verify_config_file(self) -> Dict[str, Any]:
+    def verify_config_file(self) -> dict[str, Any]:
         """Verify the main configuration file"""
         logger.info("🔍 Verifying Claudia configuration...")
 
@@ -65,7 +65,7 @@ class ClaudiaModelVerification:
             logger.error(f"❌ Error reading configuration: {e}")
             return {"status": "error", "message": str(e)}
 
-    def verify_usage_monitor(self) -> Dict[str, Any]:
+    def verify_usage_monitor(self) -> dict[str, Any]:
         """Verify the usage monitor configuration"""
         logger.info("🔍 Verifying usage monitor...")
 
@@ -102,7 +102,7 @@ class ClaudiaModelVerification:
             logger.error(f"❌ Error reading usage monitor: {e}")
             return {"status": "error", "message": str(e)}
 
-    def verify_model_routing(self) -> Dict[str, Any]:
+    def verify_model_routing(self) -> dict[str, Any]:
         """Verify model routing configuration"""
         logger.info("🔍 Verifying model routing...")
 

@@ -11,7 +11,7 @@ import os
 import signal
 import logging
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import List, Optional
 from datetime import datetime
 import yaml
 import psutil
@@ -72,12 +72,12 @@ class ServiceStatus(Enum):
 class Service:
     """Service definition"""
     name: str
-    command: List[str]
+    command: list[str]
     port: Optional[int] = None
     health_endpoint: Optional[str] = None
     required: bool = True
-    depends_on: List[str] = None
-    env: Dict[str, str] = None
+    depends_on: list[str] = None
+    env: dict[str, str] = None
     
     def __post_init__(self):
         if self.depends_on is None:
@@ -90,14 +90,14 @@ class SystemManager:
     """Main system manager"""
     
     def __init__(self):
-        self.services: Dict[str, Service] = {}
-        self.processes: Dict[str, subprocess.Popen] = {}
-        self.status: Dict[str, ServiceStatus] = {}
+        self.services: dict[str, Service] = {}
+        self.processes: dict[str, subprocess.Popen] = {}
+        self.status: dict[str, ServiceStatus] = {}
         self.config = self._load_config()
         self._setup_services()
         self._shutdown_requested = False
         
-    def _load_config(self) -> Dict[str, Any]:
+    def _load_config(self) -> dict[str, Any]:
         """Load system configuration"""
         config_path = Path("system_config.yaml")
         
@@ -322,7 +322,7 @@ class SystemManager:
                     async with session.get(service.health_endpoint, timeout=5) as resp:
                         if resp.status == 200:
                             return True
-                except:
+                except Exception:
                     pass
                     
                 # Check if process died
@@ -366,7 +366,7 @@ class SystemManager:
                                 async with session.get(service.health_endpoint, timeout=5) as resp:
                                     if resp.status != 200:
                                         logger.warning(f"{name} health check failed")
-                        except:
+                        except Exception:
                             logger.warning(f"{name} health check error")
                             
             except asyncio.CancelledError:

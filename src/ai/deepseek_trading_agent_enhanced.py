@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple, Deque
+from typing import Optional, Tuple, Deque
 import websockets
 import aiohttp
 from dataclasses import dataclass, asdict
@@ -47,12 +47,12 @@ MEMORY_PATH = F_DRIVE_ROOT / "memory"
 class EnhancedMarketState:
     """Enhanced market state with additional features"""
     timestamp: datetime
-    prices: Dict[str, float]
-    volumes: Dict[str, float]
-    rsi: Dict[str, float]
-    macd: Dict[str, Dict[str, float]]
-    bollinger_bands: Dict[str, Dict[str, float]]
-    order_book_imbalance: Dict[str, float]
+    prices: dict[str, float]
+    volumes: dict[str, float]
+    rsi: dict[str, float]
+    macd: dict[str, Dict[str, float]]
+    bollinger_bands: dict[str, Dict[str, float]]
+    order_book_imbalance: dict[str, float]
     sentiment: float
     volatility: float
     correlation_matrix: np.ndarray
@@ -61,7 +61,7 @@ class EnhancedMarketState:
 class DeepQNetwork(nn.Module):
     """Deep Q-Network with attention mechanism"""
     
-    def __init__(self, state_size: int, action_size: int, hidden_sizes: List[int] = [512, 256, 128]):
+    def __init__(self, state_size: int, action_size: int, hidden_sizes: list[int] = [512, 256, 128]):
         super(DeepQNetwork, self).__init__()
         
         # Build layers
@@ -307,7 +307,7 @@ class AdvancedRLEngine:
         for target_param, param in zip(self.target_network.parameters(), self.q_network.parameters()):
             target_param.data.copy_(self.tau * param.data + (1.0 - self.tau) * target_param.data)
             
-    def save_checkpoint(self, episode: int, performance_metrics: Dict[str, float]):
+    def save_checkpoint(self, episode: int, performance_metrics: dict[str, float]):
         """Save model checkpoint"""
         checkpoint = {
             'episode': episode,
@@ -442,7 +442,7 @@ class MarketDataManager:
             
         return df
         
-    async def calculate_indicators(self, symbol: str, df: pd.DataFrame) -> Dict[str, pd.Series]:
+    async def calculate_indicators(self, symbol: str, df: pd.DataFrame) -> dict[str, pd.Series]:
         """Calculate and store technical indicators"""
         indicators = {}
         
@@ -783,11 +783,11 @@ class EnhancedAutonomousTradingAgent:
             
     async def combine_with_risk_management(
         self,
-        deepseek_analysis: Dict[str, Any],
+        deepseek_analysis: dict[str, Any],
         rl_action: int,
         market_state: EnhancedMarketState,
-        risk_assessment: Dict[str, Any]
-    ) -> Optional[TradingAction]:
+        risk_assessment: dict[str, Any]
+    ) -> [TradingAction]:
         """Combine recommendations with risk management"""
         
         if not risk_assessment['allow_new_trades']:
@@ -1165,7 +1165,7 @@ class RiskManager:
         self.correlation_threshold = correlation_threshold
         self.peak_portfolio_value = 100000  # Starting value
         
-    def assess_risk(self, portfolio: Dict[str, Any], market_state: EnhancedMarketState) -> Dict[str, Any]:
+    def assess_risk(self, portfolio: dict[str, Any], market_state: EnhancedMarketState) -> dict[str, Any]:
         """Comprehensive risk assessment"""
         
         # Calculate current portfolio value
@@ -1368,7 +1368,7 @@ class EnhancedPerformanceTracker:
             avg_trade_duration=avg_duration
         )
         
-    def _store_daily_metrics(self, metrics: Dict[str, Any]):
+    def _store_daily_metrics(self, metrics: dict[str, Any]):
         """Store daily performance metrics"""
         conn = sqlite3.connect(self.metrics_db_path)
         cursor = conn.cursor()

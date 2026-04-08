@@ -21,7 +21,7 @@ def check_http_endpoint(url):
     try:
         response = urllib.request.urlopen(url, timeout=2)
         return response.status == 200
-    except:
+    except Exception:
         return False
 
 def main():

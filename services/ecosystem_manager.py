@@ -19,7 +19,7 @@ import sqlite3
 import hashlib
 from pathlib import Path
 from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Optional, Tuple
 import aiohttp
 import threading
 from dataclasses import dataclass, asdict
@@ -220,8 +220,8 @@ class EcosystemManager:
         }
         
         # Service health tracking
-        self.service_health: Dict[str, ServiceHealth] = {}
-        self.processes: Dict[str, subprocess.Popen] = {}
+        self.service_health: dict[str, ServiceHealth] = {}
+        self.processes: dict[str, subprocess.Popen] = {}
         self.hardware_status: Optional[HardwareStatus] = None
         
         # Self-healing configuration
@@ -328,7 +328,7 @@ class EcosystemManager:
             if torch.cuda.is_available():
                 gpu_available = True
                 gpu_memory = torch.cuda.get_device_properties(0).total_memory / 1024**3
-        except:
+        except Exception:
             pass
         
         # Get CPU temperature if available
@@ -341,7 +341,7 @@ class EcosystemManager:
                         if entry.label == 'Package id 0' or 'cpu' in entry.label.lower():
                             temperature = entry.current
                             break
-        except:
+        except Exception:
             pass
         
         # Calculate optimal thread count based on CPU
@@ -369,7 +369,7 @@ class EcosystemManager:
         sock.close()
         return result == 0
     
-    async def health_check_service(self, service_id: str, service_config: Dict[str, Any]) -> ServiceHealth:
+    async def health_check_service(self, service_id: str, service_config: dict[str, Any]) -> ServiceHealth:
         """Perform health check on a service"""
         start_time = time.time()
         port = service_config["port"]
@@ -413,7 +413,7 @@ class EcosystemManager:
                                 await ws.ping()
                                 current_health.status = "healthy"
                                 current_health.error_count = 0
-                        except:
+                        except Exception:
                             current_health.status = "unhealthy"
                             current_health.error_count += 1
                 else:
@@ -428,7 +428,7 @@ class EcosystemManager:
                             p = psutil.Process(process.pid)
                             current_health.cpu_usage = p.cpu_percent()
                             current_health.memory_usage = p.memory_info().rss / 1024**2  # MB
-                        except:
+                        except Exception:
                             pass
                             
         except Exception as e:
@@ -466,7 +466,7 @@ class EcosystemManager:
         conn.commit()
         conn.close()
     
-    async def start_service(self, service_id: str, service_config: Dict[str, Any]) -> bool:
+    async def start_service(self, service_id: str, service_config: dict[str, Any]) -> bool:
         """Start a single service"""
         try:
             # Check dependencies first

@@ -17,7 +17,7 @@ import websockets
 import socket
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional, Any, Set, Tuple
+from typing import Set, Tuple
 from dataclasses import dataclass, asdict
 import aiohttp
 from aiohttp import web, WSMsgType
@@ -49,7 +49,7 @@ class MCPNode:
     memory_usage: float
     cpu_usage: float
     connections: int
-    tools: List[str]
+    tools: list[str]
     process_id: Optional[int] = None
     health_score: float = 1.0
     request_count: int = 0
@@ -61,12 +61,12 @@ class MCPNode:
 @dataclass
 class ResourcePool:
     """Enhanced resource pool for MCP nodes with intelligent allocation"""
-    active_nodes: Dict[str, MCPNode]
-    idle_nodes: Set[str]
-    failed_nodes: Set[str]
-    node_registry: Dict[str, Dict[str, Any]]
-    tool_mapping: Dict[str, List[str]]  # tool -> nodes that provide it
-    load_balancer: Dict[str, int]  # node -> current load
+    active_nodes: dict[str, MCPNode]
+    idle_nodes: set[str]
+    failed_nodes: set[str]
+    node_registry: dict[str, Dict[str, Any]]
+    tool_mapping: dict[str, List[str]]  # tool -> nodes that provide it
+    load_balancer: dict[str, int]  # node -> current load
 
 @dataclass
 class SystemMetrics:
@@ -562,7 +562,7 @@ class MCPResourceManager:
         with open(template_path, "w", encoding="utf-8") as f:
             f.write(template_content)
 
-    async def get_optimal_node(self, tool_name: str) -> Optional[MCPNode]:
+    async def get_optimal_node(self, tool_name: str) -> [MCPNode]:
         """Get the optimal node for a specific tool with intelligent load balancing"""
         available_nodes = self.resource_pool.tool_mapping.get(tool_name, [])
 
@@ -596,7 +596,7 @@ class MCPResourceManager:
 
         return best_node
 
-    async def create_node_for_tool(self, tool_name: str) -> Optional[MCPNode]:
+    async def create_node_for_tool(self, tool_name: str) -> [MCPNode]:
         """Create a new MCP node for a specific tool"""
         try:
             # Find available port
@@ -640,7 +640,7 @@ class MCPResourceManager:
 
         return None
 
-    async def start_mcp_server(self, node: MCPNode) -> Optional[subprocess.Popen]:
+    async def start_mcp_server(self, node: MCPNode) -> [subprocess.Popen]:
         """Start an MCP server process"""
         try:
             # This is a simplified implementation

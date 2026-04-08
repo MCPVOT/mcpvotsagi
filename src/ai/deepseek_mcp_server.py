@@ -15,7 +15,7 @@ import time
 import websockets
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple, Callable
+from typing import Optional, Tuple, Callable
 import aiohttp
 from dataclasses import dataclass, asdict
 import numpy as np
@@ -34,7 +34,7 @@ class ReasoningTask:
     """Reasoning task for DeepSeek"""
     id: str
     type: str  # 'trading', 'analysis', 'strategy', 'learning'
-    context: Dict[str, Any]
+    context: dict[str, Any]
     prompt: str
     priority: int
     timestamp: datetime
@@ -50,9 +50,9 @@ class TradingStrategy:
     expected_return: float
     risk_level: float
     time_horizon: str
-    entry_conditions: List[Dict[str, Any]]
-    exit_conditions: List[Dict[str, Any]]
-    position_sizing: Dict[str, Any]
+    entry_conditions: list[Dict[str, Any]]
+    exit_conditions: list[Dict[str, Any]]
+    position_sizing: dict[str, Any]
 
 class DeepSeekMCPServer:
     """MCP Server for DeepSeek reasoning engine"""
@@ -134,7 +134,7 @@ class DeepSeekMCPServer:
         conn.commit()
         conn.close()
         
-    async def query_ollama(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    async def query_ollama(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> dict[str, Any]:
         """Query the local Ollama DeepSeek model"""
         try:
             async with aiohttp.ClientSession() as session:
@@ -194,7 +194,7 @@ Current context:
         
         return f"{system_context}\n\nTask: {prompt}\n\nProvide a detailed reasoning response:"
     
-    def _parse_reasoning_result(self, response: str) -> Dict[str, Any]:
+    def _parse_reasoning_result(self, response: str) -> dict[str, Any]:
         """Parse DeepSeek reasoning into structured format"""
         try:
             # Extract structured components from reasoning
@@ -216,7 +216,7 @@ Current context:
             logger.error(f"Parse error: {e}")
             return {"reasoning": response, "error": str(e)}
     
-    async def analyze_trading_opportunity(self, market_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def analyze_trading_opportunity(self, market_data: dict[str, Any]) -> dict[str, Any]:
         """Analyze trading opportunity using DeepSeek reasoning"""
         prompt = f"""Analyze this trading opportunity for precious metals:
 
@@ -246,7 +246,7 @@ Provide:
             "timestamp": datetime.now().isoformat()
         }
     
-    async def optimize_portfolio(self, positions: List[Dict[str, Any]], constraints: Dict[str, Any]) -> Dict[str, Any]:
+    async def optimize_portfolio(self, positions: list[Dict[str, Any]], constraints: dict[str, Any]) -> dict[str, Any]:
         """Optimize portfolio allocation using DeepSeek reasoning"""
         prompt = f"""Optimize this precious metals portfolio:
 
@@ -272,7 +272,7 @@ Provide optimal allocation strategy with reasoning.
             "rebalance_actions": self._extract_rebalance_actions(result)
         }
     
-    async def generate_trading_strategy(self, parameters: Dict[str, Any]) -> TradingStrategy:
+    async def generate_trading_strategy(self, parameters: dict[str, Any]) -> TradingStrategy:
         """Generate new trading strategy using DeepSeek"""
         prompt = f"""Generate a comprehensive trading strategy for:
 
@@ -310,7 +310,7 @@ Include:
         
         return strategy
     
-    async def update_learning_model(self, experience: Dict[str, Any]) -> Dict[str, Any]:
+    async def update_learning_model(self, experience: dict[str, Any]) -> dict[str, Any]:
         """Update self-learning model with new experience"""
         # Store experience for replay
         self.experience_replay.append(experience)
@@ -437,7 +437,7 @@ Update your understanding and provide insights for improvement.
         
         return 0.6  # Default moderate confidence
     
-    def _extract_recommendations(self, text: str) -> List[str]:
+    def _extract_recommendations(self, text: str) -> list[str]:
         """Extract recommendations from reasoning"""
         recommendations = []
         lines = text.split('\n')
@@ -453,7 +453,7 @@ Update your understanding and provide insights for improvement.
         
         return recommendations
     
-    def _generate_trading_signal(self, analysis: Dict[str, Any], market_data: Dict[str, Any]) -> Optional[Any]:
+    def _generate_trading_signal(self, analysis: dict[str, Any], market_data: dict[str, Any]) -> [Any]:
         """Generate trading signal from analysis"""
         reasoning = analysis.get('reasoning', '').lower()
         confidence = analysis.get('confidence', 0.5)
@@ -493,7 +493,7 @@ Update your understanding and provide insights for improvement.
         
         return None
     
-    def _store_reasoning_history(self, result: Dict[str, Any]):
+    def _store_reasoning_history(self, result: dict[str, Any]):
         """Store reasoning in history database"""
         try:
             conn = sqlite3.connect(self.memory_db)
@@ -558,7 +558,7 @@ Update your understanding and provide insights for improvement.
                         logger.info("✓ Ollama connection successful")
                     else:
                         logger.warning("⚠ Ollama connection failed, will retry on requests")
-        except:
+        except Exception:
             logger.warning("⚠ Ollama not available, ensure it's running")
         
         # Start WebSocket server

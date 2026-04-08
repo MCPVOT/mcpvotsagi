@@ -35,7 +35,7 @@ logger = logging.getLogger("ClaudiaEcosystemLauncher")
 class ServiceConfig:
     """Service configuration"""
     name: str
-    command: List[str]
+    command: list[str]
     port: Optional[int] = None
     health_url: Optional[str] = None
     enabled: bool = True

@@ -6,7 +6,7 @@ Unified DGM Server V2 - Enhanced with A2A and MCP Integration
 import asyncio
 import json
 import logging
-from typing import Dict, Any, List, Optional
+from typing import List, Optional
 from datetime import datetime
 import websockets
 from dataclasses import dataclass, asdict
@@ -44,7 +44,7 @@ class EvolutionProgram:
     fitness: float
     created: datetime
     updated: datetime
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 
 class UnifiedDGMServer:
     """Enhanced Unified Darwin Gödel Machine Server"""
@@ -52,7 +52,7 @@ class UnifiedDGMServer:
     def __init__(self, port: int = 8013):
         self.port = port
         self.redis_client = None
-        self.active_programs: Dict[str, EvolutionProgram] = {}
+        self.active_programs: dict[str, EvolutionProgram] = {}
         self.evolution_history = []
         self.trading_strategies = {}
         self.connected_agents = set()
@@ -132,7 +132,7 @@ class UnifiedDGMServer:
         finally:
             self.connected_agents.discard(agent_id)
     
-    async def process_message(self, message: str) -> Dict[str, Any]:
+    async def process_message(self, message: str) -> dict[str, Any]:
         """Process incoming messages with routing"""
         data = json.loads(message)
         method = data.get("method")
@@ -161,7 +161,7 @@ class UnifiedDGMServer:
                 "error": f"Unknown method: {method}"
             }
     
-    async def evolve_program(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def evolve_program(self, params: dict[str, Any]) -> dict[str, Any]:
         """Enhanced program evolution with real genetic algorithms"""
         program_id = params.get("program_id", f"dgm_{int(datetime.now().timestamp())}")
         task = params.get("task", "general_optimization")
@@ -232,7 +232,7 @@ class UnifiedDGMServer:
             except Exception as e:
                 logger.error(f"Redis storage error: {e}")
     
-    async def create_trading_strategy(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def create_trading_strategy(self, params: dict[str, Any]) -> dict[str, Any]:
         """Create AI-optimized trading strategy"""
         strategy_name = params.get("name", f"dgm_strategy_{int(datetime.now().timestamp())}")
         market_conditions = params.get("market_conditions", {})
@@ -259,7 +259,7 @@ class UnifiedDGMServer:
             }
         }
     
-    def _generate_strategy_params(self, risk_profile: str, conditions: Dict) -> Dict:
+    def _generate_strategy_params(self, risk_profile: str, conditions: Dict) -> dict:
         """Generate strategy parameters based on risk and market"""
         base_params = {
             "conservative": {"stop_loss": 0.02, "take_profit": 0.05, "position_size": 0.05},
@@ -276,7 +276,7 @@ class UnifiedDGMServer:
             
         return params
     
-    def _estimate_performance(self, risk_profile: str) -> Dict:
+    def _estimate_performance(self, risk_profile: str) -> dict:
         """Estimate strategy performance"""
         estimates = {
             "conservative": {"annual_return": 0.08, "volatility": 0.05},
@@ -285,7 +285,7 @@ class UnifiedDGMServer:
         }
         return estimates.get(risk_profile, estimates["moderate"])
     
-    async def get_evolution_status(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def get_evolution_status(self, params: dict[str, Any]) -> dict[str, Any]:
         """Get status of evolution programs"""
         program_id = params.get("program_id")
         
@@ -304,7 +304,7 @@ class UnifiedDGMServer:
                 "total": len(self.active_programs)
             }
     
-    async def optimize_strategy(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def optimize_strategy(self, params: dict[str, Any]) -> dict[str, Any]:
         """Optimize existing trading strategy"""
         strategy_name = params.get("strategy_name")
         optimization_target = params.get("target", "sharpe_ratio")
@@ -332,7 +332,7 @@ class UnifiedDGMServer:
             "improvement": "15%"
         }
     
-    async def self_modify(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def self_modify(self, params: dict[str, Any]) -> dict[str, Any]:
         """DGM self-modification capability"""
         target = params.get("target", "performance")
         constraints = params.get("constraints", [])
@@ -358,7 +358,7 @@ class UnifiedDGMServer:
         
         return result
     
-    async def get_metrics(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def get_metrics(self, params: dict[str, Any]) -> dict[str, Any]:
         """Get DGM performance metrics"""
         return {
             "uptime": "100%",
@@ -370,7 +370,7 @@ class UnifiedDGMServer:
             "success_rate": "94%"
         }
     
-    async def handle_a2a_registration(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def handle_a2a_registration(self, params: dict[str, Any]) -> dict[str, Any]:
         """Handle A2A agent registration"""
         agent_info = params.get("agent_info", {})
         logger.info(f"A2A registration: {agent_info.get('name')}")
@@ -380,7 +380,7 @@ class UnifiedDGMServer:
             "capabilities_acknowledged": agent_info.get("capabilities", [])
         }
     
-    async def handle_a2a_message(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def handle_a2a_message(self, params: dict[str, Any]) -> dict[str, Any]:
         """Handle A2A inter-agent messages"""
         from_agent = params.get("from_agent")
         message_type = params.get("type")

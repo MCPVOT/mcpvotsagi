@@ -8,7 +8,7 @@ Browser automation and web intelligence capabilities
 import asyncio
 import json
 import logging
-from typing import Dict, List, Any, Optional
+from typing import Optional
 from pathlib import Path
 import aiohttp
 import base64
@@ -65,7 +65,7 @@ class MCPChromeIntegration:
             await self.session.close()
         self.connected = False
     
-    async def execute_tool(self, tool_name: str, params: Dict) -> Dict:
+    async def execute_tool(self, tool_name: str, params: Dict) -> dict:
         """Execute an MCP Chrome tool"""
         if not self.connected:
             return {'error': 'Not connected to MCP Chrome'}
@@ -79,7 +79,7 @@ class MCPChromeIntegration:
             logger.error(f"Tool execution error: {e}")
             return {'error': str(e)}
     
-    async def _call_mcp(self, method: str, params: Dict) -> Dict:
+    async def _call_mcp(self, method: str, params: Dict) -> dict:
         """Call MCP Chrome API"""
         payload = {
             'jsonrpc': '2.0',
@@ -100,7 +100,7 @@ class MCPChromeIntegration:
             
             return result.get('result', {})
     
-    async def _navigate(self, params: Dict) -> Dict:
+    async def _navigate(self, params: Dict) -> dict:
         """Navigate to a URL"""
         url = params.get('url')
         if not url:
@@ -118,7 +118,7 @@ class MCPChromeIntegration:
             'loaded': result.get('loaded', True)
         }
     
-    async def _screenshot(self, params: Dict) -> Dict:
+    async def _screenshot(self, params: Dict) -> dict:
         """Take a screenshot"""
         result = await self._call_mcp('page.screenshot', {
             'full_page': params.get('full_page', False),
@@ -148,7 +148,7 @@ class MCPChromeIntegration:
             'format': params.get('format', 'png')
         }
     
-    async def _extract_content(self, params: Dict) -> Dict:
+    async def _extract_content(self, params: Dict) -> dict:
         """Extract content from current page"""
         selector = params.get('selector', 'body')
         
@@ -165,7 +165,7 @@ class MCPChromeIntegration:
             'elements_found': result.get('count', 0)
         }
     
-    async def _fill_form(self, params: Dict) -> Dict:
+    async def _fill_form(self, params: Dict) -> dict:
         """Fill form fields"""
         fields = params.get('fields', {})
         
@@ -185,7 +185,7 @@ class MCPChromeIntegration:
             'filled_fields': results
         }
     
-    async def _click(self, params: Dict) -> Dict:
+    async def _click(self, params: Dict) -> dict:
         """Click an element"""
         selector = params.get('selector')
         if not selector:
@@ -202,7 +202,7 @@ class MCPChromeIntegration:
             'new_url': result.get('new_url')
         }
     
-    async def _search_tabs(self, params: Dict) -> Dict:
+    async def _search_tabs(self, params: Dict) -> dict:
         """Search across browser tabs using AI"""
         query = params.get('query')
         if not query:
@@ -221,7 +221,7 @@ class MCPChromeIntegration:
             'total_tabs': result.get('total_tabs', 0)
         }
     
-    async def _monitor_network(self, params: Dict) -> Dict:
+    async def _monitor_network(self, params: Dict) -> dict:
         """Monitor network requests"""
         duration = params.get('duration', 5000)  # milliseconds
         filter_pattern = params.get('filter', '*')
@@ -240,7 +240,7 @@ class MCPChromeIntegration:
             'total_size': result.get('total_size', 0)
         }
     
-    async def _execute_script(self, params: Dict) -> Dict:
+    async def _execute_script(self, params: Dict) -> dict:
         """Execute JavaScript in the browser"""
         script = params.get('script')
         if not script:
@@ -257,7 +257,7 @@ class MCPChromeIntegration:
             'type': result.get('type')
         }
     
-    async def _get_cookies(self, params: Dict) -> Dict:
+    async def _get_cookies(self, params: Dict) -> dict:
         """Get browser cookies"""
         result = await self._call_mcp('storage.getCookies', {
             'url': params.get('url'),
@@ -270,7 +270,7 @@ class MCPChromeIntegration:
             'count': len(result.get('cookies', []))
         }
     
-    async def _wait_for_element(self, params: Dict) -> Dict:
+    async def _wait_for_element(self, params: Dict) -> dict:
         """Wait for element to appear"""
         selector = params.get('selector')
         if not selector:
@@ -288,7 +288,7 @@ class MCPChromeIntegration:
             'elapsed': result.get('elapsed_ms', 0)
         }
     
-    async def research_topic(self, topic: str, depth: int = 3) -> Dict:
+    async def research_topic(self, topic: str, depth: int = 3) -> dict:
         """Perform comprehensive web research on a topic"""
         research_results = {
             'topic': topic,
@@ -358,7 +358,7 @@ class WebAutomationWorkflow:
     def __init__(self, chrome_integration: MCPChromeIntegration):
         self.chrome = chrome_integration
     
-    async def login_to_service(self, service_url: str, username: str, password: str) -> Dict:
+    async def login_to_service(self, service_url: str, username: str, password: str) -> dict:
         """Automated login workflow"""
         # Navigate to service
         await self.chrome.execute_tool('navigate', {'url': service_url})
@@ -385,7 +385,7 @@ class WebAutomationWorkflow:
             'logged_in': len(cookies.get('cookies', [])) > 0
         }
     
-    async def scrape_data(self, url: str, selectors: Dict[str, str]) -> Dict:
+    async def scrape_data(self, url: str, selectors: dict[str, str]) -> dict:
         """Scrape structured data from a webpage"""
         # Navigate to page
         await self.chrome.execute_tool('navigate', {'url': url})
@@ -411,7 +411,7 @@ class WebAutomationWorkflow:
             'timestamp': datetime.now().isoformat()
         }
     
-    async def monitor_site_changes(self, url: str, check_interval: int = 60) -> Dict:
+    async def monitor_site_changes(self, url: str, check_interval: int = 60) -> dict:
         """Monitor a website for changes"""
         # Initial snapshot
         await self.chrome.execute_tool('navigate', {'url': url})
@@ -436,7 +436,7 @@ class WebAutomationWorkflow:
 
 
 # Integration function for ULTIMATE AGI SYSTEM
-async def create_mcp_chrome_integration(port: int = 3000) -> Optional[MCPChromeIntegration]:
+async def create_mcp_chrome_integration(port: int = 3000) -> [MCPChromeIntegration]:
     """Create and initialize MCP Chrome integration"""
     integration = MCPChromeIntegration(port)
     

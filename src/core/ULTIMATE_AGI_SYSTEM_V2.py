@@ -16,7 +16,7 @@ import hashlib
 from datetime import datetime, timedelta
 from pathlib import Path
 from collections import deque, defaultdict
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Optional, Tuple
 import random
 import logging
 import requests
@@ -216,7 +216,7 @@ class UltimateAGISystemV2:
         try:
             self.ipfs_client = ipfshttpclient.connect()
             logger.info("✅ IPFS connected")
-        except:
+        except Exception:
             logger.warning("⚠️ IPFS not available")
 
     async def _init_ollama(self):
@@ -230,7 +230,7 @@ class UltimateAGISystemV2:
             )
             if self.deepseek_model:
                 logger.info(f"✅ DeepSeek-R1 model available: {self.deepseek_model}")
-        except:
+        except Exception:
             logger.warning("⚠️ Ollama/DeepSeek not available")
 
     async def _init_real_implementations(self):
@@ -410,7 +410,7 @@ class UltimateAGISystemV2:
         try:
             from ULTIMATE_DASHBOARD_V2 import generate_ultimate_dashboard_v2
             html = generate_ultimate_dashboard_v2()
-        except:
+        except Exception:
             html = self.generate_fallback_dashboard()
         
         return web.Response(text=html, content_type='text/html')
@@ -571,7 +571,7 @@ class UltimateAGISystemV2:
                     prompt=message
                 )
                 return result['response']
-            except:
+            except Exception:
                 pass
         
         # Fallback response
@@ -624,7 +624,7 @@ class UltimateAGISystemV2:
         finally:
             return ws
 
-    async def _process_ws_message(self, data: Dict) -> Dict:
+    async def _process_ws_message(self, data: Dict) -> dict:
         """Process WebSocket messages"""
         msg_type = data.get('type')
         

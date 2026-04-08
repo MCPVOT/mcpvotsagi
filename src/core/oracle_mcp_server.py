@@ -8,7 +8,7 @@ Model Context Protocol server for Oracle AGI to integrate with Claudia
 import json
 import asyncio
 import logging
-from typing import Dict, List, Any
+from typing import Any
 import sys
 import os
 
@@ -21,7 +21,7 @@ class OracleMCPServer:
     def __init__(self):
         self.port = int(os.environ.get('ORACLE_PORT', '8888'))
         
-    async def handle_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    async def handle_request(self, request: dict[str, Any]) -> dict[str, Any]:
         """Handle MCP protocol requests"""
         method = request.get('method', '')
         params = request.get('params', {})
@@ -37,7 +37,7 @@ class OracleMCPServer:
         else:
             return {'error': f'Unknown method: {method}'}
             
-    async def initialize(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def initialize(self, params: dict[str, Any]) -> dict[str, Any]:
         """Initialize the MCP connection"""
         return {
             'name': 'Oracle AGI MCP Server',
@@ -50,7 +50,7 @@ class OracleMCPServer:
             }
         }
         
-    async def list_tools(self) -> Dict[str, Any]:
+    async def list_tools(self) -> dict[str, Any]:
         """List available Oracle AGI tools"""
         return {
             'tools': [
@@ -89,7 +89,7 @@ class OracleMCPServer:
             ]
         }
         
-    async def call_tool(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def call_tool(self, params: dict[str, Any]) -> dict[str, Any]:
         """Execute an Oracle AGI tool"""
         tool_name = params.get('name', '')
         tool_params = params.get('parameters', {})
@@ -105,7 +105,7 @@ class OracleMCPServer:
         else:
             return {'error': f'Unknown tool: {tool_name}'}
             
-    async def oracle_analyze(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def oracle_analyze(self, params: dict[str, Any]) -> dict[str, Any]:
         """Analyze using Oracle AGI"""
         query = params.get('query', '')
         context = params.get('context', {})
@@ -121,7 +121,7 @@ class OracleMCPServer:
             'confidence': 0.87
         }
         
-    async def oracle_plan(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def oracle_plan(self, params: dict[str, Any]) -> dict[str, Any]:
         """Create plan using II-Agent"""
         task = params.get('task', '')
         
@@ -137,7 +137,7 @@ class OracleMCPServer:
             }
         }
         
-    async def oracle_trade(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def oracle_trade(self, params: dict[str, Any]) -> dict[str, Any]:
         """Get trading insights"""
         symbol = params.get('symbol', 'SOL')
         
@@ -152,7 +152,7 @@ class OracleMCPServer:
             'confidence': 0.75
         }
         
-    async def oracle_reflect(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def oracle_reflect(self, params: dict[str, Any]) -> dict[str, Any]:
         """Reflect on results"""
         results = params.get('results', {})
         
@@ -167,7 +167,7 @@ class OracleMCPServer:
             }
         }
         
-    async def get_context(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def get_context(self, params: dict[str, Any]) -> dict[str, Any]:
         """Get Oracle AGI context"""
         return {
             'context': {

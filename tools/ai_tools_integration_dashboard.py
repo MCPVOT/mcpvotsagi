@@ -42,7 +42,7 @@ async def get_claudia_status():
     try:
         response = requests.get("http://localhost:8890/api/models/status")
         return response.json()
-    except:
+    except Exception:
         return {"status": "offline", "models": {}}
 
 async def get_copilot_status():
@@ -74,7 +74,7 @@ async def get_usage_monitor_status():
     try:
         response = requests.get("http://localhost:8890/api/usage/current")
         return response.json()
-    except:
+    except Exception:
         return {"status": "offline", "usage": {}}
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@ import logging
 import sys
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Optional, Any
+from typing import Any
 from dataclasses import dataclass, asdict
 import aiohttp
 
@@ -40,9 +40,9 @@ class AnalysisResult:
     """DeepSeek analysis result"""
     stream_id: str
     analysis_type: str
-    insights: List[str]
-    patterns: List[str]
-    recommendations: List[str]
+    insights: list[str]
+    patterns: list[str]
+    recommendations: list[str]
     confidence_score: float
     timestamp: datetime
     raw_data: Dict = None
@@ -51,10 +51,10 @@ class AnalysisResult:
 class ExecutiveDecision:
     """Claude Opus 4 executive decision"""
     decision_id: str
-    analysis_inputs: List[AnalysisResult]
+    analysis_inputs: list[AnalysisResult]
     decision: str
     reasoning: str
-    action_plan: List[str]
+    action_plan: list[str]
     priority: int
     timestamp: datetime
     confidence: float
@@ -161,7 +161,7 @@ class HierarchicalAgentSystem:
             logger.warning("DeepSeek agent not available, using fallback analysis")
             return self._fallback_analysis(stream)
 
-    async def _generate_deepseek_insights(self, stream: DataStream) -> List[str]:
+    async def _generate_deepseek_insights(self, stream: DataStream) -> list[str]:
         """Generate insights using DeepSeek reasoning"""
         insights = []
 
@@ -180,7 +180,7 @@ class HierarchicalAgentSystem:
 
         return insights
 
-    async def _detect_patterns(self, stream: DataStream) -> List[str]:
+    async def _detect_patterns(self, stream: DataStream) -> list[str]:
         """Detect patterns in data stream"""
         patterns = []
 
@@ -196,7 +196,7 @@ class HierarchicalAgentSystem:
 
         return patterns
 
-    async def _generate_recommendations(self, stream: DataStream) -> List[str]:
+    async def _generate_recommendations(self, stream: DataStream) -> list[str]:
         """Generate recommendations based on analysis"""
         recommendations = []
 
@@ -266,7 +266,7 @@ class HierarchicalAgentSystem:
         ]
         return "; ".join(reasoning_parts)
 
-    async def _create_action_plan(self, analysis: AnalysisResult) -> List[str]:
+    async def _create_action_plan(self, analysis: AnalysisResult) -> list[str]:
         """Create actionable plan based on decision"""
         action_plan = [
             "1. Validate decision parameters",
@@ -310,7 +310,7 @@ class HierarchicalAgentSystem:
         logger.info(f"✅ Decision executed successfully: {decision.decision_id}")
         return execution_results
 
-    async def get_system_status(self) -> Dict:
+    async def get_system_status(self) -> dict:
         """Get comprehensive system status"""
         return {
             "system_id": self.system_id,
@@ -325,7 +325,7 @@ class HierarchicalAgentSystem:
             "last_decision": self.executive_decisions[-1].timestamp.isoformat() if self.executive_decisions else None
         }
 
-    async def deploy_coordinated_mission(self, mission_type: str, targets: List[str]) -> Dict:
+    async def deploy_coordinated_mission(self, mission_type: str, targets: list[str]) -> dict:
         """Deploy coordinated mission with both agents"""
         logger.info(f"🚀 Deploying coordinated mission: {mission_type}")
 

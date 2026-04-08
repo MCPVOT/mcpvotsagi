@@ -11,7 +11,7 @@ import aiohttp
 import json
 import logging
 from datetime import datetime
-from typing import Dict, Any, List, Optional
+from typing import List, Optional
 import random
 
 logger = logging.getLogger("DGMEvolutionConnector")
@@ -47,7 +47,7 @@ class DGMEvolutionConnector:
         if self.session:
             await self.session.close()
 
-    async def create_program(self, task: str) -> Dict[str, Any]:
+    async def create_program(self, task: str) -> dict[str, Any]:
         """Create a self-modifying program"""
         try:
             async with self.session.post(
@@ -59,10 +59,10 @@ class DGMEvolutionConnector:
                 else:
                     # Simulate if DGM not running
                     return self._simulate_program_creation(task)
-        except:
+        except Exception:
             return self._simulate_program_creation(task)
 
-    async def evolve(self, program_id: str) -> Dict[str, Any]:
+    async def evolve(self, program_id: str) -> dict[str, Any]:
         """Evolve a program using genetic algorithms"""
         try:
             async with self.session.post(
@@ -77,10 +77,10 @@ class DGMEvolutionConnector:
                     return await resp.json()
                 else:
                     return self._simulate_evolution()
-        except:
+        except Exception:
             return self._simulate_evolution()
 
-    async def self_modify(self, program_id: str, modification: str) -> Dict[str, Any]:
+    async def self_modify(self, program_id: str, modification: str) -> dict[str, Any]:
         """Perform Gödel machine self-modification"""
         try:
             async with self.session.post(
@@ -94,10 +94,10 @@ class DGMEvolutionConnector:
                     return await resp.json()
                 else:
                     return self._simulate_self_modification(modification)
-        except:
+        except Exception:
             return self._simulate_self_modification(modification)
 
-    async def meta_learn(self, experiences: List[Dict]) -> Dict[str, Any]:
+    async def meta_learn(self, experiences: list[Dict]) -> dict[str, Any]:
         """Meta-learning from experiences"""
         try:
             async with self.session.post(
@@ -108,10 +108,10 @@ class DGMEvolutionConnector:
                     return await resp.json()
                 else:
                     return self._simulate_meta_learning(len(experiences))
-        except:
+        except Exception:
             return self._simulate_meta_learning(len(experiences))
 
-    async def get_evolution_metrics(self) -> Dict[str, Any]:
+    async def get_evolution_metrics(self) -> dict[str, Any]:
         """Get current evolution metrics"""
         self.current_generation += 1
 
@@ -150,7 +150,7 @@ class DGMEvolutionConnector:
             'fitness_trend': 'improving' if improvement > 0 else 'declining'
         }
 
-    def _simulate_program_creation(self, task: str) -> Dict[str, Any]:
+    def _simulate_program_creation(self, task: str) -> dict[str, Any]:
         """Simulate program creation when DGM offline"""
         return {
             'program_id': f'dgm_prog_{int(datetime.now().timestamp())}',
@@ -160,7 +160,7 @@ class DGMEvolutionConnector:
             'created': datetime.now().isoformat()
         }
 
-    def _simulate_evolution(self) -> Dict[str, Any]:
+    def _simulate_evolution(self) -> dict[str, Any]:
         """Simulate evolution process"""
         best_fitness = random.uniform(85, 95)
         mutations = [
@@ -179,7 +179,7 @@ class DGMEvolutionConnector:
             'improvement': random.uniform(0, 5)
         }
 
-    def _simulate_self_modification(self, modification: str) -> Dict[str, Any]:
+    def _simulate_self_modification(self, modification: str) -> dict[str, Any]:
         """Simulate self-modification"""
         proof_valid = random.random() > 0.3  # 70% success rate
 
@@ -191,7 +191,7 @@ class DGMEvolutionConnector:
             'risk_assessment': 'low' if proof_valid else 'high'
         }
 
-    def _simulate_meta_learning(self, experience_count: int) -> Dict[str, Any]:
+    def _simulate_meta_learning(self, experience_count: int) -> dict[str, Any]:
         """Simulate meta-learning"""
         patterns_discovered = random.randint(1, min(5, experience_count // 10))
 
@@ -268,7 +268,7 @@ class DGMEvolutionMonitor:
         """Stop monitoring"""
         self.monitoring = False
 
-    async def get_metrics(self) -> Dict[str, Any]:
+    async def get_metrics(self) -> dict[str, Any]:
         """Get current evolution metrics"""
         return {
             'current_generation': self.current_generation,
@@ -393,7 +393,7 @@ class DGMEvolutionService:
 
         logger.info(f"✅ DGM Evolution Service running on http://localhost:{self.port}")
 
-    async def broadcast_to_clients(self, message: Dict[str, Any]):
+    async def broadcast_to_clients(self, message: dict[str, Any]):
         """Broadcast message to connected clients"""
         # For now, just log the message
         # In the future, this could broadcast to WebSocket clients

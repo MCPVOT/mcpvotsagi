@@ -83,7 +83,7 @@ import json
 import torch
 import numpy as np
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Optional
 
 class RLIntegration:
     """Integrates RL models and data with DeepSeek-R1"""
@@ -158,7 +158,7 @@ class RLIntegration:
 - Provide reasoning for trading decisions
 """
     
-    def load_model(self, model_name: str) -> Optional[Any]:
+    def load_model(self, model_name: str) -> [Any]:
         """Load RL model from F: drive or cache"""
         model_path = self.f_drive / "RL_Models" / self.config['models'].get(model_name, model_name)
         
@@ -175,7 +175,7 @@ class RLIntegration:
             print(f"Model {model_name} not found on F: drive")
             return None
     
-    def get_trading_decision(self, market_data: Dict) -> Dict:
+    def get_trading_decision(self, market_data: Dict) -> dict:
         """Get trading decision using RL models"""
         # This would integrate with actual RL models
         return {
@@ -281,21 +281,21 @@ def test_system_integration():
         sys.path.append('src')
         from core.oracle_agi_v9_complete_mcp import OracleAGIV9CompleteMCP
         tests.append(("Oracle AGI V9 import", True))
-    except:
+    except Exception:
         tests.append(("Oracle AGI V9 import", False))
     
     # Test 2: Memory system
     try:
         from memory.ultimate_memory_system import UltimateMemorySystem
         tests.append(("Memory system import", True))
-    except:
+    except Exception:
         tests.append(("Memory system import", False))
     
     # Test 3: RL integration
     try:
         from rl.rl_integration import rl_system, RL_CONTEXT
         tests.append(("RL integration import", True))
-    except:
+    except Exception:
         tests.append(("RL integration import", False))
     
     # Test 4: Database access
@@ -304,7 +304,7 @@ def test_system_integration():
         conn = sqlite3.connect("ultimate_agi.db")
         conn.close()
         tests.append(("Database access", True))
-    except:
+    except Exception:
         tests.append(("Database access", False))
     
     # Print results

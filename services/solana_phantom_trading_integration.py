@@ -10,7 +10,7 @@ import asyncio
 import json
 import base64
 import logging
-from typing import Dict, Any, List, Optional, Tuple
+from typing import List, Optional, Tuple
 from datetime import datetime
 import aiohttp
 from aiohttp import web
@@ -30,8 +30,8 @@ class PhantomWalletConnector:
     """Handle Phantom wallet connections and signatures"""
     
     def __init__(self):
-        self.connected_wallets: Dict[str, str] = {}
-        self.pending_transactions: Dict[str, Any] = {}
+        self.connected_wallets: dict[str, str] = {}
+        self.pending_transactions: dict[str, Any] = {}
         
     async def verify_phantom_signature(self, 
                                      message: str,
@@ -54,7 +54,7 @@ class PhantomWalletConnector:
             logger.error(f"Signature verification failed: {e}")
             return False
             
-    def create_connection_message(self) -> Dict[str, Any]:
+    def create_connection_message(self) -> dict[str, Any]:
         """Create a message for Phantom wallet connection"""
         return {
             "domain": "MCPVotsAGI Trading",
@@ -78,8 +78,8 @@ class DGMTradingAlgorithm:
         }
         
     async def search_for_improvement(self, 
-                                    market_data: Dict[str, Any],
-                                    performance_metrics: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+                                    market_data: dict[str, Any],
+                                    performance_metrics: dict[str, Any]) -> [Dict[str, Any]]:
         """Search for provable improvements to trading strategy"""
         
         # Simulate Gödel machine proof search
@@ -120,7 +120,7 @@ class DGMTradingAlgorithm:
             
         return best_improvement
         
-    async def _simulate_strategy(self, strategy: Dict[str, Any], market_data: Dict[str, Any]) -> float:
+    async def _simulate_strategy(self, strategy: dict[str, Any], market_data: dict[str, Any]) -> float:
         """Simulate strategy performance"""
         # Simplified simulation - in production would use backtesting
         base_performance = 1.5  # Base Sharpe ratio
@@ -147,7 +147,7 @@ class SolanaAITradingEngine:
         self.trading_pairs = {}
         self.active_positions = {}
         
-    async def analyze_token_with_ai(self, token_address: str) -> Dict[str, Any]:
+    async def analyze_token_with_ai(self, token_address: str) -> dict[str, Any]:
         """Use DeepSeek-R1 to analyze Solana token"""
         
         prompt = f"""Analyze this Solana token for trading potential:
@@ -189,7 +189,7 @@ Provide a comprehensive trading analysis with risk score (0-10) and recommendati
                                        token_in: str,
                                        token_out: str,
                                        amount: float,
-                                       slippage: float = 0.01) -> Dict[str, Any]:
+                                       slippage: float = 0.01) -> dict[str, Any]:
         """Execute trade through Phantom wallet"""
         
         # Get AI recommendation
@@ -241,7 +241,7 @@ Provide a comprehensive trading analysis with risk score (0-10) and recommendati
                                    input_mint: str,
                                    output_mint: str,
                                    amount: int,
-                                   slippage: int = 50) -> Dict[str, Any]:
+                                   slippage: int = 50) -> dict[str, Any]:
         """Get swap route from Jupiter aggregator"""
         
         jupiter_api = "https://quote-api.jup.ag/v6"

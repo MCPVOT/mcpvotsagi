@@ -12,7 +12,7 @@ Version: 1.0.0
 
 import re
 from pathlib import Path
-from typing import Dict, List
+# typing: use built-in list
 import logging
 
 # Configure logging
@@ -110,7 +110,7 @@ class ImportReferencesFixer:
             logger.error(f"❌ Error fixing {file_path}: {e}")
             return False
 
-    def fix_all_imports(self) -> Dict[str, bool]:
+    def fix_all_imports(self) -> dict[str, bool]:
         """Fix imports in all problematic files"""
         logger.info("🔧 Starting import references fix...")
 
@@ -189,7 +189,7 @@ __all__ = ['dgm_trading_v2', 'dgm_trading_legacy', 'dgm_evolution', 'ecosystem_m
 
         logger.info(f"✅ Created import helper module: {helper_file}")
 
-    def generate_fix_report(self, results: Dict[str, bool]):
+    def generate_fix_report(self, results: dict[str, bool]):
         """Generate a report of the import fixes"""
         logger.info("📊 Generating import fix report...")
 

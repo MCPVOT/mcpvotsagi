@@ -19,7 +19,7 @@ import json
 import logging
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Set
+from typing import Set
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -103,7 +103,7 @@ class MCPVotsAGIOrganizer:
             "__pycache__/",
         ]
 
-    def analyze_current_state(self) -> Dict:
+    def analyze_current_state(self) -> dict:
         """Analyze current project state"""
         logger.info("🔍 Analyzing current project state...")
 

@@ -10,7 +10,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple, Union, Callable
+from typing import List, Optional, Tuple, Union, Callable
 from datetime import datetime, timedelta
 import logging
 from dataclasses import dataclass, field
@@ -81,7 +81,7 @@ class TradingConfigV2:
     model_timeout: int = 30
 
     # MCP Ports
-    mcp_ports: Dict[str, int] = field(default_factory=lambda: {
+    mcp_ports: dict[str, int] = field(default_factory=lambda: {
         "memory": 3002,
         "github": 3001,
         "solana": 3005,
@@ -224,11 +224,11 @@ class CacheManager:
     def __init__(self, max_size: int = 1000, default_ttl: int = 60):
         self.max_size = max_size
         self.default_ttl = default_ttl
-        self._cache: Dict[str, Tuple[Any, datetime]] = {}
-        self._access_count: Dict[str, int] = defaultdict(int)
+        self._cache: dict[str, Tuple[Any, datetime]] = {}
+        self._access_count: dict[str, int] = defaultdict(int)
         self._lock = asyncio.Lock()
 
-    async def get(self, key: str) -> Optional[Any]:
+    async def get(self, key: str) -> [Any]:
         """Get value from cache"""
         async with self._lock:
             if key in self._cache:
@@ -300,13 +300,13 @@ class EnhancedMarketDataAggregator(BaseComponent):
                 if hasattr(source, 'get_quote'):
                     await source.get_quote("AAPL")
                     return ComponentStatus.HEALTHY
-            except:
+            except Exception:
                 continue
 
         return ComponentStatus.DEGRADED
 
     @with_retry(max_attempts=3)
-    async def get_market_data(self, symbol: str) -> Dict[str, Any]:
+    async def get_market_data(self, symbol: str) -> dict[str, Any]:
         """Get market data with caching and fallbacks"""
         # Check cache first
         cache_key = f"market_data:{symbol}"
@@ -399,7 +399,7 @@ class AdvancedMCPIntegrationLayer(BaseComponent):
                         async with pool.acquire() as conn:
                             # Send ping or health check message
                             self.health_status[name] = ComponentStatus.HEALTHY
-                    except:
+                    except Exception:
                         self.health_status[name] = ComponentStatus.UNHEALTHY
 
                 await asyncio.sleep(30)  # Check every 30 seconds
@@ -422,7 +422,7 @@ class AdvancedMCPIntegrationLayer(BaseComponent):
         else:
             return ComponentStatus.UNHEALTHY
 
-    async def query_memory(self, query: str, timeout: int = 10) -> Dict[str, Any]:
+    async def query_memory(self, query: str, timeout: int = 10) -> dict[str, Any]:
         """Query memory MCP with timeout and error handling"""
         if self.health_status.get("memory") != ComponentStatus.HEALTHY:
             return {"error": "Memory MCP unavailable", "fallback": True}
@@ -513,7 +513,7 @@ class MCPConnection:
         self.port = port
         self.websocket = websocket
 
-    async def send_query(self, query: str) -> Dict[str, Any]:
+    async def send_query(self, query: str) -> dict[str, Any]:
         """Send query to MCP server"""
         if not self.websocket:
             raise ConnectionError(f"No websocket connection to {self.name}")
@@ -574,7 +574,7 @@ class OptimizedTradingEngine(BaseComponent):
             return ComponentStatus.HEALTHY
 
     @trade_latency.time()
-    async def execute_trade(self, signal: Dict[str, Any]) -> Dict[str, Any]:
+    async def execute_trade(self, signal: dict[str, Any]) -> dict[str, Any]:
         """Execute trade with circuit breaker protection"""
 
         # Check circuit breaker
@@ -706,7 +706,7 @@ class RiskManager:
         self.daily_pnl = 0
         self.max_daily_loss = config.max_drawdown * self.portfolio_value
 
-    async def check_trade(self, signal: Dict[str, Any]) -> Dict[str, bool]:
+    async def check_trade(self, signal: dict[str, Any]) -> dict[str, bool]:
         """Check if trade passes risk rules"""
 
         # Check daily loss limit
@@ -731,7 +731,7 @@ class RiskManager:
             "risk_score": self._calculate_risk_score(signal)
         }
 
-    def _calculate_kelly_size(self, signal: Dict[str, Any]) -> float:
+    def _calculate_kelly_size(self, signal: dict[str, Any]) -> float:
         """Calculate optimal position size using Kelly Criterion"""
         win_probability = signal.get("confidence", 0.5)
         win_loss_ratio = 1.5  # Example ratio
@@ -746,7 +746,7 @@ class RiskManager:
         # Ensure within limits
         return max(0.01, min(safe_kelly, self.config.max_position_size))
 
-    async def _check_correlation_risk(self, signal: Dict[str, Any]) -> bool:
+    async def _check_correlation_risk(self, signal: dict[str, Any]) -> bool:
         """Check if new position increases correlation risk"""
         # Simplified check - in production would calculate actual correlations
         token = signal.get("token")
@@ -755,7 +755,7 @@ class RiskManager:
 
         return similar_positions >= 3  # Max 3 positions in same token
 
-    def _calculate_risk_score(self, signal: Dict[str, Any]) -> float:
+    def _calculate_risk_score(self, signal: dict[str, Any]) -> float:
         """Calculate overall risk score for position"""
         base_risk = 1.0 - signal.get("confidence", 0.5)
         volatility_factor = signal.get("volatility", 0.2) * 2
@@ -771,7 +771,7 @@ class UnifiedTradingBackendV2:
         self.config = config or TradingConfigV2()
 
         # Core components
-        self.components: Dict[str, BaseComponent] = {
+        self.components: dict[str, BaseComponent] = {
             "market_data": EnhancedMarketDataAggregator(self.config),
             "mcp_integration": AdvancedMCPIntegrationLayer(self.config),
             "trading_engine": OptimizedTradingEngine(self.config)
@@ -895,7 +895,7 @@ class UnifiedTradingBackendV2:
     async def analyze_and_trade(self,
                               token: str,
                               amount: float,
-                              strategy_override: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+                              strategy_override: Optional[Dict[str, Any]] = None) -> dict[str, Any]:
         """
         Main trading flow with enhanced error handling and monitoring
         """
@@ -978,7 +978,7 @@ class UnifiedTradingBackendV2:
                 "timestamp": datetime.now().isoformat()
             }
 
-    def _apply_strategy_override(self, signal: Any, override: Dict[str, Any]) -> Any:
+    def _apply_strategy_override(self, signal: Any, override: dict[str, Any]) -> Any:
         """Apply strategy overrides to signal"""
         # Modify signal based on override parameters
         if "min_confidence" in override and signal.confidence < override["min_confidence"]:
@@ -1011,7 +1011,7 @@ class UnifiedTradingBackendV2:
         except Exception as e:
             logger.error(f"Failed to store decision: {e}")
 
-    async def get_system_status(self) -> Dict[str, Any]:
+    async def get_system_status(self) -> dict[str, Any]:
         """Get comprehensive system status"""
         status = {
             "timestamp": datetime.now().isoformat(),
@@ -1029,7 +1029,7 @@ class UnifiedTradingBackendV2:
             try:
                 health = await component.health_check()
                 status["components"][name] = health.value
-            except:
+            except Exception:
                 status["components"][name] = "unknown"
 
         # Get metrics

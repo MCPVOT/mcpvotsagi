@@ -10,7 +10,7 @@ import json
 import logging
 import aiohttp
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Optional
 import websockets
 from datetime import datetime
 import yaml
@@ -27,7 +27,7 @@ class N8NEnhancedIntegration:
         self.active_executions = {}
         self.workflow_templates = self._load_workflow_templates()
         
-    def _load_workflow_templates(self) -> Dict:
+    def _load_workflow_templates(self) -> dict:
         """Load workflow templates"""
         templates_path = Path("/mnt/c/Workspace/MCPVotsAGI/n8n-workflows/workflows")
         templates = {}
@@ -68,7 +68,7 @@ class N8NEnhancedIntegration:
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"{self.n8n_url}/healthz", timeout=5) as resp:
                     return resp.status == 200
-        except:
+        except Exception:
             return False
     
     async def _sync_workflows(self):
@@ -346,12 +346,12 @@ class N8NEnhancedIntegration:
                     if resp.status == 200:
                         data = await resp.json()
                         return data.get('status', 'unknown')
-        except:
+        except Exception:
             pass
         
         return 'unknown'
     
-    async def trigger_workflow(self, workflow_name: str, data: Dict) -> Optional[str]:
+    async def trigger_workflow(self, workflow_name: str, data: Dict) -> [str]:
         """Trigger a workflow by name"""
         workflow = next(
             (w for w in self.workflows.values() if w['name'] == workflow_name),
@@ -391,7 +391,7 @@ class N8NEnhancedIntegration:
         
         return None
     
-    async def create_dynamic_workflow(self, name: str, description: str, nodes: List[Dict]) -> bool:
+    async def create_dynamic_workflow(self, name: str, description: str, nodes: list[Dict]) -> bool:
         """Create a dynamic workflow based on AI recommendations"""
         workflow = {
             'name': f"AI_Generated_{name}",
@@ -407,7 +407,7 @@ class N8NEnhancedIntegration:
         await self._create_workflow(workflow)
         return True
     
-    def _generate_connections(self, nodes: List[Dict]) -> Dict:
+    def _generate_connections(self, nodes: list[Dict]) -> dict:
         """Generate connections between nodes"""
         connections = {}
         
@@ -421,7 +421,7 @@ class N8NEnhancedIntegration:
         
         return connections
     
-    async def analyze_workflow_performance(self) -> Dict:
+    async def analyze_workflow_performance(self) -> dict:
         """Analyze workflow performance metrics"""
         metrics = {
             'total_workflows': len(self.workflows),

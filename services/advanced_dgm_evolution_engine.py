@@ -22,7 +22,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.nn import functional as F
-from typing import Dict, Any, List, Optional, Tuple, Union, Callable
+from typing import List, Optional, Tuple, Union, Callable
 from dataclasses import dataclass, field
 from enum import Enum
 import json
@@ -71,13 +71,13 @@ class MutationType(Enum):
 @dataclass
 class EvolutionGenome:
     """Represents an evolutionary genome with neural and code components"""
-    neural_architecture: Dict[str, Any]
-    hyperparameters: Dict[str, float]
-    strategy_config: Dict[str, Any]
-    code_segments: List[str]
-    fitness_scores: Dict[str, float] = field(default_factory=dict)
+    neural_architecture: dict[str, Any]
+    hyperparameters: dict[str, float]
+    strategy_config: dict[str, Any]
+    code_segments: list[str]
+    fitness_scores: dict[str, float] = field(default_factory=dict)
     generation: int = 0
-    parent_ids: List[str] = field(default_factory=list)
+    parent_ids: list[str] = field(default_factory=list)
     genome_id: str = field(default_factory=lambda: hashlib.md5(str(time.time()).encode()).hexdigest()[:8])
 
     def __post_init__(self):
@@ -89,7 +89,7 @@ class MetaLearningTask:
     """Represents a meta-learning task for few-shot adaptation"""
     task_id: str
     domain: str
-    input_examples: List[Tuple[Any, Any]]
+    input_examples: list[Tuple[Any, Any]]
     target_metric: str
     adaptation_steps: int = 5
     success_threshold: float = 0.8
@@ -97,7 +97,7 @@ class MetaLearningTask:
 class NeuralArchitectureSearch:
     """Neural Architecture Search component"""
 
-    def __init__(self, search_space: Dict[str, List]):
+    def __init__(self, search_space: dict[str, List]):
         self.search_space = search_space
         self.architecture_history = []
         self.performance_predictor = self._create_performance_predictor()
@@ -114,7 +114,7 @@ class NeuralArchitectureSearch:
             nn.Sigmoid()
         )
 
-    def generate_architecture(self, constraints: Optional[Dict] = None) -> Dict[str, Any]:
+    def generate_architecture(self, constraints: Optional[Dict] = None) -> dict[str, Any]:
         """Generate new neural architecture"""
         architecture = {}
 
@@ -159,7 +159,7 @@ class NeuralArchitectureSearch:
 
         return architecture
 
-    def predict_performance(self, architecture: Dict[str, Any]) -> float:
+    def predict_performance(self, architecture: dict[str, Any]) -> float:
         """Predict architecture performance without training"""
         # Convert architecture to feature vector
         features = self._architecture_to_features(architecture)
@@ -170,7 +170,7 @@ class NeuralArchitectureSearch:
 
         return predicted_score
 
-    def _architecture_to_features(self, architecture: Dict[str, Any]) -> List[float]:
+    def _architecture_to_features(self, architecture: dict[str, Any]) -> list[float]:
         """Convert architecture to feature vector for prediction"""
         features = [0.0] * 64  # Fixed size feature vector
 
@@ -290,7 +290,7 @@ class CodeEvolutionEngine:
         self.successful_mutations = []
         self.execution_history = deque(maxlen=1000)
 
-    def _load_code_templates(self) -> Dict[str, str]:
+    def _load_code_templates(self) -> dict[str, str]:
         """Load code templates for evolution"""
         return {
             "strategy_function": """
@@ -314,7 +314,7 @@ def make_decision_{id}(features, state):
 """
         }
 
-    def evolve_code(self, template_type: str, performance_feedback: Dict[str, float]) -> str:
+    def evolve_code(self, template_type: str, performance_feedback: dict[str, float]) -> str:
         """Evolve code based on performance feedback"""
         template = self.code_templates.get(template_type, "")
 
@@ -342,7 +342,7 @@ def make_decision_{id}(features, state):
 
         return evolved_code
 
-    def _evolve_strategy_logic(self, feedback: Dict[str, float]) -> str:
+    def _evolve_strategy_logic(self, feedback: dict[str, float]) -> str:
         """Evolve strategy logic based on feedback"""
         performance = feedback.get("performance", 0.5)
 
@@ -380,7 +380,7 @@ def make_decision_{id}(features, state):
 
         return logic
 
-    def _evolve_feature_logic(self, feedback: Dict[str, float]) -> str:
+    def _evolve_feature_logic(self, feedback: dict[str, float]) -> str:
         """Evolve feature extraction logic"""
         return """
     # Evolved feature extraction
@@ -390,7 +390,7 @@ def make_decision_{id}(features, state):
     features.append(len([x for x in data[-10:] if x > np.mean(data[-20:])]) / 10)  # Above-average ratio
 """
 
-    def _evolve_decision_logic(self, feedback: Dict[str, float]) -> str:
+    def _evolve_decision_logic(self, feedback: dict[str, float]) -> str:
         """Evolve decision logic"""
         return """
     # Evolved decision tree
@@ -415,7 +415,7 @@ class AdvancedDGMEvolutionEngine:
     def __init__(self, population_size: int = 20):
         self.population_size = population_size
         self.current_generation = 0
-        self.population: List[EvolutionGenome] = []
+        self.population: list[EvolutionGenome] = []
         self.elite_size = max(2, population_size // 10)
 
         # Advanced components
@@ -614,7 +614,7 @@ class AdvancedDGMEvolutionEngine:
 
         logger.info(f"✅ Population initialized with {len(self.population)} genomes")
 
-    async def evolve_generation(self, objective: EvolutionObjective = EvolutionObjective.PERFORMANCE_OPTIMIZATION) -> Dict[str, Any]:
+    async def evolve_generation(self, objective: EvolutionObjective = EvolutionObjective.PERFORMANCE_OPTIMIZATION) -> dict[str, Any]:
         """Evolve one generation"""
         logger.info(f"🧬 Evolving generation {self.current_generation + 1} with objective: {objective.value}")
 
@@ -664,7 +664,7 @@ class AdvancedDGMEvolutionEngine:
             "objective": objective.value
         }
 
-    async def _evaluate_genome_fitness(self, genome: EvolutionGenome) -> Dict[str, float]:
+    async def _evaluate_genome_fitness(self, genome: EvolutionGenome) -> dict[str, float]:
         """Evaluate fitness of a genome"""
         # Simulate complex fitness evaluation
         await asyncio.sleep(0.1)  # Simulate computation time
@@ -692,7 +692,7 @@ class AdvancedDGMEvolutionEngine:
             "robustness": random.uniform(0.5, 0.8)
         }
 
-    def _select_elite(self) -> List[EvolutionGenome]:
+    def _select_elite(self) -> list[EvolutionGenome]:
         """Select elite genomes"""
         sorted_population = sorted(self.population, key=lambda g: g.fitness_scores["overall"], reverse=True)
         return sorted_population[:self.elite_size]
@@ -752,7 +752,7 @@ class AdvancedDGMEvolutionEngine:
 
         return child
 
-    def _crossover_architectures(self, arch1: Dict[str, Any], arch2: Dict[str, Any]) -> Dict[str, Any]:
+    def _crossover_architectures(self, arch1: dict[str, Any], arch2: dict[str, Any]) -> dict[str, Any]:
         """Crossover neural architectures"""
         child_arch = {"layers": []}
 
@@ -804,7 +804,7 @@ class AdvancedDGMEvolutionEngine:
             if new_code:
                 genome.code_segments.append(new_code)
 
-    async def _mutate_architecture(self, architecture: Dict[str, Any]):
+    async def _mutate_architecture(self, architecture: dict[str, Any]):
         """Mutate neural architecture"""
         layers = architecture.get("layers", [])
 
@@ -838,7 +838,7 @@ class AdvancedDGMEvolutionEngine:
             remove_idx = random.randint(0, len(layers) - 1)
             layers.pop(remove_idx)
 
-    def _mutate_hyperparameters(self, hyperparams: Dict[str, float]):
+    def _mutate_hyperparameters(self, hyperparams: dict[str, float]):
         """Mutate hyperparameters"""
         for key, value in hyperparams.items():
             if random.random() < 0.3:  # 30% chance to mutate each parameter
@@ -849,7 +849,7 @@ class AdvancedDGMEvolutionEngine:
                 else:
                     hyperparams[key] = value * random.uniform(0.8, 1.2)
 
-    def _mutate_strategy(self, strategy: Dict[str, float]):
+    def _mutate_strategy(self, strategy: dict[str, float]):
         """Mutate strategy configuration"""
         for key, value in strategy.items():
             if random.random() < 0.3:

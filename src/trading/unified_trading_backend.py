@@ -17,7 +17,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
+from typing import List, Optional, Tuple
 from datetime import datetime, timedelta
 import logging
 from dataclasses import dataclass
@@ -105,7 +105,7 @@ class MarketDataAggregator:
         self.cache = {}
         self.cache_ttl = 60  # 60 seconds cache
         
-    async def get_market_data(self, symbol: str) -> Dict[str, Any]:
+    async def get_market_data(self, symbol: str) -> dict[str, Any]:
         """Get comprehensive market data for a symbol"""
         
         # Check cache
@@ -147,7 +147,7 @@ class MarketDataAggregator:
         
         return market_data
         
-    async def _fetch_finnhub_data(self, symbol: str) -> Dict[str, Any]:
+    async def _fetch_finnhub_data(self, symbol: str) -> dict[str, Any]:
         """Fetch data from Finnhub"""
         if not self.config.finnhub_api_key:
             return {}
@@ -173,7 +173,7 @@ class MarketDataAggregator:
             
         return {}
         
-    async def _fetch_coingecko_data(self, symbol: str) -> Dict[str, Any]:
+    async def _fetch_coingecko_data(self, symbol: str) -> dict[str, Any]:
         """Fetch crypto data from CoinGecko"""
         # Map symbol to CoinGecko ID
         symbol_map = {
@@ -207,7 +207,7 @@ class MarketDataAggregator:
             
         return {}
         
-    async def _calculate_technical_indicators(self, symbol: str) -> Dict[str, Any]:
+    async def _calculate_technical_indicators(self, symbol: str) -> dict[str, Any]:
         """Calculate technical indicators"""
         # In production, would fetch historical data and calculate
         # For now, return simulated values
@@ -221,13 +221,13 @@ class MarketDataAggregator:
             }
         }
         
-    def _calculate_volatility(self, data: Dict[str, Any]) -> float:
+    def _calculate_volatility(self, data: dict[str, Any]) -> float:
         """Calculate price volatility"""
         if data.get("high_24h") and data.get("low_24h"):
             return (data["high_24h"] - data["low_24h"]) / data.get("price", 1)
         return 0.2  # Default volatility
         
-    def _calculate_trend(self, data: Dict[str, Any]) -> float:
+    def _calculate_trend(self, data: dict[str, Any]) -> float:
         """Calculate trend strength (-1 to 1)"""
         change_pct = data.get("price_change_24h", 0) / 100
         return np.tanh(change_pct * 2)  # Normalize to [-1, 1]
@@ -272,7 +272,7 @@ class MCPIntegrationLayer:
         
         logger.info(f"Connected to {name} MCP on port {port}")
         
-    async def query_memory(self, query: str) -> Dict[str, Any]:
+    async def query_memory(self, query: str) -> dict[str, Any]:
         """Query memory MCP for historical data"""
         if self.health_status.get("memory") != "online":
             return {"error": "Memory MCP offline"}
@@ -336,7 +336,7 @@ class UnifiedTradingBackend:
         try:
             self.redis = redis.Redis(host='localhost', port=6379, decode_responses=True)
             self.redis.ping()
-        except:
+        except Exception:
             self.redis = None
             logger.warning("Redis not available")
             
@@ -358,7 +358,7 @@ class UnifiedTradingBackend:
         logger.info("Backend initialization complete")
         logger.info(f"MCP Status: {self.mcp_layer.health_status}")
         
-    async def analyze_and_trade(self, token: str, amount: float) -> Dict[str, Any]:
+    async def analyze_and_trade(self, token: str, amount: float) -> dict[str, Any]:
         """
         Main trading flow: analyze market and execute trade if confident
         """
@@ -460,7 +460,7 @@ class UnifiedTradingBackend:
     async def _execute_trade(self,
                            token: str,
                            amount: float,
-                           signal: TradeSignal) -> Dict[str, Any]:
+                           signal: TradeSignal) -> dict[str, Any]:
         """Execute the trade"""
         
         # In production, would execute via Phantom/Solana
@@ -496,7 +496,7 @@ class UnifiedTradingBackend:
             "amount": amount
         }
         
-    async def get_portfolio_status(self) -> Dict[str, Any]:
+    async def get_portfolio_status(self) -> dict[str, Any]:
         """Get current portfolio status"""
         
         positions = []

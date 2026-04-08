@@ -11,7 +11,7 @@ import shutil
 from pathlib import Path
 import json
 import logging
-from typing import Dict, List, Optional
+from typing import Optional
 import argparse
 
 # Setup logging

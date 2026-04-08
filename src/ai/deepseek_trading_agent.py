@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Optional, Tuple
 import websockets
 import aiohttp
 from dataclasses import dataclass, asdict
@@ -34,10 +34,10 @@ logger = logging.getLogger("DeepSeekTradingAgent")
 class MarketState:
     """Current market state representation"""
     timestamp: datetime
-    prices: Dict[str, float]  # Asset prices
-    volumes: Dict[str, float]  # Trading volumes
-    rsi: Dict[str, float]  # RSI indicators
-    macd: Dict[str, Dict[str, float]]  # MACD values
+    prices: dict[str, float]  # Asset prices
+    volumes: dict[str, float]  # Trading volumes
+    rsi: dict[str, float]  # RSI indicators
+    macd: dict[str, Dict[str, float]]  # MACD values
     sentiment: float  # Market sentiment score
     volatility: float  # Market volatility
 
@@ -79,7 +79,7 @@ class DeepSeekTradingBrain:
             logger.error(f"Failed to connect to DeepSeek: {e}")
             raise
             
-    async def analyze_market(self, state: MarketState, portfolio: Dict[str, Any]) -> Dict[str, Any]:
+    async def analyze_market(self, state: MarketState, portfolio: dict[str, Any]) -> dict[str, Any]:
         """Get market analysis from DeepSeek"""
         self.request_id += 1
         
@@ -113,7 +113,7 @@ Provide specific buy/sell/hold recommendations with confidence levels.""",
         
         return data.get("result", {})
         
-    async def evaluate_strategy(self, performance: PerformanceMetrics) -> Dict[str, Any]:
+    async def evaluate_strategy(self, performance: PerformanceMetrics) -> dict[str, Any]:
         """Get strategy evaluation from DeepSeek"""
         self.request_id += 1
         
@@ -276,7 +276,7 @@ class AutonomousTradingAgent:
         try:
             self.solana_connection = await websockets.connect("ws://localhost:3005")
             logger.info("Connected to Solana MCP")
-        except:
+        except Exception:
             logger.warning("Solana MCP not available")
             
         # Load RL model if exists
@@ -407,10 +407,10 @@ class AutonomousTradingAgent:
         
     async def combine_recommendations(
         self, 
-        deepseek_analysis: Dict[str, Any], 
+        deepseek_analysis: dict[str, Any], 
         rl_action: int,
         market_state: MarketState
-    ) -> Optional[TradingAction]:
+    ) -> [TradingAction]:
         """Combine DeepSeek and RL recommendations"""
         
         # Parse DeepSeek recommendation

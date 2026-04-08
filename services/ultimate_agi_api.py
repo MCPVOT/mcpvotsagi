@@ -12,7 +12,7 @@ import json
 import logging
 from datetime import datetime
 import uvicorn
-from typing import Dict, List, Any
+from typing import Any
 import psutil
 import platform
 
@@ -33,7 +33,7 @@ app.add_middleware(
 )
 
 # Global state
-connected_clients: List[WebSocket] = []
+connected_clients: list[WebSocket] = []
 system_metrics = {
     "system_health": "operational",
     "active_sessions": 0,
@@ -150,7 +150,7 @@ async def websocket_endpoint(websocket: WebSocket):
         logger.info("WebSocket client disconnected")
 
 @app.post("/api/v3/agents/{agent_id}/execute")
-async def execute_agent_task(agent_id: str, task: Dict[str, Any]):
+async def execute_agent_task(agent_id: str, task: dict[str, Any]):
     """Execute a task on a specific agent"""
     # Find agent
     agent = next((a for a in agents_data if a["id"] == agent_id), None)
@@ -179,7 +179,7 @@ async def get_agent(agent_id: str):
     return agent
 
 @app.post("/api/v3/chat")
-async def chat(message: Dict[str, str]):
+async def chat(message: dict[str, str]):
     """Chat endpoint"""
     user_message = message.get("message", "")
     
@@ -197,7 +197,7 @@ async def chat(message: Dict[str, str]):
                 "type": "chat_message",
                 "data": response
             })
-        except:
+        except Exception:
             pass
     
     return response

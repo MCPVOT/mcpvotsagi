@@ -11,7 +11,7 @@ import json
 import asyncio
 import logging
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
+from typing import List, Optional, Tuple
 from datetime import datetime
 import numpy as np
 import faiss
@@ -49,7 +49,7 @@ class KnowledgeDocument:
     source: str
     category: str
     timestamp: datetime
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
     embedding: Optional[np.ndarray] = None
 
 
@@ -441,7 +441,7 @@ class KnowledgeBaseSystem:
     async def search(self, 
                     query: str,
                     collection: str = "all",
-                    top_k: int = 5) -> List[Tuple[KnowledgeDocument, float]]:
+                    top_k: int = 5) -> list[Tuple[KnowledgeDocument, float]]:
         """Search knowledge base"""
         
         # Generate query embedding
@@ -470,7 +470,7 @@ class KnowledgeBaseSystem:
         return results[:top_k]
         
     def _process_chroma_results(self, 
-                              results: Dict[str, Any]) -> List[Tuple[KnowledgeDocument, float]]:
+                              results: dict[str, Any]) -> list[Tuple[KnowledgeDocument, float]]:
         """Process Chroma search results"""
         
         processed = []
@@ -485,7 +485,7 @@ class KnowledgeBaseSystem:
                     
         return processed
         
-    async def get_trading_insights(self, context: Dict[str, Any]) -> List[str]:
+    async def get_trading_insights(self, context: dict[str, Any]) -> list[str]:
         """Get relevant trading insights based on context"""
         
         insights = []
@@ -516,7 +516,7 @@ class KnowledgeBaseSystem:
         
         return insights
         
-    def _get_graph_insights(self, context: Dict[str, Any]) -> List[str]:
+    def _get_graph_insights(self, context: dict[str, Any]) -> list[str]:
         """Get insights from knowledge graph"""
         
         insights = []

@@ -10,7 +10,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import List, Optional
 import logging
 import aiohttp
 
@@ -104,7 +104,7 @@ Response should be actionable Python code or specific instructions.
             logger.error(f"❌ Ollama query failed: {e}")
             return f"Error querying Ollama: {str(e)}"
 
-    async def analyze_dgm_file(self, file_path: Path) -> Dict[str, Any]:
+    async def analyze_dgm_file(self, file_path: Path) -> dict[str, Any]:
         """Analyze a DGM file for issues"""
         logger.info(f"🔍 Analyzing {file_path.name}")
 
