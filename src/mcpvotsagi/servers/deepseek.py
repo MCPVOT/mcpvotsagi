@@ -1,7 +1,7 @@
 """
 DeepSeek Ollama MCP Server for MCPVotsAGI
 ========================================
-Advanced reasoning engine using local LLM via Ollama
+Advanced reasoning engine using DeepSeek-R1 via Ollama
 Provides intelligent reasoning for trading, security, and ecosystem management
 """
 
@@ -26,7 +26,7 @@ from dataclasses import dataclass, asdict
 logger = logging.getLogger("DeepSeekMCP")
 
 # DeepSeek Model Configuration
-DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-r1:8b")
+DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-r1")
 OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
 MODEL_CONTEXT_SIZE = 8192  # Default context window
 REASONING_TEMPERATURE = 0.7

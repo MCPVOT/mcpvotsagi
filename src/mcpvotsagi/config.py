@@ -36,7 +36,7 @@ class MCPVotsAGIConfig:
     opencti_port: int = field(default_factory=lambda: int(os.environ.get("OPENCTI_PORT", "3007")))
 
     ollama_host: str = field(default_factory=lambda: os.environ.get("OLLAMA_HOST", "http://localhost:11434"))
-    deepseek_model: str = "deepseek-r1:8b"
+    deepseek_model: str = "deepseek-r1"
 
     log_level: str = field(default_factory=lambda: os.environ.get("LOG_LEVEL", "INFO"))
 
